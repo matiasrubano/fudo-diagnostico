@@ -1,4 +1,6 @@
 import { diagnose, type Diagnosis } from '../domain/diagnose.js'
+import { compareWithNeighbors, type NeighborComparison } from '../domain/neighbors.js'
+import { FEATURED_PLACE, sampleAnswersFor, type LandingCountry } from '../domain/showcase.js'
 import {
   isCountryCode,
   type Answers,
@@ -10,6 +12,7 @@ import {
   type SalesChannel,
 } from '../domain/types.js'
 import { getGateway, type PlaceDataProvider } from '../gateway/index.js'
+import { summaryOf } from '../gateway/shared.js'
 
 /** Lo que devuelve /api/places-search */
 export interface SearchResponse {
@@ -76,11 +79,44 @@ export async function searchPlaces(
   return { results: [], suggestions: (await provider.suggest?.(geoBias)) ?? [], notFound: true }
 }
 
+/** Lo que devuelve /api/diagnose: el diagnóstico + la comparación con otros locales reales de la demo */
+export type DiagnosisResponse = Diagnosis & { neighbors: NeighborComparison | null }
+
 export async function runDiagnosis(
   placeId: string,
   answers: Answers,
   provider: PlaceDataProvider = getGateway(),
-): Promise<Diagnosis> {
+): Promise<DiagnosisResponse> {
   const place = await provider.getDetails(placeId)
-  return diagnose(place, answers)
+  const catalog = (await provider.suggest?.()) ?? []
+  return {
+    ...diagnose(place, answers),
+    neighbors: compareWithNeighbors(summaryOf(place), catalog),
+  }
+}
+
+/** Lo que devuelve /api/showcase: el ticket de ejemplo y los locales reales de la demo (de un país o de todos) */
+export interface ShowcaseResponse {
+  country: LandingCountry | null
+  /** diagnóstico del local destacado con respuestas de ejemplo (SIMULADAS); null si el catálogo no lo tiene */
+  featured: DiagnosisResponse | null
+  places: PlaceSummary[]
+}
+
+export async function buildShowcase(
+  country: LandingCountry | null,
+  provider: PlaceDataProvider = getGateway(),
+): Promise<ShowcaseResponse> {
+  const all = (await provider.suggest?.()) ?? []
+  const places = (country ? all.filter((p) => p.country === country) : all).sort(
+    (a, b) =>
+      (a.country ?? '').localeCompare(b.country ?? '') ||
+      (b.reviewCount ?? -1) - (a.reviewCount ?? -1),
+  )
+  const featuredId = FEATURED_PLACE[country ?? 'AR']
+  const id = places.some((p) => p.id === featuredId) ? featuredId : places[0]?.id
+  if (!id) return { country, featured: null, places }
+  const place = await provider.getDetails(id)
+  const answers = sampleAnswersFor(place)
+  return { country, featured: await runDiagnosis(id, answers, provider), places }
 }

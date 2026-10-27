@@ -1,6 +1,9 @@
-import type { Diagnosis } from '../domain/diagnose'
 import type { Answers } from '../domain/types'
-import type { SearchResponse } from '../server/diagnosisService'
+import type {
+  DiagnosisResponse,
+  SearchResponse,
+  ShowcaseResponse,
+} from '../server/diagnosisService'
 
 // Único punto donde el frontend habla con el servidor. No conoce el proveedor de datos ni keys.
 
@@ -14,7 +17,10 @@ export async function searchPlaces(query: string): Promise<SearchResponse> {
   return readJson(await fetch(`/api/places-search?q=${encodeURIComponent(query)}`))
 }
 
-export async function requestDiagnosis(placeId: string, answers: Answers): Promise<Diagnosis> {
+export async function requestDiagnosis(
+  placeId: string,
+  answers: Answers,
+): Promise<DiagnosisResponse> {
   return readJson(
     await fetch('/api/diagnose', {
       method: 'POST',
@@ -22,4 +28,9 @@ export async function requestDiagnosis(placeId: string, answers: Answers): Promi
       body: JSON.stringify({ placeId, answers }),
     }),
   )
+}
+
+export async function fetchShowcase(country: string | null): Promise<ShowcaseResponse> {
+  const query = country ? `?country=${encodeURIComponent(country)}` : ''
+  return readJson(await fetch(`/api/showcase${query}`))
 }
