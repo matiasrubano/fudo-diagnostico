@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { getCountry } from '../src/config/countries'
-import { copyFor, type LandingFacts } from '../src/content/copy'
+import { copy, copyFor, type LandingFacts } from '../src/content/copy'
 import { buildRecommendations } from '../src/domain/recommendations'
 import { scoreProfile } from '../src/domain/scoring'
 import { LANDING_COUNTRIES } from '../src/domain/showcase'
@@ -119,6 +119,21 @@ describe('voz por país: voseo en AR, tuteo en MX, CL y CO', () => {
       Infinity,
     ).find((r) => r.id === 'delivery-commission')
     expect(rec?.body).toContain('Hoy vendes solo por apps (DiDi Food y Rappi')
+  })
+})
+
+describe('textos comunes del resultado (sin voz propia)', () => {
+  it('no tienen formas de voseo: sirven igual para AR y para tuteo', () => {
+    const shared = [
+      copy.result,
+      copy.areas,
+      copy.money,
+      copy.ticket,
+      copy.evidence,
+      copy.neighbors,
+      copy.checks,
+    ]
+    expect(leaves(shared).filter((t) => VOSEO.test(t))).toEqual([])
   })
 })
 

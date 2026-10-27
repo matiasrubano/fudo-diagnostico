@@ -1,7 +1,8 @@
 import { copy } from '../content/copy'
 import type { Diagnosis } from '../domain/diagnose'
 import { appsFound } from '../domain/scoring'
-import type { Field, Provenance } from '../domain/types'
+import { fridayHours } from '../domain/showcase'
+import type { AreaId, Field, Provenance } from '../domain/types'
 import { formatNumber, formatRating } from './format'
 
 export interface Evidence {
@@ -25,7 +26,7 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
   const a = d.answers
   switch (checkId) {
     case 'hours':
-      return fromField(f.openingHours, (h) => `${h.length} días cargados`)
+      return fromField(f.openingHours, (h) => copy.evidence.daysLoaded(h.length))
     case 'address':
       return fromField(f.address, (v) => [v.street, v.city].filter(Boolean).join(', '))
     case 'category':
@@ -33,9 +34,9 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
     case 'price':
       return fromField(f.priceLevel, (v) => v)
     case 'rating':
-      return fromField(f.rating, (v) => `${formatRating(v)} en Google`)
+      return fromField(f.rating, (v) => copy.evidence.ratingOnGoogle(formatRating(v)))
     case 'volume':
-      return fromField(f.reviewCount, (v) => `${formatNumber(v, d.country)} reseñas`)
+      return fromField(f.reviewCount, (v) => copy.evidence.reviews(formatNumber(v, d.country)))
     case 'website':
       return fromField(f.website, (v) => v.replace(/^https?:\/\//, '').replace(/\/$/, ''))
     case 'instagram':
@@ -44,7 +45,7 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
       const n = appsFound(d.place)
       return n > 0
         ? {
-            text: `${n} ${n === 1 ? 'app encontrada' : 'apps encontradas'}`,
+            text: copy.evidence.appsFound(n),
             provenance: f.delivery.provenance,
           }
         : fromField(f.delivery, () => '')
@@ -59,5 +60,48 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
       return { text: copy.questions.items.locals.options[a.locals] }
     default:
       return { text: '' }
+  }
+}
+
+const APP_LABEL: Record<string, string> = {
+  pedidosya: 'PedidosYa',
+  rappi: 'Rappi',
+  ubereats: 'Uber Eats',
+  didi: 'DiDi Food',
+  ifood: 'iFood',
+}
+
+/** Apps de delivery en las que figura el local, con su nombre ("PedidosYa, Rappi"). */
+export function appNamesOf(d: Pick<Diagnosis, 'place'>): string[] {
+  return Object.entries(d.place.fields.delivery.value ?? {})
+    .filter(([, url]) => Boolean(url))
+    .map(([key]) => APP_LABEL[key] ?? key)
+}
+
+/** Una línea real por área, para el renglón de la comanda (sin puntaje). */
+export function rowSummary(area: AreaId, d: Diagnosis): string {
+  const f = d.place.fields
+  switch (area) {
+    case 'google': {
+      const friday = fridayHours(f.openingHours.value)
+      return friday ? copy.evidence.friday(friday) : evidenceFor('hours', d).text
+    }
+    case 'reviews': {
+      return (
+        [evidenceFor('rating', d).text, evidenceFor('volume', d).text]
+          .filter((text) => text !== copy.evidence.notFound)
+          .join(' · ') || copy.evidence.notFound
+      )
+    }
+    case 'web':
+      return f.website.status === 'absent'
+        ? copy.evidence.noWebsite
+        : [evidenceFor('website', d).text, evidenceFor('instagram', d).text].join(' · ')
+    case 'delivery': {
+      const apps = appNamesOf(d)
+      return apps.length ? apps.join(', ') : evidenceFor('apps', d).text
+    }
+    case 'operation':
+      return copy.questions.items.billing.options[d.answers.billing]
   }
 }

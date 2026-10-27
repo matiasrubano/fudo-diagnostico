@@ -25,10 +25,14 @@ export default {
         'warning-text': tokens.color.warningText,
         danger: tokens.color.error,
         star: tokens.color.star,
+        paper: tokens.color.ticket.paper,
+        ticket: tokens.color.ticket,
+        'on-night': tokens.color.onNight,
       },
       fontFamily: {
         display: [tokens.font.display],
         sans: [tokens.font.body],
+        mono: [tokens.font.mono],
       },
       borderRadius: {
         xl: tokens.radius.xl,
@@ -43,6 +47,7 @@ export default {
       },
       backgroundImage: {
         cta: tokens.gradient.cta,
+        hero: tokens.gradient.hero,
       },
       minHeight: { touch: tokens.layout.minTouch },
       minWidth: { touch: tokens.layout.minTouch },

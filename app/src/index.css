@@ -7,7 +7,7 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-cream-soft font-sans text-base text-ink antialiased;
+    @apply bg-surface font-sans text-base text-ink antialiased;
     overflow-x: hidden;
   }
   h1,
@@ -46,6 +46,16 @@
   .btn-night {
     @apply bg-night text-white hover:bg-blue-900;
   }
+  /* Sobre azul noche: naranja de marca con texto oscuro (5,2:1). Blanco sobre #FF5023 no pasa AA. */
+  .btn-brand {
+    @apply bg-primary-500 text-ink hover:bg-primary-400;
+  }
+  .btn-ghost-night {
+    @apply border-2 border-white/70 bg-transparent text-white hover:bg-white hover:text-night;
+  }
+  .chip-night {
+    @apply inline-flex min-h-touch max-w-full items-center rounded-pill border border-white/40 bg-white/10 px-4 py-2 text-left text-sm font-medium text-white transition-colors hover:bg-white hover:text-night disabled:opacity-60;
+  }
   .card {
     @apply rounded-xl border border-line bg-white p-5 shadow-card;
   }
@@ -64,6 +74,42 @@
   }
   .input {
     @apply min-h-touch w-full rounded-pill border-2 border-line bg-white px-5 py-3 text-base text-ink placeholder:text-muted;
+  }
+
+  /* ─── La comanda: resultado impreso como ticket de cocina ─── */
+  .ticket-wrap {
+    filter: drop-shadow(0 18px 28px rgb(6 12 40 / 0.35));
+  }
+  .ticket {
+    --tooth: 14px;
+    @apply bg-paper font-mono text-[14px] leading-snug text-ticket-ink;
+    padding: calc(var(--tooth) / 2 + 22px) 20px calc(var(--tooth) / 2 + 22px);
+    /* borde dentado arriba y abajo (papel arrancado de la impresora) */
+    -webkit-mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--tooth) 51%
+        repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom /
+        var(--tooth) 51% repeat-x;
+    mask:
+      conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / var(--tooth) 51%
+        repeat-x,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom /
+        var(--tooth) 51% repeat-x;
+  }
+  .ticket-rule {
+    @apply border-t-2 border-dashed border-ticket-rule;
+  }
+  .ticket summary {
+    list-style: none;
+  }
+  .ticket summary::-webkit-details-marker {
+    display: none;
+  }
+  .ticket-num {
+    @apply font-mono font-bold tabular-nums;
+  }
+  .ticket-stamp {
+    @apply inline-block -rotate-2 rounded-sm border-2 border-ticket-stamp px-1.5 py-0.5 text-xs font-bold uppercase tracking-widest text-ticket-stamp;
   }
 
   /* Texto de artículos del blog (HTML prerenderizado, scripts/prerender.ts) */

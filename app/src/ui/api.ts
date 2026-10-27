@@ -30,6 +30,17 @@ export async function requestDiagnosis(
   )
 }
 
+/** "Ver su diagnóstico completo": el mismo diagnóstico, con respuestas de ejemplo (simuladas) puestas por el servidor */
+export async function requestSampleDiagnosis(placeId: string): Promise<DiagnosisResponse> {
+  return readJson(
+    await fetch('/api/diagnose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ placeId, sample: true }),
+    }),
+  )
+}
+
 export async function fetchShowcase(country: string | null): Promise<ShowcaseResponse> {
   const query = country ? `?country=${encodeURIComponent(country)}` : ''
   return readJson(await fetch(`/api/showcase${query}`))

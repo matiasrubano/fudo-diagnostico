@@ -45,16 +45,33 @@ export const tokens = {
     warningText: '#7A6500',
     error: '#D7001B',
     star: '#F5C542',
+    // La comanda (ticket de cocina): papel cálido, tinta oscura y regla punteada
+    ticket: {
+      paper: '#FFFDF7',
+      ink: '#1A1A2E',
+      rule: '#8A8472', // línea punteada entre renglones
+      stamp: '#D03F00', // sello "simulado" y total
+    },
+    // Texto sobre superficies azul noche (header, hero, pie)
+    onNight: {
+      text: '#FFFFFF',
+      muted: '#C9CCF5', // 10,9:1 sobre #0F1B4E
+      accent: '#FF734F', // naranja claro para texto chico sobre azul noche
+    },
   },
   gradient: {
     cta: 'linear-gradient(135deg, #3937FF, #12105C)',
+    // Fondo del hero: azul noche con un reflejo naranja de cocina encendida
+    hero: 'radial-gradient(1200px 500px at 85% -10%, rgba(255,80,35,0.28), transparent 60%), linear-gradient(#0F1B4E, #0F1B4E)',
   },
   font: {
     // Ambas son Google Fonts (OFL).
     display: '"Barlow", ui-sans-serif, system-ui, sans-serif',
     body: '"Inter", ui-sans-serif, system-ui, sans-serif',
+    // Números y texto de la comanda (tipografía de ticket, ancho fijo)
+    mono: '"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace',
     googleFontsHref:
-      'https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap',
+      'https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap',
   },
   radius: {
     xs: '3px',

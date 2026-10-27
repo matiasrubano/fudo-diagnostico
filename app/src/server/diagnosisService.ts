@@ -95,6 +95,15 @@ export async function runDiagnosis(
   }
 }
 
+/** Diagnóstico de un local real con las respuestas de ejemplo (SIMULADAS): "Ver su diagnóstico completo" */
+export async function runSampleDiagnosis(
+  placeId: string,
+  provider: PlaceDataProvider = getGateway(),
+): Promise<DiagnosisResponse> {
+  const place = await provider.getDetails(placeId)
+  return runDiagnosis(placeId, sampleAnswersFor(place), provider)
+}
+
 /** Lo que devuelve /api/showcase: el ticket de ejemplo y los locales reales de la demo (de un país o de todos) */
 export interface ShowcaseResponse {
   country: LandingCountry | null
@@ -116,7 +125,5 @@ export async function buildShowcase(
   const featuredId = FEATURED_PLACE[country ?? 'AR']
   const id = places.some((p) => p.id === featuredId) ? featuredId : places[0]?.id
   if (!id) return { country, featured: null, places }
-  const place = await provider.getDetails(id)
-  const answers = sampleAnswersFor(place)
-  return { country, featured: await runDiagnosis(id, answers, provider), places }
+  return { country, featured: await runSampleDiagnosis(id, provider), places }
 }

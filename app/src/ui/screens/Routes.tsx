@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { track } from '../../analytics/events'
 import { getCountry, type CountryConfig } from '../../config/countries'
-import { copy } from '../../content/copy'
+import { copy, copyFor } from '../../content/copy'
 import type { Diagnosis } from '../../domain/diagnose'
 import { withUtm } from '../../domain/links'
 import { FREE_RESOURCES, moduleUrl } from '../../domain/recommendations'
@@ -9,8 +9,6 @@ import type { AreaId } from '../../domain/types'
 import { Modal } from '../components/Modal'
 import { ProvenanceBadge, SimulatedBadge } from '../components/ProvenanceBadge'
 import { formatDate, formatPrice } from '../format'
-
-const r = copy.route
 
 function ExternalLink({
   href,
@@ -42,6 +40,7 @@ function ExternalLink({
 // ─── Caliente y switcher: "Tu Fudo ya armado" ───
 
 function AccountPreview({ d, country }: { d: Diagnosis; country: CountryConfig }) {
+  const r = copyFor(d.country).route
   const f = d.place.fields
   const plan = country.fudoPlans[0]
   const address = f.address.value
@@ -118,6 +117,7 @@ function AccountPreview({ d, country }: { d: Diagnosis; country: CountryConfig }
 }
 
 function CreateAccount({ d, country }: { d: Diagnosis; country: CountryConfig }) {
+  const r = copyFor(d.country).route
   const [open, setOpen] = useState(false)
   const [done, setDone] = useState(false)
   const tier = d.lead.tier
@@ -192,6 +192,7 @@ function CreateAccount({ d, country }: { d: Diagnosis; country: CountryConfig })
 }
 
 function HotOrSwitcher({ d, country }: { d: Diagnosis; country: CountryConfig }) {
+  const r = copyFor(d.country).route
   const switcher = d.lead.tier === 'switcher'
   const product = country.productName
   return (
@@ -228,6 +229,7 @@ function HotOrSwitcher({ d, country }: { d: Diagnosis; country: CountryConfig })
 // ─── Nutrir ───
 
 function Nurture({ d }: { d: Diagnosis }) {
+  const r = copyFor(d.country).route
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'invalid' | 'sent'>('idle')
 
@@ -307,6 +309,7 @@ function Nurture({ d }: { d: Diagnosis }) {
 // ─── Por abrir ───
 
 function OpenBusiness({ d }: { d: Diagnosis }) {
+  const r = copyFor(d.country).route
   return (
     <div className="space-y-4">
       <h2 className="text-3xl font-extrabold leading-tight">{r.porAbrir.title}</h2>
@@ -326,6 +329,7 @@ function OpenBusiness({ d }: { d: Diagnosis }) {
 // ─── Descartar ───
 
 function Discard({ d, country }: { d: Diagnosis; country: CountryConfig }) {
+  const r = copyFor(d.country).route
   const chain = d.lead.reasons.includes('cadena')
   return (
     <div className="space-y-4">
@@ -357,6 +361,7 @@ function Discard({ d, country }: { d: Diagnosis; country: CountryConfig }) {
 
 /** Ruteo final según el tier del lead. */
 export function RouteSection({ d }: { d: Diagnosis }) {
+  const r = copyFor(d.country).route
   const country = getCountry(d.country)
   const tier = d.lead.tier
   return (

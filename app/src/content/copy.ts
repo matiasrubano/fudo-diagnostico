@@ -53,15 +53,7 @@ export const copy = {
     searchLabel: 'Nombre de tu local',
     searchButton: 'Diagnosticar',
     searching: 'Buscando…',
-    examplesLabel: 'O probá con un local real de la demo:',
     examples: ['Piki', 'El Campeón', "Red's Burger", 'Davvero', 'Ladina', 'Diavola'],
-    tooShort: 'Escribí al menos 2 letras.',
-    searchError: 'No pudimos buscar ahora. Probá de nuevo en un rato.',
-    trust: [
-      'Usa datos públicos de tu local',
-      'Sin tarjeta ni registro',
-      'La nota sale de reglas que podés ver',
-    ],
   },
 
   proof: {
@@ -70,9 +62,47 @@ export const copy = {
     intro: (city: string) =>
       `Es un local de ${city}. Rating, reseñas, horarios, web y apps salen de su ficha pública; el cobro y los canales son respuestas de ejemplo.`,
     cta: 'Ver su diagnóstico completo',
-    sampleBanner:
-      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
     tryMine: 'Hacer el diagnóstico de mi local',
+  },
+
+  home: {
+    stepsTitle: 'Cómo es el diagnóstico',
+    steps: [
+      {
+        n: '1',
+        title: 'Tu local',
+        body: 'Lo buscamos y traemos de su ficha pública el rating, las reseñas, los horarios, la web y las apps.',
+      },
+      {
+        n: '2',
+        title: 'Cuatro preguntas',
+        body: 'Por dónde se vende, cómo se cobra y se factura, y cuántos locales son.',
+      },
+      {
+        n: '3',
+        title: 'Tu comanda',
+        body: 'Una nota por área, qué mejorar primero y cuánta plata se escapa por mes (estimación simulada).',
+      },
+      {
+        n: '4',
+        title: 'Tu Fudo ya armado',
+        body: 'Si encaja, la cuenta viene con nombre, dirección y horarios cargados (simulado en la demo).',
+      },
+    ],
+    loadingTicket: 'Preparando la comanda de ejemplo…',
+    ticketError: 'No pudimos cargar la comanda de ejemplo.',
+  },
+
+  /** <title>, description y textos de compartir de la home. Los de cada landing salen de copyFor(país).landing */
+  seo: {
+    appName: 'Diagnóstico gratis para restaurantes',
+    homeTitle:
+      'Diagnóstico gratis para restaurantes: Google Maps, apps de delivery y factura electrónica',
+    homeDescription:
+      'Viernes 21:30, alguien busca tu local: ¿te encuentra, ve que estás abierto y te puede pedir? Diagnóstico gratis para restaurantes de Argentina, México, Chile y Colombia.',
+    appDescription:
+      'Diagnóstico de la presencia online de un restaurante: ficha de Google, reseñas, web, apps de delivery y operación, con recomendaciones y una estimación (simulada) de la plata que se escapa por mes.',
+    noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, podés leer las guías.',
   },
 
   countriesNav: {
@@ -151,7 +181,6 @@ export const copy = {
   result: {
     eyebrow: 'Tu diagnóstico',
     noScore: 'Sin datos suficientes',
-    notApplicable: 'No aplica: no vendés por delivery',
     insufficient: 'Sin datos suficientes',
     partial: (known: number, total: number) => `Basada en ${known} de ${total} chequeos: el resto no lo pudimos leer`,
     countryAssumed:
@@ -199,8 +228,8 @@ export const copy = {
   areas: {
     google: { name: 'Google', help: 'Ficha completa: horarios, dirección, categoría y precios' },
     reviews: { name: 'Reseñas', help: 'Rating y cantidad de reseñas' },
-    web: { name: 'Web y redes', help: 'Si tenés web propia e Instagram (solo presencia, no actividad)' },
-    delivery: { name: 'Delivery', help: 'En cuántas apps estás y si tenés canal propio' },
+    web: { name: 'Web y redes', help: 'Web propia e Instagram (solo presencia, no actividad)' },
+    delivery: { name: 'Delivery', help: 'En cuántas apps está y si tiene canal propio' },
     operation: { name: 'Operación', help: 'Cobro, facturación y orden entre canales y locales' },
   } satisfies Record<AreaId, { name: string; help: string }>,
 
@@ -233,6 +262,7 @@ export const copy = {
     yourAnswer: 'tu respuesta',
     yes: 'Sí',
     no: 'No',
+    noWebsite: 'Sin web propia',
     daysLoaded: (n: number) => `${n} días cargados`,
     friday: (hours: string) => `viernes ${hours}`,
     ratingOnGoogle: (rating: string) => `${rating} en Google`,
@@ -267,19 +297,19 @@ export const copy = {
       },
       billing: {
         title: 'Merma por cobrar y facturar a mano',
-        formula: 'ventas × % de merma según cómo cobrás hoy',
+        formula: 'ventas × % de merma según cómo se cobra hoy',
       },
     },
     assumptionsTitle: 'Supuestos (simulados, editables en el código)',
     assumptions: {
-      appShare: 'Parte de tus pedidos que entra por apps (si vendés por apps)',
+      appShare: 'Parte de los pedidos que entra por apps (si se vende por apps)',
       appShareDarkKitchen: 'Idem, para dark kitchen',
       appCommission:
         'Comisión de las apps. En Argentina la prensa informa 25%–35% (iProfesional, 14/05/2026); en el resto es un supuesto',
       redirectableShare: 'Parte de esos pedidos que podrías pasar a un canal propio',
       googleGapLoss: 'Ventas perdidas con la ficha de Google al 0%',
-      billingManual: 'Merma si cobrás a mano',
-      billingTerminal: 'Merma si cobrás solo con terminal',
+      billingManual: 'Merma si se cobra a mano',
+      billingTerminal: 'Merma si se cobra solo con terminal',
       ticket: 'Ticket promedio (supuesto de la demo)',
       orders: 'Pedidos por mes por local, según volumen (supuesto de la demo)',
     },
@@ -398,6 +428,20 @@ const base = {
         ? `Revisamos tu ficha de Google, tus reseñas, tu web y tus apps (${andList(apps)}) en 60 segundos. Sin tarjeta y sin registro.`
         : 'Revisamos tu ficha de Google, tus reseñas, tu web y tus apps de delivery en 60 segundos. Sin tarjeta y sin registro.',
     placeholder: 'Ej.: Pizzería Piki, Lanús',
+    examplesLabel: 'O probá con un local real de la demo:',
+    tooShort: 'Escribí al menos 2 letras.',
+    searchError: 'No pudimos buscar ahora. Probá de nuevo en un rato.',
+    trust: [
+      'Usa datos públicos de tu local',
+      'Sin tarjeta ni registro',
+      'La nota sale de reglas que podés ver',
+    ],
+  },
+
+  result: {
+    notApplicable: 'No aplica: no vendés por delivery',
+    sampleBanner:
+      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
   },
 
   questions: {
@@ -642,6 +686,21 @@ type DeepPartial<T> = T extends (...args: never[]) => unknown
  */
 const tuteo: DeepPartial<Voice> = {
   voice: 'tuteo',
+  hero: {
+    examplesLabel: 'O prueba con un local real de la demo:',
+    tooShort: 'Escribe al menos 2 letras.',
+    searchError: 'No pudimos buscar ahora. Prueba de nuevo en un rato.',
+    trust: [
+      'Usa datos públicos de tu local',
+      'Sin tarjeta ni registro',
+      'La nota sale de reglas que puedes ver',
+    ],
+  },
+  result: {
+    notApplicable: 'No aplica: no vendes por delivery',
+    sampleBanner:
+      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Prueba con el tuyo.',
+  },
   questions: {
     channelsTitle: '¿Por dónde vendes hoy?',
     channelsHint: 'Puedes marcar varias.',
@@ -754,7 +813,7 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   AR: {},
   MX: {
     ...tuteo,
-    hero: { placeholder: "Ej.: Red's Burger, Zapopan" },
+    hero: { ...tuteo.hero, placeholder: "Ej.: Red's Burger, Zapopan" },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'factura CFDI del SAT',
@@ -763,7 +822,7 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   },
   CL: {
     ...tuteo,
-    hero: { placeholder: 'Ej.: Davvero, Ñuñoa' },
+    hero: { ...tuteo.hero, placeholder: 'Ej.: Davvero, Ñuñoa' },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'boleta electrónica del SII',
@@ -772,7 +831,7 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   },
   CO: {
     ...tuteo,
-    hero: { placeholder: 'Ej.: El Social, Medellín' },
+    hero: { ...tuteo.hero, placeholder: 'Ej.: El Social, Medellín' },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'factura electrónica de la DIAN',
@@ -780,7 +839,7 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
     },
   },
   // Brasil: el contenido sigue en español (recorte declarado); usa tuteo neutro
-  BR: { ...tuteo, hero: { placeholder: 'Ej.: Diavola Pizzaria, Pinheiros' } },
+  BR: { ...tuteo, hero: { ...tuteo.hero, placeholder: 'Ej.: Diavola Pizzaria, Pinheiros' } },
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

@@ -5,10 +5,14 @@ export function ScreenTitle({
   children,
   eyebrow,
   className = '',
+  titleClassName = 'text-[32px] font-extrabold leading-[1.1] sm:text-5xl',
+  eyebrowClassName = 'eyebrow mb-2',
 }: {
   children: ReactNode
   eyebrow?: string
   className?: string
+  titleClassName?: string
+  eyebrowClassName?: string
 }) {
   const ref = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
@@ -17,8 +21,8 @@ export function ScreenTitle({
   }, [])
   return (
     <div className={className}>
-      {eyebrow && <p className="eyebrow mb-2">{eyebrow}</p>}
-      <h1 ref={ref} tabIndex={-1} className="text-[32px] font-extrabold leading-[1.1] sm:text-5xl">
+      {eyebrow && <p className={eyebrowClassName}>{eyebrow}</p>}
+      <h1 ref={ref} tabIndex={-1} className={titleClassName}>
         {children}
       </h1>
     </div>

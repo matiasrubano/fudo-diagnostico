@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { track } from './analytics/events'
-import { copy } from './content/copy'
-import type { Diagnosis } from './domain/diagnose'
-import type { Answers, PlaceSummary } from './domain/types'
-import type { SearchResponse } from './server/diagnosisService'
-import { requestDiagnosis, searchPlaces } from './ui/api'
+import { copy, copyFor } from './content/copy'
+import type { Answers, CountryCode, PlaceSummary } from './domain/types'
+import type { DiagnosisResponse, SearchResponse, ShowcaseResponse } from './server/diagnosisService'
+import { fetchShowcase, requestDiagnosis, requestSampleDiagnosis, searchPlaces } from './ui/api'
 import { Footer, Header, Page } from './ui/components/Layout'
 import { ScreenTitle } from './ui/components/ScreenTitle'
+import { landingCountryFromPath, readPageData } from './ui/pageData'
 import { Debug } from './ui/screens/Debug'
-import { Hero } from './ui/screens/Hero'
+import { Home } from './ui/screens/Home'
 import { PickPlace } from './ui/screens/PickPlace'
 import { Questions, TOTAL_QUESTIONS } from './ui/screens/Questions'
 import { Result } from './ui/screens/Result'
@@ -23,6 +23,12 @@ const DEFAULTS_BEFORE_OPENING: Pick<Answers, 'channels' | 'billing' | 'locals'> 
 }
 
 export default function App() {
+  // Home o landing por país (/ar/, /mx/, /cl/, /co/): el HTML prerenderizado trae los datos embebidos
+  const [pageData] = useState(readPageData)
+  const landing = pageData?.country ?? landingCountryFromPath(window.location.pathname)
+  const [showcase, setShowcase] = useState<ShowcaseResponse | null>(pageData?.showcase ?? null)
+  const [showcaseError, setShowcaseError] = useState(false)
+
   const [stage, setStage] = useState<Stage>('search')
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
@@ -33,8 +39,21 @@ export default function App() {
   const [place, setPlace] = useState<PlaceSummary | null>(null)
   const [step, setStep] = useState(0)
   const [answers, setAnswers] = useState<Partial<Answers>>({})
-  const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null)
+  const [diagnosis, setDiagnosis] = useState<DiagnosisResponse | null>(null)
+  const [sample, setSample] = useState(false)
   const [diagnosisError, setDiagnosisError] = useState<string | null>(null)
+
+  // En desarrollo (sin prerender) el ticket de ejemplo se pide al servidor
+  useEffect(() => {
+    if (showcase) return
+    let cancelled = false
+    fetchShowcase(landing)
+      .then((data) => !cancelled && setShowcase(data))
+      .catch(() => !cancelled && setShowcaseError(true))
+    return () => {
+      cancelled = true
+    }
+  }, [showcase, landing])
 
   async function search(q: string, byExample = false) {
     setQuery(q)
@@ -46,7 +65,7 @@ export default function App() {
       setResponse(await searchPlaces(q))
       setStage('pick')
     } catch {
-      setSearchError(copy.hero.searchError)
+      setSearchError(copyFor(landing).hero.searchError)
     } finally {
       setSearching(false)
     }
@@ -56,12 +75,28 @@ export default function App() {
     setPlace(selected)
     setAnswers({})
     setStep(0)
+    setSample(false)
     setStage('questions')
     track('place_selected', {
       country: selected.country,
       // sugerencia = local elegido de la lista "en la demo cubrimos…" o de un ejemplo (chip)
       from_suggestion: fromSuggestion || (response?.notFound ?? false) || searchedByExample,
     })
+  }
+
+  /** "Ver su diagnóstico completo": un local real de la vidriera, con respuestas de ejemplo (simuladas) */
+  async function openSample(placeId: string, country: CountryCode | null) {
+    setPlace(null)
+    setSample(true)
+    setStage('loading')
+    setDiagnosisError(null)
+    track('place_selected', { country, from_suggestion: true })
+    try {
+      setDiagnosis(await requestSampleDiagnosis(placeId))
+      setStage('result')
+    } catch {
+      setDiagnosisError(copy.loading.error)
+    }
   }
 
   async function finish(finalAnswers: Answers, placeId: string) {
@@ -106,49 +141,67 @@ export default function App() {
     setResponse(null)
     setPlace(null)
     setDiagnosis(null)
+    setSample(false)
     setAnswers({})
     setStep(0)
   }
 
   if (window.location.pathname.replace(/\/$/, '') === '/debug') return <Debug />
 
+  // El logo cambia a "Deli" cuando el local es de Brasil
+  const brandCountry: CountryCode | null =
+    stage === 'result' ? (diagnosis?.country ?? null) : (place?.country ?? null)
+
   return (
     <>
-      <Header />
-      <Page>
-        {stage === 'search' && (
-          <Hero initialQuery={query} loading={searching} error={searchError} onSearch={search} />
-        )}
-        {stage === 'pick' && response && (
-          <PickPlace
-            query={query}
-            response={response}
-            onPick={(selected, fromSuggestion) => pick(selected, fromSuggestion)}
-            onBack={() => setStage('search')}
-          />
-        )}
-        {stage === 'questions' && place && (
-          <Questions
-            step={step}
-            answers={answers}
-            country={place.country}
-            onAnswer={answer}
-            onBack={() => (step === 0 ? setStage('pick') : setStep(step - 1))}
-          />
-        )}
-        {stage === 'loading' && (
-          <section role="status" aria-live="polite">
-            <ScreenTitle>{diagnosisError ?? copy.loading.title}</ScreenTitle>
-            {diagnosisError && (
-              <button type="button" className="btn btn-secondary mt-6" onClick={restart}>
-                {copy.result.restart}
-              </button>
-            )}
-          </section>
-        )}
-        {stage === 'result' && diagnosis && <Result d={diagnosis} onRestart={restart} />}
-      </Page>
-      <Footer />
+      <Header country={brandCountry} />
+      {stage === 'search' ? (
+        <Home
+          country={landing}
+          showcase={showcase}
+          showcaseError={showcaseError}
+          guides={pageData?.guides ?? []}
+          initialQuery={query}
+          loading={searching}
+          error={searchError}
+          onSearch={search}
+          onOpenSample={openSample}
+        />
+      ) : (
+        <Page>
+          {stage === 'pick' && response && (
+            <PickPlace
+              query={query}
+              response={response}
+              onPick={(selected, fromSuggestion) => pick(selected, fromSuggestion)}
+              onBack={() => setStage('search')}
+            />
+          )}
+          {stage === 'questions' && place && (
+            <Questions
+              step={step}
+              answers={answers}
+              country={place.country}
+              onAnswer={answer}
+              onBack={() => (step === 0 ? setStage('pick') : setStep(step - 1))}
+            />
+          )}
+          {stage === 'loading' && (
+            <section role="status" aria-live="polite">
+              <ScreenTitle>{diagnosisError ?? copy.loading.title}</ScreenTitle>
+              {diagnosisError && (
+                <button type="button" className="btn btn-secondary mt-6" onClick={restart}>
+                  {copy.result.restart}
+                </button>
+              )}
+            </section>
+          )}
+          {stage === 'result' && diagnosis && (
+            <Result d={diagnosis} sample={sample} onRestart={restart} />
+          )}
+        </Page>
+      )}
+      <Footer country={brandCountry} />
     </>
   )
 }

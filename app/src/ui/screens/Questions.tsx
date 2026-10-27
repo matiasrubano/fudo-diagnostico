@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { getCountry } from '../../config/countries'
-import { copy } from '../../content/copy'
+import { copy, copyFor } from '../../content/copy'
 import type { Answers, CountryCode, SalesChannel } from '../../domain/types'
 import { ScreenTitle } from '../components/ScreenTitle'
 
@@ -38,11 +38,13 @@ function Progress({ step }: { step: number }) {
 
 function SingleChoice<V extends string>({
   title,
+  hint,
   options,
   selected,
   onSelect,
 }: {
   title: string
+  hint?: string
   options: Option<V>[]
   selected?: V
   onSelect: (value: V) => void
@@ -50,6 +52,7 @@ function SingleChoice<V extends string>({
   return (
     <>
       <ScreenTitle>{title}</ScreenTitle>
+      {hint && <p className="mt-2 text-muted">{hint}</p>}
       <div role="radiogroup" aria-label={title} className="mt-6 grid gap-3">
         {options.map((o) => (
           <button
@@ -139,6 +142,8 @@ export function Questions({
   onBack: () => void
 }) {
   const q = copy.questions.items
+  const v = copyFor(country).questions
+  const authority = country ? getCountry(country).fiscal.authority : 'el ente fiscal'
   const appNames = country
     ? getCountry(country)
         .deliveryApps.slice(0, 2)
@@ -164,8 +169,8 @@ export function Questions({
       {step === 1 && (
         <MultiChoice
           key="q2"
-          title={q.channels.title}
-          hint={q.channels.hint}
+          title={v.channelsTitle}
+          hint={v.channelsHint}
           options={channelOptions}
           initial={answers.channels ?? []}
           onDone={(v) => onAnswer('channels', v)}
@@ -174,7 +179,8 @@ export function Questions({
       {step === 2 && (
         <SingleChoice
           key="q3"
-          title={q.billing.title}
+          title={v.billingTitle}
+          hint={v.billingHint(authority)}
           options={entries(q.billing.options)}
           selected={answers.billing}
           onSelect={(v) => onAnswer('billing', v)}
@@ -183,7 +189,7 @@ export function Questions({
       {step === 3 && (
         <SingleChoice
           key="q4"
-          title={q.locals.title}
+          title={v.localsTitle}
           options={entries(q.locals.options)}
           selected={answers.locals}
           onSelect={(v) => onAnswer('locals', v)}
