@@ -1,0 +1,9 @@
+# Todos los rastreadores pueden leer el sitio y el blog (incluidos los de búsqueda de IA: OAI-SearchBot, etc.).
+# GPTBot (entrenamiento) también queda permitido: es una decisión de negocio, ver docs/adr/0004-blog-prerenderizado-geo.md
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /debug
+
+# El dominio de la línea Sitemap es un placeholder que se reemplaza en el build (scripts/prerender.ts)
+Sitemap: %SITE_URL%/sitemap.xml
