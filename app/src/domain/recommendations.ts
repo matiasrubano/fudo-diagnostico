@@ -1,6 +1,7 @@
 import type { CountryConfig } from '../config/countries.js'
 import { copyFor, type RecsCopy } from '../content/copy.js'
 import { withUtm } from './links.js'
+import { COMMISSION_SOURCES } from './moneyLost.js'
 import { formatRating } from './numbers.js'
 import { appsFound, type Scorecard } from './scoring.js'
 import type { Answers, AreaId, CountryCode, PlaceProfile } from './types.js'
@@ -85,13 +86,16 @@ const BILLING_PITCH: Record<CountryCode, string> = {
   BR: 'Deli emite notas fiscales (NFC-e) desde el Plano Pro.',
 }
 
-/** Único país con cifra de comisión publicada en nuestras fuentes (countries.json → iProfesional, 14/05/2026) */
-const COMMISSION_FACT: Partial<Record<CountryCode, string>> = {
-  AR: 'En Argentina la prensa informa comisiones de PedidosYa de 25% a 35% de la venta (iProfesional, 14/05/2026).',
-}
-
 /** Nombre corto del ente fiscal para títulos (en countries.json BR trae el nombre completo) */
 const FISCAL_SHORT: Partial<Record<CountryCode, string>> = { BR: 'NFC-e' }
+
+/** La comisión de las apps con su fuente (AR, MX) o, si no hay dato público en el país, una frase general */
+function commissionFact(ctx: RecContext, t: RecsCopy['deliveryCommission']): string {
+  const source = COMMISSION_SOURCES[ctx.country.code]
+  return source
+    ? t.commissionSourced(ctx.country.name, source.claim, source.label, source.date)
+    : t.commissionGeneric
+}
 
 function appNames(ctx: RecContext): string {
   const names = ctx.country.deliveryApps.slice(0, 2).map((a) => a.name)
@@ -119,6 +123,8 @@ function deliveryIntro(ctx: RecContext, t: RecsCopy['deliveryCommission']): stri
   const salon = channels.includes('salon')
   const counter = channels.includes('mostrador')
   if (!channels.includes('apps')) return t.unmarked(appsFound(ctx.profile), apps)
+  // Marcó apps pero no vimos su local en ninguna: no suponemos en cuáles está
+  if (appsFound(ctx.profile) === 0) return t.markedNotFound
   if (!salon && !counter) return t.onlyApps(apps)
   return t.withOthers(
     salon && counter ? t.where.both : salon ? t.where.salon : t.where.mostrador,
@@ -218,7 +224,7 @@ const RULES: Rule[] = [
       !answers.channels.includes('delivery-propio'),
     build: (ctx, t) => ({
       title: t.deliveryCommission.title,
-      body: `${deliveryIntro(ctx, t.deliveryCommission)} ${COMMISSION_FACT[ctx.country.code] ?? t.deliveryCommission.commissionGeneric} ${t.deliveryCommission.closing}`,
+      body: `${deliveryIntro(ctx, t.deliveryCommission)} ${commissionFact(ctx, t.deliveryCommission)} ${t.deliveryCommission.closing}`,
       action: paid(`Tu Delivery (${ctx.country.productName})`, moduleUrl(ctx.country, 'delivery')),
     }),
   },
@@ -226,7 +232,10 @@ const RULES: Rule[] = [
     id: 'delivery-centralize',
     area: 'delivery',
     bonus: 15,
-    when: ({ profile, answers }) => appsFound(profile) >= 2 && answers.billing !== 'otro-sistema',
+    when: ({ profile, answers }) =>
+      appsFound(profile) >= 2 &&
+      answers.billing !== 'otro-sistema' &&
+      answers.billing !== 'app-paga',
     build: (ctx, t) => ({
       title: t.deliveryCentralize.title,
       body: t.deliveryCentralize.body(appsFound(ctx.profile)),
@@ -255,6 +264,18 @@ const RULES: Rule[] = [
       ),
       body: t.opsBillingManual.body(BILLING_PITCH[ctx.country.code]),
       action: paid(`Tus Cobros (${ctx.country.productName})`, moduleUrl(ctx.country, 'cobros')),
+    }),
+  },
+  {
+    // Le paga la app: no factura ni cobra a mano. Lo que le conviene es conciliar las liquidaciones
+    id: 'ops-app-pays',
+    area: 'operation',
+    bonus: 25,
+    when: ({ answers }) => answers.billing === 'app-paga',
+    build: (ctx, t) => ({
+      title: t.opsAppPays.title,
+      body: t.opsAppPays.body,
+      action: paid(`Delivery Apps (${ctx.country.productName})`, moduleUrl(ctx.country, 'gestion')),
     }),
   },
   {

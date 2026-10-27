@@ -102,11 +102,30 @@ export interface GeoBias {
 
 /** Tipos de negocio que se diagnostican */
 export type BusinessType =
-  'restaurante' | 'bar' | 'pizzeria' | 'cafeteria' | 'dark-kitchen' | 'otro'
+  | 'restaurante'
+  | 'bar'
+  | 'pizzeria'
+  | 'cafeteria'
+  | 'taqueria'
+  | 'hamburgueseria'
+  | 'dark-kitchen'
+  | 'otro'
 /** Lo que se ofrece en la P1: además de los tipos, "Todavía no abrí", que NO es un diagnóstico sino otra ruta (src/domain/opening.ts) */
 export type BusinessChoice = BusinessType | 'por-abrir'
 export type SalesChannel = 'salon' | 'mostrador' | 'apps' | 'delivery-propio'
-export type BillingSetup = 'manual' | 'terminal' | 'otro-sistema'
+/** app-paga = "Me paga la app (no cobro directo)": las apps liquidan lo vendido, no se cobra ni se factura a mano */
+export type BillingSetup = 'manual' | 'terminal' | 'otro-sistema' | 'app-paga'
+/** Sistema de gestión que usa hoy quien contesta "Con otro sistema" */
+export const CURRENT_SYSTEMS = [
+  'soft-restaurant',
+  'maxirest',
+  'bistrosoft',
+  'poster',
+  'toteat',
+  'loyverse',
+  'otro',
+] as const
+export type CurrentSystem = (typeof CURRENT_SYSTEMS)[number]
 export type LocalsBand = '1' | '2-3' | '4+'
 
 export interface Answers {
@@ -114,6 +133,8 @@ export interface Answers {
   channels: SalesChannel[]
   billing: BillingSetup
   locals: LocalsBand
+  /** solo si billing = 'otro-sistema' y el dueño dijo cuál */
+  currentSystem?: CurrentSystem
 }
 
 // ─── Resultado del diagnóstico ───

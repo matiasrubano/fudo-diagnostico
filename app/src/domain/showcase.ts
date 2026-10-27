@@ -27,6 +27,8 @@ const SAMPLE_TYPES: Record<string, BusinessType> = {
   pizzeria: 'pizzeria',
   bar: 'bar',
   cafeteria: 'cafeteria',
+  taqueria: 'taqueria',
+  hamburgueseria: 'hamburgueseria',
   'dark-kitchen': 'dark-kitchen',
 }
 

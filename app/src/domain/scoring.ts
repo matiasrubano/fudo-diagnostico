@@ -34,8 +34,11 @@ export const THRESHOLDS = {
   /** Cantidad de reseñas → puntos: [hasta pocas, hasta algunas, hasta muchas, hasta un montón, más] */
   reviewBands: [10, 50, 300, 1000] as const,
   reviewPoints: [10, 30, 55, 80, 100] as const,
-  /** Puntos de la facturación declarada (pregunta 3) */
-  billingPoints: { manual: 20, terminal: 50, 'otro-sistema': 85 },
+  /**
+   * Puntos de la facturación declarada (pregunta 3). "Me paga la app" no es cobrar a mano: no se penaliza
+   * como tal, pero tampoco cuenta como tener un sistema que ordene la operación.
+   */
+  billingPoints: { manual: 20, terminal: 50, 'otro-sistema': 85, 'app-paga': 70 },
   /** Puntos cuando todo está ordenado / cuando hay varios canales o locales sin un sistema que los junte */
   operationOk: 85,
   operationWithSystem: 70,
@@ -65,6 +68,9 @@ export interface Check {
   status: CheckStatus
 }
 
+/** Por qué un área no cuenta en la nota general aunque no sea "falta de datos" */
+export type AreaNote = 'dark-kitchen-no-reviews'
+
 export interface AreaScore {
   id: AreaId
   /** null = no aplica o no hay datos suficientes */
@@ -72,6 +78,8 @@ export interface AreaScore {
   grade: Grade | null
   applicable: boolean
   checks: Check[]
+  /** explicación para el dueño cuando el área se deja afuera a propósito */
+  note?: AreaNote
 }
 
 export interface Scorecard {
@@ -112,9 +120,9 @@ function fromField<T>(f: Field<T>, whenFound: (value: T) => number): number | nu
   return whenFound(f.value)
 }
 
-function area(id: AreaId, checks: Check[], applicable = true): AreaScore {
+function area(id: AreaId, checks: Check[], applicable = true, note?: AreaNote): AreaScore {
   const score = applicable ? weighted(checks) : null
-  return { id, score, grade: gradeOf(score), applicable, checks }
+  return { id, score, grade: gradeOf(score), applicable, checks, ...(note ? { note } : {}) }
 }
 
 // ─── Chequeos por área ───
@@ -169,18 +177,27 @@ function googleArea(p: PlaceProfile): AreaScore {
   ])
 }
 
-function reviewsArea(p: PlaceProfile): AreaScore {
+function reviewsArea(p: PlaceProfile, a: Answers): AreaScore {
   const w = CHECK_WEIGHTS.reviews
   const f = p.fields
   const count = f.reviewCount.value
-  return area('reviews', [
-    makeCheck(
-      'rating',
-      w.rating,
-      fromField(f.rating, (r) => ratingPoints(r, count)),
-    ),
-    makeCheck('volume', w.volume, fromField(f.reviewCount, volumePoints)),
-  ])
+  // Una dark kitchen que solo vende por apps casi no tiene reseñas en Google: es normal, y no es un punto flojo.
+  // El área queda afuera de la nota general (que se reparte entre las demás) y la UI lo explica.
+  const darkKitchenWithoutReviews =
+    a.businessType === 'dark-kitchen' && f.rating.value === null && count === null
+  return area(
+    'reviews',
+    [
+      makeCheck(
+        'rating',
+        w.rating,
+        fromField(f.rating, (r) => ratingPoints(r, count)),
+      ),
+      makeCheck('volume', w.volume, fromField(f.reviewCount, volumePoints)),
+    ],
+    !darkKitchenWithoutReviews,
+    darkKitchenWithoutReviews ? 'dark-kitchen-no-reviews' : undefined,
+  )
 }
 
 function webArea(p: PlaceProfile): AreaScore {
@@ -257,7 +274,7 @@ function operationArea(a: Answers): AreaScore {
 export function scoreProfile(profile: PlaceProfile, answers: Answers): Scorecard {
   const areas: Record<AreaId, AreaScore> = {
     google: googleArea(profile),
-    reviews: reviewsArea(profile),
+    reviews: reviewsArea(profile, answers),
     web: webArea(profile),
     delivery: deliveryArea(profile, answers),
     operation: operationArea(answers),

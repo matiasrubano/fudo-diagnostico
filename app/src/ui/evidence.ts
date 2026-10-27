@@ -51,7 +51,9 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
         : fromField(f.delivery, () => '')
     }
     case 'ownChannel':
-      return { text: a.channels.includes('delivery-propio') ? copy.evidence.yes : copy.evidence.no }
+      return {
+        text: a.channels.includes('delivery-propio') ? copy.evidence.yes : copy.evidence.notMarked,
+      }
     case 'billing':
       return { text: copy.questions.items.billing.options[a.billing] }
     case 'channels':
@@ -90,13 +92,16 @@ export function rowSummary(area: AreaId, d: Diagnosis): string {
       return (
         [evidenceFor('rating', d).text, evidenceFor('volume', d).text]
           .filter((text) => text !== copy.evidence.notFound)
-          .join(' · ') || copy.evidence.notFound
+          .join(' · ') || copy.confirm.noRating
       )
     }
     case 'web':
       return f.website.status === 'absent'
         ? copy.evidence.noWebsite
-        : [evidenceFor('website', d).text, evidenceFor('instagram', d).text].join(' · ')
+        : // si las dos cosas dicen lo mismo ("No lo pudimos leer"), se dice una vez
+          [...new Set([evidenceFor('website', d).text, evidenceFor('instagram', d).text])].join(
+            ' · ',
+          )
     case 'delivery': {
       const apps = appNamesOf(d)
       return apps.length ? apps.join(', ') : evidenceFor('apps', d).text

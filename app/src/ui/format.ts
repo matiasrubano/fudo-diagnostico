@@ -2,6 +2,7 @@ import { copy } from '../content/copy'
 import type { Provenance } from '../domain/types'
 
 export {
+  formatDecimal,
   formatMoney,
   formatNumber,
   formatPercent,

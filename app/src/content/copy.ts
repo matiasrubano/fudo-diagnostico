@@ -18,6 +18,7 @@ import type {
   BillingSetup,
   BusinessChoice,
   CountryCode,
+  CurrentSystem,
   LocalsBand,
   SalesChannel,
 } from '../domain/types.js'
@@ -146,6 +147,8 @@ export const copy = {
           bar: 'Bar',
           pizzeria: 'Pizzería',
           cafeteria: 'Cafetería',
+          taqueria: 'Taquería',
+          hamburgueseria: 'Hamburguesería',
           'dark-kitchen': 'Dark kitchen (solo delivery)',
           'por-abrir': 'Todavía no abrí',
           otro: 'Otro (kiosco, catering, food truck…)',
@@ -164,7 +167,20 @@ export const copy = {
           manual: 'A mano: papel, Excel o calculadora',
           terminal: 'Solo con la terminal de tarjetas',
           'otro-sistema': 'Con otro sistema de gestión',
+          'app-paga': 'Me paga la app (no cobro directo)',
         } satisfies Record<BillingSetup, string>,
+      },
+      /** "Con otro sistema" pregunta cuál. Son nombres de producto: no cambian por país. */
+      currentSystem: {
+        options: {
+          'soft-restaurant': 'Soft Restaurant',
+          maxirest: 'Maxirest',
+          bistrosoft: 'Bistrosoft',
+          poster: 'Poster',
+          toteat: 'Toteat',
+          loyverse: 'Loyverse',
+          otro: 'Otro',
+        } satisfies Record<CurrentSystem, string>,
       },
       locals: {
         options: { '1': '1 local', '2-3': '2 o 3 locales', '4+': '4 o más' } satisfies Record<
@@ -178,12 +194,17 @@ export const copy = {
   result: {
     eyebrow: 'Tu diagnóstico',
     noScore: 'Sin datos suficientes',
+    notCounted: 'No cuenta en la nota',
     insufficient: 'Sin datos suficientes',
     partial: (known: number, total: number) => `Basada en ${known} de ${total} chequeos: el resto no lo pudimos leer`,
     countryAssumed:
       'La dirección de este local no es de los 5 países de la demo: usamos Argentina como referencia.',
     brBanner:
       'Contenido en español: la versión en portugués está fuera del alcance de la demo.',
+    areaNote: {
+      'dark-kitchen-no-reviews':
+        'No cuenta en la nota general: es normal en un negocio solo de apps, que casi no tiene reseñas en Google.',
+    } as Record<string, string>,
     recsTitle: 'Qué mejorar primero',
     recsIntro: 'Ordenadas por impacto. Cada una te lleva a la herramienta o al módulo que lo resuelve.',
     actionKind: {
@@ -258,7 +279,8 @@ export const copy = {
     notFound: 'No lo pudimos leer',
     yourAnswer: 'tu respuesta',
     yes: 'Sí',
-    no: 'No',
+    /** canal propio: no lo marcó en la pregunta 2 (no es que lo hayamos verificado) */
+    notMarked: 'No lo marcaste',
     noWebsite: 'Sin web propia',
     daysLoaded: (n: number) => `${n} días cargados`,
     friday: (hours: string) => `viernes ${hours}`,
@@ -279,9 +301,24 @@ export const copy = {
     title: 'Cuánta plata se te escapa por mes',
     how: '¿Cómo calculamos esto?',
     steps: {
-      sales: (orders: string, ticket: string, locals: string, sales: string) =>
-        `Ventas por mes ≈ ${orders} pedidos × ${ticket} de ticket × ${locals} (locales) = ${sales}`,
-      volumeNote: (volume: string) => `El volumen (${volume}) sale de la cantidad de reseñas de Google, un proxy gratis.`,
+      /** 1 local: ventas = pedidos × ticket */
+      sales: (orders: string, ticket: string, sales: string) =>
+        `Ventas por mes ≈ ${orders} pedidos × ${ticket} de ticket = ${sales}`,
+      /** 2 o 3 locales: se multiplica por un factor (2,5), que se nombra para que no quede un "× ×1" */
+      salesMulti: (orders: string, ticket: string, factor: string, locals: string, sales: string) =>
+        `Ventas por mes ≈ ${orders} pedidos × ${ticket} de ticket × ${factor} (${locals}) = ${sales}`,
+      volumeNote: (volume: string) =>
+        `El volumen (${volume}) sale de la cantidad de reseñas de Google, un proxy gratis.`,
+    },
+    /** "Tus números": los dos datos que más mueven la cuenta, editables */
+    yours: {
+      title: 'Tus números',
+      orders: 'Pedidos por mes (por local)',
+      ticket: 'Ticket promedio',
+      estimated: 'estimado por reseñas',
+      mine: 'tu número',
+      reset: 'Volver a la estimación',
+      custom: 'Calculado con tus números. El resto son supuestos de la demo.',
     },
     lines: {
       apps: {
@@ -290,25 +327,32 @@ export const copy = {
       },
       google: {
         title: 'Ventas que no llegan por una ficha de Google incompleta',
-        formula: 'ventas × 4% × (100 − tu nota de Google) / 100',
+        formula: 'ventas × % de ventas perdidas × (100 − tu nota de Google) / 100',
       },
       billing: {
         title: 'Merma por cobrar y facturar a mano',
         formula: 'ventas × % de merma según cómo se cobra hoy',
       },
     },
-    assumptionsTitle: 'Supuestos (simulados, editables en el código)',
+    assumptionsTitle: 'Supuestos que usamos (simulados, editables en el código)',
     assumptions: {
-      appShare: 'Parte de los pedidos que entra por apps (si se vende por apps)',
-      appShareDarkKitchen: 'Idem, para dark kitchen',
-      appCommission:
-        'Comisión de las apps. En Argentina la prensa informa 25%–35% (iProfesional, 14/05/2026); en el resto es un supuesto',
+      appShare: 'Parte de los pedidos que entra por apps',
+      appShareDarkKitchen: 'Parte de los pedidos que entra por apps (dark kitchen: casi todo)',
+      appCommission: 'Comisión de las apps',
+      /** hay dato público: "En Argentina, la prensa informa comisiones de PedidosYa de 25% a 35%…" */
+      commissionSourced: (country: string, claim: string) => `En ${country}, ${claim}`,
+      commissionNone: (country: string, pct: string) =>
+        `Sin dato público en ${country}: usamos ${pct} (supuesto)`,
+      commissionAssumed: (pct: string) => `usamos ${pct} (supuesto, el piso de lo publicado)`,
       redirectableShare: 'Parte de esos pedidos que podrías pasar a un canal propio',
       googleGapLoss: 'Ventas perdidas con la ficha de Google al 0%',
       billingManual: 'Merma si se cobra a mano',
       billingTerminal: 'Merma si se cobra solo con terminal',
-      ticket: 'Ticket promedio (supuesto de la demo)',
-      orders: 'Pedidos por mes por local, según volumen (supuesto de la demo)',
+      ticket: 'Ticket promedio por pedido',
+      orders: 'Pedidos por mes por local',
+      yourNumber: 'tu número',
+      estimatedByReviews: 'estimado por reseñas',
+      localsFactor: 'Locales',
     },
   },
 
@@ -455,6 +499,8 @@ const base = {
     channelsTitle: '¿Por dónde vendés hoy?',
     channelsHint: 'Podés marcar varias.',
     billingTitle: '¿Cómo cobrás y facturás hoy?',
+    systemTitle: '¿Cuál usás?',
+    systemHint: 'Así te decimos cómo pasar lo que ya cargaste.',
     billingHint: (authority: string) => `Pensá en cómo emitís el comprobante ante ${authority}.`,
     localsTitle: '¿Cuántos locales tenés?',
   },
@@ -491,6 +537,9 @@ const base = {
 
   money: {
     howIntro: 'Es una cuenta simple, con números que podés discutir. Estos son los pasos y todos los supuestos:',
+    /** rótulo de los dos campos que el dueño puede cambiar */
+    changeIt: 'estimado por reseñas · cambialo por el tuyo',
+    changeItMine: 'tu número · volvé a la estimación si querés',
   },
 
   /** "Estoy por abrir": otra ruta, sin diagnóstico (src/domain/opening.ts) */
@@ -535,6 +584,10 @@ const base = {
       cadena: 'Tenés 4 o más locales.',
       'nucleo-sin-sistema': 'Vendés con volumen y por delivery, y hoy no tenés un sistema que lo ordene.',
       'nucleo-con-sistema': 'Vendés con volumen y por delivery, y ya usás otro sistema.',
+      'nucleo-sin-sistema-volumen-desconocido':
+        'No pudimos medir tu volumen (casi no hay reseñas para leer), pero vendés por delivery y hoy no tenés un sistema que lo ordene.',
+      'nucleo-con-sistema-volumen-desconocido':
+        'No pudimos medir tu volumen (casi no hay reseñas para leer), pero vendés por delivery y ya usás otro sistema.',
       'poco-volumen': 'Todavía tenés pocas reseñas, lo que indica poco volumen.',
       'sin-delivery': 'No vendés por delivery.',
     } satisfies Record<LeadReason, string>,
@@ -549,6 +602,13 @@ const base = {
     switcher: {
       title: (product: string) => `Pasate a ${product} sin empezar de cero`,
       intro: 'Ya tenés un sistema, así que lo que importa es no perder lo que cargaste. Mirá cómo quedaría tu cuenta.',
+      /** el dueño dijo cuál sistema usa: se lo nombra */
+      fromSystem: (system: string) =>
+        `Venís de ${system}: lo que importa es no perder lo que cargaste. Mirá cómo quedaría tu cuenta.`,
+      guides: {
+        'cambiar-de-soft-restaurant':
+          'Guía: alternativa a Soft Restaurant, cómo cambiar sin dejar de facturar',
+      } as Record<string, string>,
       migrateTitle: 'Migramos tus datos',
       migrateBody:
         'Podés importar tus productos desde un Excel. En la demo no se importa nada: es una simulación.',
@@ -648,7 +708,13 @@ const base = {
       /** no marcó apps, pero el local figura en alguna */
       unmarked: (n: number, apps: string) =>
         `Aunque no marcaste las apps, tu local figura en ${n} (${apps}) y cada pedido que entra por ahí paga comisión.`,
+      /** marcó apps, pero no vimos su local en ninguna: no se lo trata como si lo supiéramos */
+      markedNotFound:
+        'Marcaste que vendés por apps, aunque no pudimos ver en cuáles figura tu local, y cada pedido que entra por ahí paga comisión.',
       closing: 'Un canal propio por WhatsApp o tienda online te deja ese margen.',
+      /** hay dato público de la comisión en el país: con fuente y fecha */
+      commissionSourced: (country: string, claim: string, source: string, date: string) =>
+        `En ${country}, ${claim} (${source}, ${date}).`,
       where: { salon: 'del salón', mostrador: 'del mostrador', both: 'del salón y el mostrador' },
       commissionGeneric: 'Cada app cobra una comisión por venta.',
     },
@@ -666,6 +732,10 @@ const base = {
       title: (authority: string) => `Dejá de cobrar y facturar a mano (${authority})`,
       body: (pitch: string) =>
         `Cobrar a mano genera errores de caja y comprobantes tardíos. ${pitch}`,
+    },
+    opsAppPays: {
+      title: 'Conciliá lo que te liquidan las apps',
+      body: 'Las apps te pagan una liquidación con su comisión ya descontada. Compará cada una con los pedidos que registraste para detectar descuentos de más. Un módulo que junte los pedidos de todas las apps en una pantalla te deja ese control a mano.',
     },
     opsTerminalOnly: {
       title: 'Conectá el cobro con tu gestión',
@@ -748,6 +818,7 @@ const tuteo: DeepPartial<Voice> = {
     channelsTitle: '¿Por dónde vendes hoy?',
     channelsHint: 'Puedes marcar varias.',
     billingTitle: '¿Cómo cobras y facturas hoy?',
+    systemTitle: '¿Cuál usas?',
     billingHint: (authority) => `Piensa en cómo emites el comprobante ante ${authority}.`,
     localsTitle: '¿Cuántos locales tienes?',
   },
@@ -760,6 +831,8 @@ const tuteo: DeepPartial<Voice> = {
   },
   money: {
     howIntro: 'Es una cuenta simple, con números que puedes discutir. Estos son los pasos y todos los supuestos:',
+    changeIt: 'estimado por reseñas · cámbialo por el tuyo',
+    changeItMine: 'tu número · vuelve a la estimación si quieres',
   },
   opening: {
     link: 'Mira qué conviene tener listo antes de abrir',
@@ -772,6 +845,10 @@ const tuteo: DeepPartial<Voice> = {
       cadena: 'Tienes 4 o más locales.',
       'nucleo-sin-sistema': 'Vendes con volumen y por delivery, y hoy no tienes un sistema que lo ordene.',
       'nucleo-con-sistema': 'Vendes con volumen y por delivery, y ya usas otro sistema.',
+      'nucleo-sin-sistema-volumen-desconocido':
+        'No pudimos medir tu volumen (casi no hay reseñas para leer), pero vendes por delivery y hoy no tienes un sistema que lo ordene.',
+      'nucleo-con-sistema-volumen-desconocido':
+        'No pudimos medir tu volumen (casi no hay reseñas para leer), pero vendes por delivery y ya usas otro sistema.',
       'poco-volumen': 'Todavía tienes pocas reseñas, lo que indica poco volumen.',
       'sin-delivery': 'No vendes por delivery.',
     },
@@ -780,6 +857,8 @@ const tuteo: DeepPartial<Voice> = {
         'Con los datos que ya tenemos de tu local, armamos cómo te quedaría la cuenta. Revísala y créala.',
     },
     switcher: {
+      fromSystem: (system) =>
+        `Vienes de ${system}: lo que importa es no perder lo que cargaste. Mira cómo quedaría tu cuenta.`,
       title: (product) => `Pásate a ${product} sin empezar de cero`,
       intro: 'Ya tienes un sistema, así que lo que importa es no perder lo que cargaste. Mira cómo quedaría tu cuenta.',
       migrateBody:
@@ -824,6 +903,8 @@ const tuteo: DeepPartial<Voice> = {
     deliveryCommission: {
       title: 'Arma tu canal propio de delivery',
       onlyApps: (apps) => `Hoy vendes solo por apps (${apps}) y cada pedido paga comisión.`,
+      markedNotFound:
+        'Marcaste que vendes por apps, aunque no pudimos ver en cuáles figura tu local, y cada pedido que entra por ahí paga comisión.',
       withOthers: (where, apps) =>
         `Además ${where}, vendes por apps (${apps}) y cada pedido que entra por ahí paga comisión.`,
     },
@@ -838,6 +919,10 @@ const tuteo: DeepPartial<Voice> = {
     },
     opsBillingManual: {
       title: (authority) => `Deja de cobrar y facturar a mano (${authority})`,
+    },
+    opsAppPays: {
+      title: 'Concilia lo que te liquidan las apps',
+      body: 'Las apps te pagan una liquidación con su comisión ya descontada. Compara cada una con los pedidos que registraste para detectar descuentos de más. Un módulo que junte los pedidos de todas las apps en una pantalla te deja ese control a mano.',
     },
     opsTerminalOnly: {
       title: 'Conecta el cobro con tu gestión',

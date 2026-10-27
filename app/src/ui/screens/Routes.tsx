@@ -4,6 +4,8 @@ import { getCountry, type CountryConfig } from '../../config/countries'
 import { copy, copyFor } from '../../content/copy'
 import type { Diagnosis } from '../../domain/diagnose'
 import { withUtm } from '../../domain/links'
+import { guidePath } from '../../domain/opening'
+import { systemGuide } from '../../domain/switcher'
 import { FREE_RESOURCES, moduleUrl } from '../../domain/recommendations'
 import type { AreaId } from '../../domain/types'
 import { ExternalLink } from '../components/ExternalLink'
@@ -169,6 +171,13 @@ function HotOrSwitcher({ d, country }: { d: Diagnosis; country: CountryConfig })
   const r = copyFor(d.country).route
   const switcher = d.lead.tier === 'switcher'
   const product = country.productName
+  // Si dijo cuál sistema usa, el bloque lo nombra ("Venís de Soft Restaurant…"); "Otro" no se nombra
+  const { currentSystem } = d.answers
+  const system =
+    currentSystem && currentSystem !== 'otro'
+      ? copy.questions.items.currentSystem.options[currentSystem]
+      : null
+  const guide = systemGuide(currentSystem, d.country)
   return (
     <div className="space-y-5">
       <div>
@@ -176,7 +185,13 @@ function HotOrSwitcher({ d, country }: { d: Diagnosis; country: CountryConfig })
         <h2 className="text-3xl font-extrabold leading-tight sm:text-4xl">
           {switcher ? r.switcher.title(product) : r.caliente.title(product)}
         </h2>
-        <p className="mt-2 text-lg text-muted">{switcher ? r.switcher.intro : r.caliente.intro}</p>
+        <p className="mt-2 text-lg text-muted">
+          {switcher
+            ? system
+              ? r.switcher.fromSystem(system)
+              : r.switcher.intro
+            : r.caliente.intro}
+        </p>
       </div>
       <AccountPreview d={d} country={country} />
       {switcher && (
@@ -185,6 +200,17 @@ function HotOrSwitcher({ d, country }: { d: Diagnosis; country: CountryConfig })
             {r.switcher.migrateTitle} <SimulatedBadge />
           </h3>
           <p className="mt-2 text-body">{r.switcher.migrateBody}</p>
+          {guide && (
+            <p className="mt-3">
+              <a
+                href={guidePath(guide)}
+                className="inline-flex min-h-touch items-center font-semibold text-blue-700 underline"
+                onClick={() => track('cta_click', { cta: `guide:${guide}`, tier: d.lead.tier })}
+              >
+                {r.switcher.guides[guide]}
+              </a>
+            </p>
+          )}
           <ExternalLink
             href={r.switcher.migrateUrl}
             tier={d.lead.tier}

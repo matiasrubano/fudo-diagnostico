@@ -2,11 +2,13 @@ import { diagnose, type Diagnosis } from '../domain/diagnose.js'
 import { compareWithNeighbors, type NeighborComparison } from '../domain/neighbors.js'
 import { FEATURED_PLACE, sampleAnswersFor, type LandingCountry } from '../domain/showcase.js'
 import {
+  CURRENT_SYSTEMS,
   isCountryCode,
   type Answers,
   type BillingSetup,
   type BusinessType,
   type CountryCode,
+  type CurrentSystem,
   type GeoBias,
   type LocalsBand,
   type PlaceSummary,
@@ -32,11 +34,13 @@ const BUSINESS_TYPES: BusinessType[] = [
   'bar',
   'pizzeria',
   'cafeteria',
+  'taqueria',
+  'hamburgueseria',
   'dark-kitchen',
   'otro',
 ]
 const CHANNELS: SalesChannel[] = ['salon', 'mostrador', 'apps', 'delivery-propio']
-const BILLING: BillingSetup[] = ['manual', 'terminal', 'otro-sistema']
+const BILLING: BillingSetup[] = ['manual', 'terminal', 'otro-sistema', 'app-paga']
 const LOCALS: LocalsBand[] = ['1', '2-3', '4+']
 
 /** Valida el body de /api/diagnose; devuelve null si algo no cuadra. */
@@ -53,11 +57,17 @@ export function parseAnswers(input: unknown): Answers | null {
   ) {
     return null
   }
+  // "¿Cuál?" solo cuenta si usa otro sistema; un valor desconocido se descarta en vez de romper el diagnóstico
+  const currentSystem =
+    a.billing === 'otro-sistema' && CURRENT_SYSTEMS.includes(a.currentSystem as CurrentSystem)
+      ? (a.currentSystem as CurrentSystem)
+      : undefined
   return {
     businessType: a.businessType as BusinessType,
     channels: channels as SalesChannel[],
     billing: a.billing as BillingSetup,
     locals: a.locals as LocalsBand,
+    ...(currentSystem ? { currentSystem } : {}),
   }
 }
 

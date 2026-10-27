@@ -55,6 +55,11 @@ export function formatPrice(amount: number, country: CountryCode): string {
   }).format(amount)
 }
 
+/** 2.5 → "2,5" (o "2.5" en MX): hasta un decimal */
+export function formatDecimal(n: number, country: CountryCode = 'AR'): string {
+  return new Intl.NumberFormat(LOCALE[country], { maximumFractionDigits: 1 }).format(n)
+}
+
 /** Porcentaje sin redondear de más: 0.015 → "1,5%" (0.35 → "35%"). */
 export function formatPercent(fraction: number, country: CountryCode = 'AR'): string {
   return new Intl.NumberFormat(LOCALE[country], {

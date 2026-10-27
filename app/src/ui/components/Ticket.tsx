@@ -1,10 +1,17 @@
+import { useMemo, useState } from 'react'
+import { getCountry } from '../../config/countries'
 import { copy, copyFor } from '../../content/copy'
 import type { Diagnosis } from '../../domain/diagnose'
-import { ASSUMPTIONS } from '../../domain/moneyLost'
+import {
+  COMMISSION_SOURCES,
+  estimateMoneyLost,
+  type MoneyEstimate,
+  type MoneyOverrides,
+} from '../../domain/moneyLost'
 import type { AreaScore, Grade } from '../../domain/scoring'
 import type { AreaId } from '../../domain/types'
 import { evidenceFor, rowSummary } from '../evidence'
-import { formatMoney, formatNumber } from '../format'
+import { formatDecimal, formatMoney, formatNumber, formatPercent } from '../format'
 import { ProvenanceBadge, SimulatedBadge } from './ProvenanceBadge'
 
 const AREA_ORDER: AreaId[] = ['google', 'reviews', 'web', 'delivery', 'operation']
@@ -54,7 +61,11 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
               <>
                 <span className="ticket-num block text-3xl leading-none text-muted">—</span>
                 <span className="mt-1 block max-w-[112px] text-xs text-muted">
-                  {area.applicable ? copy.result.insufficient : v.result.notApplicable}
+                  {area.note
+                    ? copy.result.notCounted
+                    : area.applicable
+                      ? copy.result.insufficient
+                      : v.result.notApplicable}
                 </span>
               </>
             )}
@@ -67,12 +78,15 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
         </summary>
         <div className="pb-3">
           <p className="mb-2 text-xs text-muted">{copy.areas[area.id].help}</p>
-          {unknownCount > 0 && (
+          {area.note && (
+            <p className="mb-2 text-xs font-medium">{copy.result.areaNote[area.note]}</p>
+          )}
+          {unknownCount > 0 && unknownCount < area.checks.length && (
             <p className="mb-2 text-xs font-medium">
               {copy.result.partial(area.checks.length - unknownCount, area.checks.length)}
             </p>
           )}
-          <ul className="space-y-2">
+          <ul className={`space-y-2 ${area.note ? 'hidden' : ''}`}>
             {area.checks.map((check) => {
               const ev = evidenceFor(check.id, d)
               return (
@@ -81,9 +95,12 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
                   <span className="text-muted"> — </span>
                   <span className="break-words">{ev.text}</span>
                   <span className="mt-1 flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-bold uppercase">
-                      {copy.checkStatus[check.status]}
-                    </span>
+                    {/* si no se pudo leer, el texto de arriba ya lo dice: no se repite */}
+                    {check.status !== 'unknown' && (
+                      <span className="text-xs font-bold uppercase">
+                        {copy.checkStatus[check.status]}
+                      </span>
+                    )}
                     <ProvenanceBadge provenance={ev.provenance} />
                   </span>
                 </li>
@@ -96,14 +113,90 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
   )
 }
 
+/** Solo dígitos, hasta 9: lo que escribe el dueño en "Pedidos por mes" y "Ticket promedio" */
+const digitsOnly = (text: string) => text.replace(/\D/g, '').slice(0, 9)
+
 function MoneyBlock({ d, sample }: { d: Diagnosis; sample: boolean }) {
-  const m = d.money
   const t = copy.money
   const v = copyFor(d.country)
+  const countryName = getCountry(d.country).name
+  const est = d.money.inputs
+  const [orders, setOrders] = useState(String(est.estimatedOrdersPerMonth))
+  const [ticket, setTicket] = useState(String(est.estimatedAvgTicket))
+
+  // Los números del dueño pisan la estimación; si escribe lo mismo que la estimación, no cuenta como "suyo"
+  const ownOrders = Number(orders)
+  const ownTicket = Number(ticket)
+  const overrides: MoneyOverrides = {
+    ordersPerMonth:
+      orders !== '' && ownOrders !== est.estimatedOrdersPerMonth ? ownOrders : undefined,
+    avgTicket: ticket !== '' && ownTicket !== est.estimatedAvgTicket ? ownTicket : undefined,
+  }
+  const m = useMemo(
+    () => estimateMoneyLost(d.place, d.answers, d.scorecard, d.country, overrides),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [d, overrides.ordersPerMonth, overrides.avgTicket],
+  )
+  const custom = m.inputs.customOrders || m.inputs.customTicket
+
   const money = (n: number) => formatMoney(n, d.country)
-  const a = ASSUMPTIONS
-  const pct = (n: number) => `${Math.round(n * 100)}%`
-  const sellsByApps = m.inputs.appShare > 0
+  const pct = (n: number) => formatPercent(n, d.country)
+  const source = COMMISSION_SOURCES[d.country]
+  const shownLines = m.lines.filter((line) => line.factors.reduce((x, y) => x * y, 1) > 0)
+  const locals = copy.questions.items.locals.options[d.answers.locals]
+
+  function reset() {
+    setOrders(String(est.estimatedOrdersPerMonth))
+    setTicket(String(est.estimatedAvgTicket))
+  }
+
+  const assumption = (u: MoneyEstimate['assumptionsUsed'][number]) => {
+    const a = t.assumptions
+    switch (u.id) {
+      case 'orders':
+        return (
+          <>
+            {a.orders}: {formatNumber(u.value, d.country)} (
+            {u.custom ? a.yourNumber : a.estimatedByReviews})
+          </>
+        )
+      case 'ticket':
+        return (
+          <>
+            {a.ticket}: {money(u.value)} ({u.custom ? a.yourNumber : a.estimatedByReviews})
+          </>
+        )
+      case 'appCommission':
+        return (
+          <>
+            {a.appCommission}: {pct(u.value)}.{' '}
+            {source ? (
+              <>
+                {a.commissionSourced(countryName, source.claim)}{' '}
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-blue-700 underline"
+                >
+                  ({source.label}, {source.date})
+                  <span className="sr-only"> (se abre en una pestaña nueva)</span>
+                </a>
+                . {a.commissionAssumed(pct(u.value))}
+              </>
+            ) : (
+              <>{a.commissionNone(countryName, pct(u.value))}</>
+            )}
+          </>
+        )
+      default:
+        return (
+          <>
+            {a[u.id]}: {pct(u.value)}
+          </>
+        )
+    }
+  }
 
   return (
     <section aria-labelledby="money-title" className="ticket-rule pt-4">
@@ -114,20 +207,24 @@ function MoneyBlock({ d, sample }: { d: Diagnosis; sample: boolean }) {
         {copy.ticket.money}
         <SimulatedBadge />
       </h3>
-      {m.total > 0 ? (
-        <>
-          <p className="mt-2 text-xs text-muted">{copy.ticket.moneyApprox}</p>
-          <p className="ticket-num break-words text-[34px] leading-tight text-ticket-stamp sm:text-[40px]">
-            {money(m.total)}
-          </p>
-          <p className="mt-1 text-xs text-muted">
-            {copy.ticket.moneyRange(money(m.low), money(m.high))}
-          </p>
-        </>
-      ) : (
-        <p className="mt-2 font-medium">{copy.ticket.moneyZero}</p>
-      )}
-      <p className="mt-3 text-xs font-medium">{copy.ticket.moneyDisclaimer}</p>
+      <div aria-live="polite">
+        {m.total > 0 ? (
+          <>
+            <p className="mt-2 text-xs text-muted">{copy.ticket.moneyApprox}</p>
+            <p className="ticket-num break-words text-[34px] leading-tight text-ticket-stamp sm:text-[40px]">
+              {money(m.total)}
+            </p>
+            <p className="mt-1 text-xs text-muted">
+              {copy.ticket.moneyRange(money(m.low), money(m.high))}
+            </p>
+          </>
+        ) : (
+          <p className="mt-2 font-medium">{copy.ticket.moneyZero}</p>
+        )}
+      </div>
+      <p className="mt-3 text-xs font-medium">
+        {custom ? t.yours.custom : copy.ticket.moneyDisclaimer}
+      </p>
       {sample && <p className="mt-1 text-xs text-muted">{copy.ticket.sampleMoney}</p>}
 
       <details className="mt-3 border-2 border-dashed border-ticket-rule p-3">
@@ -136,57 +233,93 @@ function MoneyBlock({ d, sample }: { d: Diagnosis; sample: boolean }) {
         </summary>
         <div className="mt-3 space-y-3 text-[13px]">
           <p>{v.money.howIntro}</p>
-          <p className="font-semibold">
-            {t.steps.sales(
-              formatNumber(m.inputs.ordersPerMonth, d.country),
-              money(m.inputs.avgTicket),
-              `×${m.inputs.localsFactor}`,
-              money(m.inputs.monthlySales),
+
+          <fieldset className="rounded-lg border border-ticket-rule p-3">
+            <legend className="px-1 font-semibold">{t.yours.title}</legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label htmlFor="money-orders" className="block font-semibold">
+                  {t.yours.orders}
+                </label>
+                <input
+                  id="money-orders"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={9}
+                  value={orders}
+                  onChange={(e) => setOrders(digitsOnly(e.target.value))}
+                  aria-describedby="money-orders-hint"
+                  className="input mt-1 w-full font-mono"
+                />
+                <p id="money-orders-hint" className="mt-1 text-xs text-muted">
+                  {m.inputs.customOrders ? v.money.changeItMine : v.money.changeIt}
+                </p>
+              </div>
+              <div>
+                <label htmlFor="money-ticket" className="block font-semibold">
+                  {t.yours.ticket} ({getCountry(d.country).currency.code})
+                </label>
+                <input
+                  id="money-ticket"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={9}
+                  value={ticket}
+                  onChange={(e) => setTicket(digitsOnly(e.target.value))}
+                  aria-describedby="money-ticket-hint"
+                  className="input mt-1 w-full font-mono"
+                />
+                <p id="money-ticket-hint" className="mt-1 text-xs text-muted">
+                  {m.inputs.customTicket ? v.money.changeItMine : v.money.changeIt}
+                </p>
+              </div>
+            </div>
+            {custom && (
+              <button type="button" className="btn btn-secondary mt-3 !min-h-touch" onClick={reset}>
+                {t.yours.reset}
+              </button>
             )}
+          </fieldset>
+
+          <p className="font-semibold">
+            {m.inputs.localsFactor === 1
+              ? t.steps.sales(
+                  formatNumber(m.inputs.ordersPerMonth, d.country),
+                  money(m.inputs.avgTicket),
+                  money(m.inputs.monthlySales),
+                )
+              : t.steps.salesMulti(
+                  formatNumber(m.inputs.ordersPerMonth, d.country),
+                  money(m.inputs.avgTicket),
+                  formatDecimal(m.inputs.localsFactor, d.country),
+                  locals,
+                  money(m.inputs.monthlySales),
+                )}
           </p>
-          <p className="text-muted">{t.steps.volumeNote(m.inputs.volume)}</p>
+          {!m.inputs.customOrders && (
+            <p className="text-muted">{t.steps.volumeNote(m.inputs.volume)}</p>
+          )}
           <ul className="space-y-2">
-            {m.lines.map((line) => (
+            {shownLines.map((line) => (
               <li key={line.id} className="ticket-rule pt-2">
                 <p className="flex flex-wrap justify-between gap-2 font-semibold">
                   <span>{t.lines[line.id].title}</span>
                   <span className="ticket-num">{money(line.amount)}</span>
                 </p>
                 <p className="text-muted">= {t.lines[line.id].formula}</p>
+                <p className="ticket-num break-words text-muted">
+                  ≈ {money(m.inputs.monthlySales)} × {line.factors.map(pct).join(' × ')}
+                </p>
               </li>
             ))}
           </ul>
           <p className="font-semibold">{t.assumptionsTitle}</p>
           <ul className="list-disc space-y-1 pl-5">
-            <li>
-              {t.assumptions.orders}: {formatNumber(a.ordersPerMonth.bajo, d.country)} /{' '}
-              {formatNumber(a.ordersPerMonth.medio, d.country)} /{' '}
-              {formatNumber(a.ordersPerMonth.alto, d.country)}
-            </li>
-            <li>
-              {t.assumptions.ticket}: {money(a.avgTicket[d.country])}
-            </li>
-            {sellsByApps && (
-              <>
-                <li>
-                  {t.assumptions.appShare}: {pct(a.appShare)} ({t.assumptions.appShareDarkKitchen}:{' '}
-                  {pct(a.appShareDarkKitchen)})
-                </li>
-                <li>
-                  {t.assumptions.appCommission}: {pct(a.appCommission)}
-                </li>
-                <li>
-                  {t.assumptions.redirectableShare}: {pct(a.redirectableShare)}
-                </li>
-              </>
-            )}
-            <li>
-              {t.assumptions.googleGapLoss}: {pct(a.googleGapLoss)}
-            </li>
-            <li>
-              {t.assumptions.billingManual}: {pct(a.billingLoss.manual)} ·{' '}
-              {t.assumptions.billingTerminal}: {pct(a.billingLoss.terminal)}
-            </li>
+            {m.assumptionsUsed.map((u) => (
+              <li key={u.id}>{assumption(u)}</li>
+            ))}
           </ul>
         </div>
       </details>

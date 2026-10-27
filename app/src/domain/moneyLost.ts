@@ -24,24 +24,89 @@ export const ASSUMPTIONS = {
   appShare: 0.35,
   /** Parte de los pedidos que entra por apps cuando es dark kitchen (solo vende por apps). SUPUESTO. */
   appShareDarkKitchen: 0.9,
-  /** Comisión de las apps sobre la venta. AR: nota de iProfesional (14/05/2026) cita 25%–35% (PedidosYa) y hasta 25% (Rappi). En el resto de los países es un SUPUESTO. */
+  /** Comisión de las apps sobre la venta. Es un SUPUESTO (el piso de lo publicado); la fuente de cada país está en COMMISSION_SOURCES. */
   appCommission: 0.25,
   /** De los pedidos por apps, cuántos se podrían pasar a un canal propio (sin comisión). SUPUESTO conservador. */
   redirectableShare: 0.15,
   /** Ventas que no llegan por tener la ficha de Google incompleta, al 0% de la nota de Google. SUPUESTO. */
   googleGapLoss: 0.04,
   /** Merma por cobro/facturación a mano (errores, descuadres, tiempo), como % de las ventas. SUPUESTO. */
-  billingLoss: { manual: 0.015, terminal: 0.008, 'otro-sistema': 0 },
+  billingLoss: { manual: 0.015, terminal: 0.008, 'otro-sistema': 0, 'app-paga': 0 },
   /** El rango que mostramos alrededor de la estimación (la cuenta es gruesa). */
   range: { low: 0.6, high: 1.4 },
   /** Se redondea el monto a este múltiplo, para no aparentar precisión que no hay. */
   roundTo: { AR: 1000, MX: 100, CL: 1000, CO: 10000, BR: 10 } satisfies Record<CountryCode, number>,
 }
 
+/** Lo que se sabe en público sobre la comisión de las apps en un país, con fuente y fecha (no inventamos cifras). */
+export interface CommissionSource {
+  /** lo que dice la fuente, sin interpretar */
+  claim: string
+  label: string
+  /** dd/mm/aaaa */
+  date: string
+  url: string
+}
+
+/**
+ * Fuentes de la comisión por país. Solo hay dato público en AR y MX (docs/research/paises.md y geo-blog.md);
+ * en CL, CO y BR la UI dice "sin dato público en <país>: usamos X% (supuesto)".
+ */
+export const COMMISSION_SOURCES: Partial<Record<CountryCode, CommissionSource>> = {
+  AR: {
+    claim:
+      'la prensa informa comisiones de PedidosYa de 25% a 35% de la venta (Rappi declara hasta 25%)',
+    label: 'iProfesional',
+    date: '14/05/2026',
+    url: 'https://www.iprofesional.com/negocios/454816-mas-pedidos-y-cargos-de-hasta-35-por-cento-la-presion-del-delivery-sobre-comercios-y-repartidores',
+  },
+  MX: {
+    claim: 'Uber Eats publicó planes de comisión de 25% a 30% de la venta',
+    label: 'Uber Eats México',
+    date: '13/03/2024',
+    url: 'https://www.uber.com/es-MX/newsroom/uber-eats-comisiones-para-pymes-mexico',
+  },
+}
+
+/** Los números propios del dueño: pisan la estimación por reseñas (opcionales, de a uno) */
+export interface MoneyOverrides {
+  ordersPerMonth?: number
+  avgTicket?: number
+}
+
+/** Tope de lo que se acepta como "pedidos por mes" o "ticket": evita desbordes y números absurdos */
+export const MAX_OVERRIDE = 1_000_000_000
+
+/** Un número del dueño sirve si es finito y positivo; si no, se usa la estimación. */
+function usable(value: number | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value) && value > 0 && value <= MAX_OVERRIDE
+}
+
 export interface MoneyLine {
   /** clave del texto en copy.ts */
   id: 'apps' | 'google' | 'billing'
+  /** ya redondeado: el total es la suma de estos montos */
   amount: number
+  /** los multiplicadores de las ventas, en orden: monto ≈ ventas × f1 × f2 × … (para mostrar la cuenta tal cual se hizo) */
+  factors: number[]
+}
+
+/** Un supuesto que la cuenta usó de verdad (la UI lista solo estos, así la lista coincide con la cuenta) */
+export interface UsedAssumption {
+  id:
+    | 'orders'
+    | 'ticket'
+    | 'appShare'
+    | 'appShareDarkKitchen'
+    | 'appCommission'
+    | 'redirectableShare'
+    | 'googleGapLoss'
+    | 'billingManual'
+    | 'billingTerminal'
+  /** pedidos y ticket en números; el resto, en fracción (0,35 = 35%) */
+  value: number
+  /** true si es un número del dueño y no el supuesto de la demo */
+  custom?: boolean
 }
 
 export interface MoneyEstimate {
@@ -52,6 +117,8 @@ export interface MoneyEstimate {
   low: number
   high: number
   lines: MoneyLine[]
+  /** los supuestos que usó la cuenta, en el orden en que se aplican */
+  assumptionsUsed: UsedAssumption[]
   /** insumos intermedios, para mostrar la cuenta paso a paso */
   inputs: {
     volume: Volume
@@ -60,6 +127,14 @@ export interface MoneyEstimate {
     localsFactor: number
     monthlySales: number
     appShare: number
+    /** parte de las ventas que se puede recuperar de las apps = comisión (solo si hay pedidos por apps) */
+    appCommission: number
+    /** true = el dueño puso sus propios pedidos / su propio ticket */
+    customOrders: boolean
+    customTicket: boolean
+    /** lo que da la estimación por reseñas, para poder volver a ella */
+    estimatedOrdersPerMonth: number
+    estimatedAvgTicket: number
   }
 }
 
@@ -67,16 +142,26 @@ function roundTo(value: number, step: number): number {
   return Math.round(value / step) * step
 }
 
+/**
+ * Función pura: mismas entradas, mismo resultado. `overrides` = los números del dueño ("Pedidos por mes" y
+ * "Ticket promedio" de la sección "¿Cómo calculamos esto?"): la UI la vuelve a llamar en cada tecla.
+ * Lo que se muestra sale de acá: ventas = pedidos × ticket × locales, y cada línea = ventas × sus porcentajes.
+ */
 export function estimateMoneyLost(
   profile: PlaceProfile,
   answers: Answers,
   scorecard: Scorecard,
   country: CountryCode,
+  overrides: MoneyOverrides = {},
 ): MoneyEstimate {
   const a = ASSUMPTIONS
   const volume = volumeOf(profile.fields.reviewCount)
-  const ordersPerMonth = a.ordersPerMonth[volume]
-  const avgTicket = a.avgTicket[country]
+  const estimatedOrders = a.ordersPerMonth[volume]
+  const estimatedTicket = a.avgTicket[country]
+  const customOrders = usable(overrides.ordersPerMonth)
+  const customTicket = usable(overrides.avgTicket)
+  const ordersPerMonth = customOrders ? (overrides.ordersPerMonth as number) : estimatedOrders
+  const avgTicket = customTicket ? (overrides.avgTicket as number) : estimatedTicket
   const localsFactor = a.localsFactor[answers.locals]
   const monthlySales = ordersPerMonth * avgTicket * localsFactor
 
@@ -88,23 +173,46 @@ export function estimateMoneyLost(
       : a.appShare
     : 0
   const hasOwnChannel = answers.channels.includes('delivery-propio')
-  const apps = hasOwnChannel ? 0 : monthlySales * appShare * a.appCommission * a.redirectableShare
+  const appsFactors = [appShare, a.appCommission, a.redirectableShare]
+  const apps = hasOwnChannel ? 0 : monthlySales * appsFactors.reduce((x, y) => x * y, 1)
 
   // 2) Ventas que no llegan por una ficha de Google incompleta (si no sabemos la nota, no inventamos)
   const googleScore = scorecard.areas.google.score
-  const google =
-    googleScore === null ? 0 : monthlySales * a.googleGapLoss * ((100 - googleScore) / 100)
+  const googleFactors = [a.googleGapLoss, googleScore === null ? 0 : (100 - googleScore) / 100]
+  const google = monthlySales * googleFactors.reduce((x, y) => x * y, 1)
 
   // 3) Merma por cobro/facturación a mano
-  const billing = monthlySales * a.billingLoss[answers.billing]
+  const billingFactors = [a.billingLoss[answers.billing]]
+  const billing = monthlySales * billingFactors[0]!
 
   const step = a.roundTo[country]
   const lines: MoneyLine[] = [
-    { id: 'apps', amount: roundTo(apps, step) },
-    { id: 'google', amount: roundTo(google, step) },
-    { id: 'billing', amount: roundTo(billing, step) },
+    { id: 'apps', amount: roundTo(apps, step), factors: hasOwnChannel ? [0] : appsFactors },
+    { id: 'google', amount: roundTo(google, step), factors: googleFactors },
+    { id: 'billing', amount: roundTo(billing, step), factors: billingFactors },
   ]
   const total = lines.reduce((sum, l) => sum + l.amount, 0)
+  const used: UsedAssumption[] = [
+    { id: 'orders', value: ordersPerMonth, custom: customOrders },
+    { id: 'ticket', value: avgTicket, custom: customTicket },
+  ]
+  if (apps > 0) {
+    used.push(
+      {
+        id: answers.businessType === 'dark-kitchen' ? 'appShareDarkKitchen' : 'appShare',
+        value: appShare,
+      },
+      { id: 'appCommission', value: a.appCommission },
+      { id: 'redirectableShare', value: a.redirectableShare },
+    )
+  }
+  if (google > 0) used.push({ id: 'googleGapLoss', value: a.googleGapLoss })
+  if (billing > 0) {
+    used.push({
+      id: answers.billing === 'manual' ? 'billingManual' : 'billingTerminal',
+      value: billingFactors[0]!,
+    })
+  }
   return {
     simulated: true,
     country,
@@ -112,6 +220,19 @@ export function estimateMoneyLost(
     low: roundTo(total * a.range.low, step),
     high: roundTo(total * a.range.high, step),
     lines,
-    inputs: { volume, ordersPerMonth, avgTicket, localsFactor, monthlySales, appShare },
+    assumptionsUsed: used,
+    inputs: {
+      volume,
+      ordersPerMonth,
+      avgTicket,
+      localsFactor,
+      monthlySales,
+      appShare,
+      appCommission: a.appCommission,
+      customOrders,
+      customTicket,
+      estimatedOrdersPerMonth: estimatedOrders,
+      estimatedAvgTicket: estimatedTicket,
+    },
   }
 }

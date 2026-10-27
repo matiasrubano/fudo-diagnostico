@@ -142,17 +142,22 @@ export function Questions({
   answers,
   country,
   onAnswer,
+  onOpening,
   onBack,
 }: {
   step: number
   answers: Partial<Answers>
   country: CountryCode | null
-  onAnswer: <K extends keyof Answers>(key: K, value: Answers[K] | 'por-abrir') => void
+  onAnswer: (patch: Partial<Answers>) => void
+  /** "Todavía no abrí" no es una respuesta: lleva a la ruta de quien está por abrir */
+  onOpening: () => void
   onBack: () => void
 }) {
   const q = copy.questions.items
   const v = copyFor(country).questions
   const authority = country ? getCountry(country).fiscal.authority : 'el ente fiscal'
+  // "Con otro sistema" pregunta cuál: es una sub-pregunta de la 3 (la barra sigue en 3 de 4)
+  const [askSystem, setAskSystem] = useState(false)
   const appNames = country
     ? getCountry(country)
         .deliveryApps.slice(0, 2)
@@ -172,7 +177,9 @@ export function Questions({
           title={q.businessType.title}
           options={entries(q.businessType.options)}
           selected={answers.businessType}
-          onSelect={(v) => onAnswer('businessType', v)}
+          onSelect={(choice) =>
+            choice === 'por-abrir' ? onOpening() : onAnswer({ businessType: choice })
+          }
         />
       )}
       {step === 1 && (
@@ -183,17 +190,29 @@ export function Questions({
           pickAtLeastOne={v.pickAtLeastOne}
           options={channelOptions}
           initial={answers.channels ?? []}
-          onDone={(v) => onAnswer('channels', v)}
+          onDone={(channels) => onAnswer({ channels })}
         />
       )}
-      {step === 2 && (
+      {step === 2 && !askSystem && (
         <SingleChoice
           key="q3"
           title={v.billingTitle}
           hint={v.billingHint(authority)}
           options={entries(q.billing.options)}
           selected={answers.billing}
-          onSelect={(v) => onAnswer('billing', v)}
+          onSelect={(billing) =>
+            billing === 'otro-sistema' ? setAskSystem(true) : onAnswer({ billing })
+          }
+        />
+      )}
+      {step === 2 && askSystem && (
+        <SingleChoice
+          key="q3b"
+          title={v.systemTitle}
+          hint={v.systemHint}
+          options={entries(q.currentSystem.options)}
+          selected={answers.currentSystem}
+          onSelect={(currentSystem) => onAnswer({ billing: 'otro-sistema', currentSystem })}
         />
       )}
       {step === 3 && (
@@ -202,10 +221,14 @@ export function Questions({
           title={v.localsTitle}
           options={entries(q.locals.options)}
           selected={answers.locals}
-          onSelect={(v) => onAnswer('locals', v)}
+          onSelect={(locals) => onAnswer({ locals })}
         />
       )}
-      <button type="button" className="btn btn-secondary mt-8" onClick={onBack}>
+      <button
+        type="button"
+        className="btn btn-secondary mt-8"
+        onClick={askSystem ? () => setAskSystem(false) : onBack}
+      >
         {copy.questions.back}
       </button>
     </section>

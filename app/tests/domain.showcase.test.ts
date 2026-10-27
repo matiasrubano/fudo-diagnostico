@@ -39,7 +39,8 @@ describe('vidriera: ticket de ejemplo con un local real', () => {
 
   it('las respuestas de ejemplo salen del tipo real del local', async () => {
     expect(sampleAnswersFor(await place(IDS.campeon)).businessType).toBe('pizzeria')
-    expect(sampleAnswersFor(await place(IDS.reds)).businessType).toBe('restaurante')
+    expect(sampleAnswersFor(await place(IDS.reds)).businessType).toBe('hamburgueseria')
+    expect(sampleAnswersFor(await place(IDS.taqueria)).businessType).toBe('taqueria')
   })
 
   it('buildShowcase(AR): el ticket sale del snapshot (4,2 · 6.167 reseñas) y trae los locales de AR', async () => {

@@ -247,16 +247,18 @@ export default function App() {
     }
   }
 
-  function answer<K extends keyof Answers>(key: K, value: Answers[K] | 'por-abrir') {
+  /** Una respuesta del cuestionario (o dos juntas: "otro sistema" + cuál) */
+  function answer(patch: Partial<Answers>) {
     if (!place) return
-    track(`q_answered_${step + 1}` as 'q_answered_1', { answer: String(value) })
-
-    // "Todavía no abrí" no es una respuesta del diagnóstico: lleva a su propia pantalla
-    if (key === 'businessType' && value === 'por-abrir') {
-      openOpening('p1', place.country)
-      return
+    track(`q_answered_${step + 1}` as 'q_answered_1', {
+      answer: String(Object.values(patch)[0]),
+      ...(patch.currentSystem ? { system: patch.currentSystem } : {}),
+    })
+    const next: Partial<Answers> = { ...answers, ...patch }
+    // "¿Cuál?" solo vale con "otro sistema": si cambia la respuesta, se olvida
+    if (patch.billing && patch.billing !== 'otro-sistema' && !patch.currentSystem) {
+      delete next.currentSystem
     }
-    const next = { ...answers, [key]: value }
     if (step < TOTAL_QUESTIONS - 1) {
       go({ answers: next, step: step + 1 })
     } else {
@@ -335,6 +337,11 @@ export default function App() {
               answers={answers}
               country={place.country}
               onAnswer={answer}
+              onOpening={() => {
+                // "Todavía no abrí" no es una respuesta del diagnóstico: lleva a su propia pantalla
+                track('q_answered_1', { answer: 'por-abrir' })
+                openOpening('p1', place.country)
+              }}
               onBack={back}
             />
           )}

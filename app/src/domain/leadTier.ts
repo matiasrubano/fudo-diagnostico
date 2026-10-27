@@ -20,6 +20,9 @@ export type LeadReason =
   | 'cadena'
   | 'nucleo-sin-sistema'
   | 'nucleo-con-sistema'
+  /** igual que los anteriores, pero sin reseñas que leer: no se dice "vendés con volumen" cuando no lo sabemos */
+  | 'nucleo-sin-sistema-volumen-desconocido'
+  | 'nucleo-con-sistema-volumen-desconocido'
   | 'poco-volumen'
   | 'sin-delivery'
 
@@ -60,9 +63,10 @@ export function classifyLead(profile: PlaceProfile, answers: Answers): LeadClass
   const hasVolume = volume !== 'bajo'
 
   if (hasVolume && hasDelivery) {
+    const unknown = volume === 'desconocido' ? '-volumen-desconocido' : ''
     return answers.billing === 'otro-sistema'
-      ? { tier: 'switcher', volume, reasons: ['nucleo-con-sistema'] }
-      : { tier: 'caliente', volume, reasons: ['nucleo-sin-sistema'] }
+      ? { tier: 'switcher', volume, reasons: [`nucleo-con-sistema${unknown}` as LeadReason] }
+      : { tier: 'caliente', volume, reasons: [`nucleo-sin-sistema${unknown}` as LeadReason] }
   }
 
   const reasons: LeadReason[] = []
