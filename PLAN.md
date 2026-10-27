@@ -193,7 +193,7 @@ video/
 
 **Listo cuando:** `docs/qa/report.md` no tiene bugs bloqueantes abiertos.
 
-### G5 — Simulación de dueños + iteración `[~]` · A4 → A5
+### G5 — Simulación de dueños + iteración `[x]` · A4 → A5
 Cada A4 recibe **solo** la persona y la URL. No sabe que es un caso, ni que es para Fudo, ni ningún contexto del proyecto. Navega la app con el navegador y responde como el dueño.
 
 | Persona | Perfil | Qué esperamos ver |
@@ -205,9 +205,9 @@ Cada A4 recibe **solo** la persona y la URL. No sabe que es un caso, ni que es p
 
 **Salida por persona:** recorrido pensado en voz alta, fricciones (en qué paso), objeciones, si crearía la cuenta (sí/no/por qué), nota del 1 al 10 y la frase que lo convenció o espantó.
 - [x] A5 aplica los cambios con mayor impacto (como máximo 5) → `docs/feedback/cambios.md`, redeploy y regresión rápida de A3
-- 🔒 **G-OK1: Matías revisa la app final y da el OK.** Sin ese OK no se pasa a G7.
+- [x] 🔒 **G-OK1: Matías revisa la app final y da el OK.** (2026-10-27: aprobada con 2 pedidos: hero dinámico que rota escenas por país y sacar el buscador de texto, que en la demo solo cubre 13 locales)
 
-### G6 — Informe (≤2 páginas) `[ ]` · A6 *(después de G-OK1)*
+### G6 — Informe (≤2 páginas) `[x]` · A6 *(después de G-OK1)*
 Secciones **a–g** exactas del caso, en español:
 - **a.** Problema, segmento, hipótesis y filtro (con los tiers)
 - **b.** Por qué esta solución y no el diagnóstico solo, el quiz solo o el agente de WhatsApp
@@ -224,9 +224,11 @@ Secciones **a–g** exactas del caso, en español:
   - roadmap
 
 Incluye las URLs de la app y del repo, y 3–4 citas de los dueños simulados (marcadas como simuladas).
+**Evidencia (2026-10-27):** `docs/informe/Informe-Fudo.{pdf,docx,md}`: PDF de 2 páginas A4 (verificado por el orquestador), secciones a–g, URLs, experimento (686 cuentas por brazo), costo USD 0,057/diagnóstico, blog GEO + MCP, 4 citas de dueños simulados. Reescrito con la skill `escritura-humana` (0 rayas, 0 muletillas).
+
 **Listo cuando:** el `.docx` y el `.pdf` entran en 2 páginas A4 y cada número tiene su fuente.
 
-### G7 — Video demo `[ ]` · A7 → 🔒 G-OK2 → A8 *(después de G-OK1)*
+### G7 — Video demo `[—] recortado por Matías (2026-10-27)` · A7 → 🔒 G-OK2 → A8 *(después de G-OK1)*
 - [x] **A7, guion de 60–90 s:**
   - hook con el problema
   - recorrido con un local real del snapshot
@@ -242,9 +244,9 @@ Incluye las URLs de la app y del repo, y 3–4 citas de los dueños simulados (m
 - [ ] Render 16:9 1080p (+ 9:16 opcional) → `video/out/`
 **Listo cuando:** el `.mp4` dura ≤90 s, el audio está sincronizado y el video está linkeado en el README.
 
-### G8 — Log de prompts y empaquetado `[ ]` · A9 + orquestador
-- [ ] `docs/prompts/LOG.md`: los briefs de cada agente, prompts clave y decisiones (entregable #3 del caso)
-- [ ] §7 completo con rutas y URLs
+### G8 — Log de prompts y empaquetado `[x]` · A9 + orquestador
+- [x] `docs/prompts/LOG.md`: los briefs de cada agente, prompts clave y decisiones (entregable #3 del caso)
+- [x] §7 completo con rutas y URLs
 - 🔒 **G-OK3: Matías da el OK para entregar**
 
 ---
@@ -287,8 +289,8 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | Plan | `C:\Users\m_rubano\FUDO\PLAN.md` |
 | Repo GitHub | https://github.com/matiasrubano/fudo-diagnostico |
 | App (Vercel) | https://fudo-diagnostico.vercel.app |
-| Informe | `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.pdf` (+ `.docx`) |
-| Video | `C:\Users\m_rubano\FUDO\video\out\demo-16x9.mp4` |
+| Informe | `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.pdf` (+ `.docx`, `.md`) · 2 páginas A4 |
+| Video | Recortado por decisión de Matías (G-OK1). Guion aprobado en `video/guion.md`; la voz de ElevenLabs falló en todas las generaciones |
 | Log de prompts | `C:\Users\m_rubano\FUDO\docs\prompts\LOG.md` |
 
 ## 8. Bitácora
@@ -311,3 +313,5 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-27 | G5 | 4 dueños simulados: Rubén 6, Mariana 5, Andrés 5, Sofía 4; ninguno crearía cuenta hoy (el alta es simulada). `docs/feedback/cambios.md` con 5 cambios + barrido QA → A5 en curso. A6 (informe) y A7 (guion) arrancan en borrador en paralelo para ganar tiempo; se cierran después de G-OK1 / G-OK2 |
 | 2026-10-27 | G7 | ✅ G-OK2: guion aprobado (9 escenas, ~77 s, El Campeón de la Pizza). A5 y A6 cortados por límite de uso de la sesión → retomados con SendMessage |
 | 2026-10-27 | G5 | ✅ A5 aplicó los 5 cambios + barrido QA (170 tests), desplegado y verificado por el orquestador en prod (Café Lumbre → no encontrado → por abrir; El Campeón con "tus números"; 404 real). Informe (A6) listo en 2 páginas. Voz: ElevenLabs falla en todas las generaciones (incluso 1 frase) → problema de la cuenta; el video sale con subtítulos y la pista de voz se agrega cuando ande. Esperando G-OK1 |
+| 2026-10-27 | G-OK1 | ✅ App aprobada con 2 cambios: hero dinámico (escenas por país) y sin buscador de texto (tarjetas de los 13 locales reales; Places en producción). Video recortado. Informe: reescritura con la skill nueva `.claude/skills/escritura-humana` (pedido de Matías; no había una en el catálogo) |
+| 2026-10-27 | G6+G8 | ✅ Informe final (2 páginas, escritura humana, 177 tests). Log de prompts cerrado (16 corridas de subagentes, ~140 KB, sin secretos). README con links finales. App final desplegada: hero dinámico + tarjetas de los 13 locales, 177 tests. Esperando G-OK3 |

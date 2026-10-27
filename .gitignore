@@ -9,5 +9,6 @@ video/out
 *.log
 .DS_Store
 
-# Config local de Claude Code (launch.json del preview)
-.claude/
+# Config local de Claude Code (se versionan solo las skills del proyecto)
+.claude/*
+!.claude/skills/

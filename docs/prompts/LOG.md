@@ -1,10 +1,10 @@
 # Log de prompts — Caso Fudo: Diagnóstico + Tu Fudo ya armado
 
 > Entregable pedido por el caso: "los prompts o el historial de conversación con la IA que usaste".
-> Archivado por A9 (Archivista de prompts) el 2026-10-27 05:22 (-03). Los briefs y los prompts del usuario están **textuales**, copiados de los transcripts de las sesiones. Los resúmenes de cada agente son míos y están marcados como tales.
+> Archivado por A9 (Archivista de prompts). **Segunda versión**, escrita al cierre (G8) el 2026-10-27 11:07 (-03). La primera cubría hasta el rediseño; esta suma QA, dueños simulados, la iteración, el informe, el guion y los gates G-OK1 y G-OK2. Los briefs y los prompts del usuario están **textuales**, copiados de los transcripts de las sesiones. Los resúmenes de cada agente son míos y están marcados como tales.
 > Horarios en hora de Argentina (UTC-3), la misma zona del repo y del PLAN.
-> Una sola redacción: en los briefs de A2, A5 y A9 aparecen los patrones del comando de búsqueda de secretos; los reemplacé por `<patrones de claves redactados>` para que este archivo pase su propio chequeo. Todo lo demás es literal.
-> Cada brief que recibió un subagente llegó con un recordatorio del harness (entregar el reporte por `SubagentHandback`) agregado como segundo mensaje; no es parte del brief y no se transcribe.
+> Una sola redacción: en los briefs de A2, A5 (las dos iteraciones) y A9 aparecen los patrones del comando de búsqueda de secretos; los reemplacé por `<patrones de claves redactados>` para que este archivo pase su propio chequeo. Todo lo demás es literal.
+> Cada brief que recibió un subagente llegó con un recordatorio del harness (entregar el reporte por `SubagentHandback`) agregado como segundo mensaje, y algunos cargaron una skill (webapp-testing, docx); no es parte del brief y no se transcribe.
 > Los bloques usan cercas de cuatro acentos graves porque varios briefs contienen bloques de código.
 
 ## Índice
@@ -18,23 +18,24 @@
 
 ## 1. Cómo se trabajó
 
-**Esquema.** Un **orquestador** (Claude Opus en Claude Code) lee `PLAN.md` —la única fuente de verdad: norte, goals G1–G8, agentes A1–A9, estructura del repo, gates— y no escribe el código grande: delega, revisa, integra, actualiza el PLAN y hace los commits. Cada goal se delega a **subagentes Claude Sonnet** (`model: "sonnet"`) con **briefs autocontenidos**: ruta del PLAN, el goal, rutas de entrada y salida, regla de oro y criterio "Listo cuando". Los cuatro investigadores (A1a–A1d) corrieron en paralelo; el constructor (A2) y el redactor del blog (A2b) también. Los agentes que simulan dueños (A4) están pensados para recibir solo una persona y la URL, sin contexto del proyecto. Antes de dar un goal por cerrado, el orquestador verifica el criterio él mismo (abre archivos, corre tests, mira la app en 375 y 1280 px) y, si falta algo, devuelve el trabajo con feedback concreto (`SendMessage`).
+**Esquema.** Un **orquestador** (Claude Opus en Claude Code) lee `PLAN.md` —la única fuente de verdad: norte, goals G1–G8, agentes A1–A9, estructura del repo, gates— y no escribe el código grande: delega, revisa, integra, actualiza el PLAN y hace los commits. Cada goal se delega a **subagentes Claude Sonnet** (`model: "sonnet"`) con **briefs autocontenidos**: ruta del PLAN, el goal, rutas de entrada y salida, regla de oro y criterio "Listo cuando". Corrieron en paralelo los cuatro investigadores (A1a–A1d), el constructor y el redactor del blog (A2, A2b), el QA y los cuatro dueños simulados (A3, A4 ×4), y la iteración, el informe y el guion (A5, A6, A7). Los **dueños simulados (A4) recibieron solo una persona y la URL**: nada del proyecto, de Fudo ni del caso. Antes de dar un goal por cerrado, el orquestador verifica el criterio él mismo (abre archivos, corre tests, mira la app en 375 y 1280 px) y, si falta algo, devuelve el trabajo con feedback concreto (`SendMessage`). Cuando un subagente no puede hacer algo (A3 no pudo escribir su informe), no lo fuerza: el orquestador recibe el texto y lo guarda.
 
-**Gates humanos.** El orquestador se detiene y pregunta en G-OK0 (nombre y visibilidad del repo, primer deploy), G-OK1 (app final), G-OK2 (guion) y G-OK3 (entrega). El único gate pasado hasta ahora es G-OK0 (el usuario eligió `fudo-diagnostico`, público, con el riesgo de ToS declarado). Las credenciales nunca las escribe un agente: el orquestador instaló `gh` y `vercel`, y el usuario hizo el login.
+**Gates humanos.** El orquestador se detiene y pregunta en G-OK0 (nombre y visibilidad del repo), G-OK1 (app final), G-OK2 (guion) y G-OK3 (entrega). Pasaron G-OK0 (repo `fudo-diagnostico`, público, con el riesgo de ToS declarado), **G-OK2** (guion aprobado) y **G-OK1** (app aprobada con dos cambios finales). Falta G-OK3. Las credenciales nunca las escribe un agente: el orquestador instaló `gh` y `vercel`, y el usuario hizo el login.
 
-**Reglas permanentes.** (1) No inventar datos: lo real lleva fuente y fecha de captura (`provenance`), lo simulado se marca como simulado, lo no encontrado dice "no encontrado". (2) Cero secretos en el repo: `.env.example` documentado y `git grep` de claves antes de cada commit. (3) Todo dentro de `C:\Users\m_rubano\FUDO\`. (4) Los subagentes no editan el PLAN. (5) Responsive obligatorio (360, 375, 768, 1024, 1280 px, sin scroll horizontal, objetivos táctiles ≥44 px) y código fácil de tocar para el cambio en vivo de 15 minutos.
+**Reglas permanentes.** (1) No inventar datos: lo real lleva fuente y fecha de captura (`provenance`), lo simulado se marca como simulado, lo no encontrado dice "no encontrado". (2) Cero secretos en el repo: `.env.example` documentado y `git grep` de claves antes de cada commit. (3) Todo dentro de `C:\Users\m_rubano\FUDO\`. (4) Los subagentes no editan el PLAN. (5) Responsive obligatorio (360, 375, 768, 1024, 1280 px, sin scroll horizontal, objetivos táctiles ≥44 px) y código fácil de tocar para el cambio en vivo de 15 minutos. (6) Los dueños simulados no conocen el proyecto.
 
-**Herramientas.** Claude Code (sesiones de orquestador y subagentes), navegador integrado de Claude (captura del snapshot de locales y verificación visual), WebSearch/WebFetch, Playwright (241 capturas de A2) y axe-core (accesibilidad), Vite + React + TypeScript + Tailwind, Vitest, ESLint/Prettier, GitHub Actions (CI), `gh` 2.103.3 y Vercel CLI 65.3.1. Previstos para después: skills `docx`/`pdf` (informe), Remotion y el conector de ElevenLabs (video).
+**Herramientas.** Claude Code (sesiones de orquestador y subagentes), navegador integrado de Claude (captura del snapshot y verificación visual), WebSearch/WebFetch, Playwright (241 capturas de A2, recorridos de A3, A4 y A5) y axe-core (accesibilidad), Lighthouse móvil (A3), Vite + React + TypeScript + Tailwind, Vitest (177 tests al cierre), ESLint/Prettier, GitHub Actions (CI), `gh` 2.103.3 y Vercel CLI 65.3.1. Skills: `webapp-testing` (QA), `docx` (informe, exportado con Word lanzado desde PowerShell), `ui-ux-pro-max` (sugerida en el rediseño) y una skill propia, `escritura-humana`, creada para este proyecto porque no había ninguna en el catálogo. Pensados y no ejecutados: Remotion y el conector de ElevenLabs (video recortado).
 
 **Cómo se manejaron los límites de los planes gratuitos** (detalle y fuentes en `docs/research/costos.md`, §5–§6):
 
 | Servicio | Límite del plan gratuito | Qué hicimos |
 |---|---|---|
 | LLM (Gemini) | Tier gratis con límites que solo se ven en AI Studio; los datos del tier gratis se usan para mejorar productos | **Sin LLM en runtime (D3).** Recomendaciones por reglas y plantillas, marcadas como simuladas. Si se activa en producción: tier pago, razonamiento mínimo y sin mandar contenido de Places |
-| Google Places | Topes gratis por SKU desde marzo 2025: Text Search Pro 5.000/mes, **Place Details Enterprise 1.000/mes** (cuello de botella); requiere cuenta de facturación | La demo corre con **snapshot estático** fechado (USD 0, sin key). Places está implementado detrás de `DATA_SOURCE=places`; para activarlo: cuota diaria, alerta de presupuesto en USD 1, key restringida, límite por IP y **fallback automático al snapshot** si hay error o 429. Costo documentado: USD 0,057 por diagnóstico; los primeros 1.000 por mes salen USD 0 |
+| Google Places | Topes gratis por SKU desde marzo 2025: Text Search Pro 5.000/mes, **Place Details Enterprise 1.000/mes** (cuello de botella); requiere cuenta de facturación | La demo corre con **snapshot estático** fechado (USD 0, sin key). Places está implementado detrás de `DATA_SOURCE=places`; para activarlo: cuota diaria, alerta de presupuesto en USD 1, key restringida, límite por IP y **fallback automático al snapshot** si hay error o 429. Costo documentado: USD 0,057 por diagnóstico; los primeros 1.000 por mes salen USD 0. Como la demo solo cubre 13 locales, el buscador de texto se sacó de la UI y se reemplazó por tarjetas de los locales reales |
 | Vercel Hobby | 1 M de invocaciones, 100 GB de transferencia, 300 s por función, 100 deploys por día; **uso no comercial**; al pasarse se pausa 30 días (no cobra); Git solo con cuentas personales | Sin dependencia de LLM, snapshot estático, un solo proyecto y un solo repo bajo cuenta personal; PageSpeed con timeout corto; README e informe aclaran que es una demo no comercial y que producción va en Pro |
 | GitHub Free | Actions gratis en repos públicos | Un solo workflow `ci.yml` (lint + typecheck + test + build) con caché y `concurrency` |
-| Plan de uso de Claude | Un límite de uso cortó la sesión el 27/10 a las 00:27 con A2 a mitad de un arreglo | Se detuvo A2, se dejó el estado anotado en la Bitácora del PLAN y se retomó al renovarse el límite, revisando `git status` antes de seguir |
+| ElevenLabs | Cuenta con créditos y permisos de voz propios | La generación de voz **falló en todos los intentos** (modelos v4 y multilingual_v2, e incluso con una sola frase): problema de la cuenta, no del guion. El usuario recortó el video; no se usó una voz de reemplazo |
+| Plan de uso de Claude | Un límite de uso cortó la sesión dos veces: el 27/10 a las 00:27 (con A2 a mitad de un arreglo) y el 27/10 antes de las 09:51 (con A5 y A6 en marcha) | Se detuvo o se pausó el trabajo, se dejó el estado anotado en la Bitácora del PLAN y se retomó al renovarse el límite, con `SendMessage` a los agentes ("seguí donde quedaste, leé `git status` y `git log`") |
 
 ---
 
@@ -115,9 +116,13 @@ Empezá ahora: leé el PLAN y arrancá el goal pendiente que corresponda.
 | 27/10, 00:18 | Respuestas al gate G-OK0 (pregunta de opciones): nombre del repo = "fudo-diagnostico (Recomendado)"; visibilidad = "Público + riesgo declarado (Recomendado)" |
 | 27/10, 00:21 | "Ya me logueé en gh y vercel. Seguí con G3." |
 | 27/10, 04:56 | "sigue, hazla menos generica. y termina" |
-| 27/10, después de 05:12 (informado por el orquestador; el transcript archivado termina antes) | "te paso el logo de fudo, tanto para el video como para el sitio" |
+| 27/10, ~05:10 | "te paso el logo de fudo, tanto para el video como para el sitio" (no figura como texto en los transcripts archivados; es textual según el orquestador. Hora inferida: el brief de A5 de las 05:12 ya cita el logo en `app/public/brand/`) |
+| 27/10, 06:47 | Respuesta al gate G-OK2 (guion de 77 s): la opción elegida es "Aprobado (Recomendado)" |
+| 27/10, 09:51 | "I hit my usage limit while you were working, but it has reset now. Please continue from where you left off." |
+| 27/10, 10:39 | Respuesta al gate G-OK1 (pregunta 1, app final): "si, esta aprobada, lo unico me gustaria que el hero sea dinamico, Viernes 21:30. Alguien busca “pizza en Lanús”. alguien busca taqueria en mexico, restaurant en peru etc. , luego elimina la barra de busqueda ya que no funciona, no busca locales reales" |
+| 27/10, 10:39 | Respuesta sobre la voz del video (pregunta 2): "si no creaste aun el video no lo crees, solo termina la app y dame el informe , pon una skill de escritura humana" |
 
-La elección entre las 3 herramientas del primer análisis (el usuario eligió la **opción A**, diagnóstico híbrido) y los demás puntos de decisión se resumen en la sección 4.
+Los dos últimos mensajes responden a un gate con dos preguntas: aprobar la app final (G-OK1) y cómo seguir con el audio del video cuando ElevenLabs falla. Las opciones que se le ofrecieron eran subtítulos ahora, revisar ElevenLabs o usar la voz local de Windows; el usuario eligió escribir su propia respuesta. La elección entre las 3 herramientas del primer análisis (opción A, diagnóstico híbrido) y los demás puntos de decisión se resumen en la sección 4.
 
 ---
 
@@ -125,24 +130,34 @@ La elección entre las 3 herramientas del primer análisis (el usuario eligió l
 
 Cada bloque trae: objetivo, métricas de la corrida (tool calls y duración, sacadas del transcript), el brief **completo** que envió el orquestador, el feedback posterior (si hubo) y un resumen de lo que devolvió. Los resúmenes son míos, tomados del reporte final de cada agente.
 
-**Agentes archivados (8):** A1a, A1b, A1c, A1d, A2, A2b, A5, A9. No hay A3, A4, A6, A7 ni A8: todavía no corrieron.
+**Agentes archivados (16 corridas):** A1a, A1b, A1c, A1d, A2, A2b, A5 (iteración 1), A9, A3, A4 ×4 (Rubén, Mariana, Andrés, Sofía), A5 (iteración 2), A6, A7. No hay A8: el video se recortó.
 
-| Agente | Lanzado (-03) | Tool calls | Estado al archivar |
-|---|---|---|---|
-| A1a | 2026-10-26 23:02 (-03) | 153 | terminado |
-| A1b | 2026-10-26 23:02 (-03) | 108 | terminado |
-| A1c | 2026-10-26 23:02 (-03) | 80 | terminado |
-| A1d | 2026-10-26 23:02 (-03) | 115 | terminado |
-| A2 | 2026-10-26 23:36 (-03) | 126 | interrumpido por límite de uso (reporte parcial entregado) |
-| A2b | 2026-10-26 23:36 (-03) | 90 | terminado |
-| A5 | 2026-10-27 05:12 (-03) | 32+ | en curso al momento de archivar |
-| A9 | 2026-10-27 05:12 (-03) | 37+ | en curso al momento de archivar |
+| Agente | Lanzado (-03) | Tool calls | Duración | Estado al archivar |
+|---|---|---|---|---|
+| A1a | 2026-10-26 23:02 (-03) | 153 | ~31 min | terminado |
+| A1b | 2026-10-26 23:02 (-03) | 108 | ~26 min | terminado |
+| A1c | 2026-10-26 23:02 (-03) | 80 | ~18 min | terminado |
+| A1d | 2026-10-26 23:02 (-03) | 115 | ~22 min | terminado |
+| A2 | 2026-10-26 23:36 (-03) | 126 | ~52 min | interrumpido por límite de uso (reporte parcial entregado) |
+| A2b | 2026-10-26 23:36 (-03) | 90 | ~13 min | terminado |
+| A5 (it. 1) | 2026-10-27 05:12 (-03) | 97 | ~33 min | terminado |
+| A9 | 2026-10-27 05:12 (-03) | 47 | ~350 min | en curso (esta actualización) |
+| A3 | 2026-10-27 05:50 (-03) | 200 | ~38 min | terminado |
+| A4 Rubén | 2026-10-27 05:50 (-03) | 31 | ~16 min | terminado |
+| A4 Mariana | 2026-10-27 05:50 (-03) | 43 | ~17 min | terminado |
+| A4 Andrés | 2026-10-27 05:50 (-03) | 47 | ~19 min | terminado |
+| A4 Sofía | 2026-10-27 05:50 (-03) | 51 | ~20 min | terminado |
+| A5 (it. 2) | 2026-10-27 06:30 (-03) | 160 | ~266 min | terminado |
+| A6 | 2026-10-27 06:31 (-03) | 101 | ~270 min | devolvió 2 versiones; ajuste de 170 a 177 tests confirmado (PDF en 2 páginas) |
+| A7 | 2026-10-27 06:31 (-03) | 49 | ~10 min | terminado |
+
+Nota sobre la duración de A5 (iteración 2) y A6: incluye las horas en que la sesión estuvo frenada por el límite de uso, no es tiempo de trabajo.
 
 ### A1a · Investigador: marca, países, herramientas de Fudo, benchmark
 
 - **Objetivo:** Sacar de fu.do los tokens exactos de marca y armar la tabla de países (moneda, ente fiscal, apps de delivery, planes, URL de alta), más el catálogo de herramientas de Fudo y un benchmark de graders.
 - **Salidas:** `docs/research/brand.md`, `paises.md`, `fudo-tools.md`, `benchmark.md`, `app/src/config/countries.json`
-- **Corrida:** lanzado 2026-10-26 23:02 (-03); 153 tool calls registrados; duró ~31 min.
+- **Corrida:** lanzado 2026-10-26 23:02 (-03); 153 tool calls registrados; ~31 min.
 
 **Brief (completo):**
 
@@ -193,7 +208,7 @@ Sin feedback posterior al brief.
 
 - **Objetivo:** Capturar 13–15 restaurantes reales (AR 4, MX 4, CL 2, CO 2, BR 1) con provenance por campo, sin datos personales, cubriendo seis perfiles.
 - **Salidas:** `app/data/snapshots/*.json` (+ `index.json`) y `docs/research/snapshot.md`
-- **Corrida:** lanzado 2026-10-26 23:02 (-03); 108 tool calls registrados; duró ~26 min.
+- **Corrida:** lanzado 2026-10-26 23:02 (-03); 108 tool calls registrados; ~26 min.
 
 **Brief (completo):**
 
@@ -257,7 +272,7 @@ Sin feedback posterior al brief.
 
 - **Objetivo:** Documentar Google Places API (New): campos, SKUs, tier gratis, ToS de caché; otras fuentes; y calcular el costo por diagnóstico y los límites de Vercel/GitHub/Places en plan gratuito.
 - **Salidas:** `docs/research/datos.md`, `docs/research/costos.md`
-- **Corrida:** lanzado 2026-10-26 23:02 (-03); 80 tool calls registrados; duró ~18 min.
+- **Corrida:** lanzado 2026-10-26 23:02 (-03); 80 tool calls registrados; ~18 min.
 
 **Brief (completo):**
 
@@ -298,7 +313,7 @@ Sin feedback posterior al brief.
 
 - **Objetivo:** Responder "una herramienta sin tráfico no genera clientes": keywords SEO/AEO por país, páginas programáticas, alianzas, plan de 6–8 artículos GEO (D4) y propuesta de MCP.
 - **Salidas:** `docs/research/distribucion.md`, `geo-blog.md`, `mcp.md`
-- **Corrida:** lanzado 2026-10-26 23:02 (-03); 115 tool calls registrados; duró ~22 min.
+- **Corrida:** lanzado 2026-10-26 23:02 (-03); 115 tool calls registrados; ~22 min.
 
 **Brief (completo):**
 
@@ -343,7 +358,7 @@ Sin feedback posterior al brief.
 
 - **Objetivo:** Construir la app (Vite + React + TS + Tailwind, funciones serverless, gateway con Snapshot/Places/Mock, scoring por reglas, blog prerenderizado) con README, ARCHITECTURE, ADR y CI, y un historial de commits convencionales.
 - **Salidas:** `app/`, `README.md`, `docs/ARCHITECTURE.md`, `docs/adr/`, `.github/workflows/ci.yml`
-- **Corrida:** lanzado 2026-10-26 23:36 (-03); 126 tool calls registrados; duró ~52 min.
+- **Corrida:** lanzado 2026-10-26 23:36 (-03); 126 tool calls registrados; ~52 min.
 
 **Brief (completo):**
 
@@ -427,7 +442,7 @@ Consecuencia: el arreglo quedó a medias; el orquestador lo cerró al retomar (c
 
 - **Objetivo:** Escribir los 8 artículos de `geo-blog.md` en Markdown con frontmatter (respuesta corta arriba, H2 como preguntas, FAQ, fuentes, `verifyNotes`).
 - **Salidas:** `app/content/blog/<slug>.md` (8 archivos)
-- **Corrida:** lanzado 2026-10-26 23:36 (-03); 90 tool calls registrados; duró ~13 min.
+- **Corrida:** lanzado 2026-10-26 23:36 (-03); 90 tool calls registrados; ~13 min.
 
 **Brief (completo):**
 
@@ -492,11 +507,11 @@ Sin feedback posterior al brief.
 
 ---
 
-### A5 · Constructor (iteración): rediseño "menos genérico", landings por país y 3 bugs
+### A5 · Constructor (iteración 1): rediseño "menos genérico", landings por país y 3 bugs
 
 - **Objetivo:** Rehacer la cara de la app a pedido del dueño ("hacela menos genérica"): logo real, hero desde la escena del cliente, ticket de ejemplo real, resultado como comanda, comparación con vecinos, voz por país, landings /ar /mx /cl /co y 3 bugs menores.
-- **Salidas:** `app/` (UI, copy, dominio, prerender), README/ARCHITECTURE si cambia la estructura
-- **Corrida:** lanzado 2026-10-27 05:12 (-03); 32+ tool calls registrados; **en curso al momento de archivar**.
+- **Salidas:** `app/` (UI, copy, dominio, prerender), README/ARCHITECTURE
+- **Corrida:** lanzado 2026-10-27 05:12 (-03); 97 tool calls registrados; ~33 min.
 
 **Brief (completo):**
 
@@ -533,15 +548,19 @@ Sin feedback posterior al brief.
 
 **Qué devolvió (resumen mío):**
 
-- **En curso al momento de archivar**: todavía no devolvió reporte final (llevaba 32 tool calls y ya había commiteado parte del trabajo, ver sección 5). Su resumen se agrega cuando el orquestador lo reciba.
+- 7 commits en `main` (`9a0f085` a `b90ff5c`); tests de 65 a **105** (vecinos, vidriera, voz por país, landings). Lint, typecheck, test y build en verde.
+- Marca: header y pie azul noche con el logo oficial y "demo · no oficial" (Deli en texto para BR), favicon con la F. Hero desde la escena "Viernes 21:30", ticket de ejemplo leído del snapshot, resultado como comanda con las áreas en lenguaje de dueño.
+- Dominio: `compareWithNeighbors` (función pura, `null` si no hay pares) y vidriera por país; voz por país en `copy.ts` (voseo AR, tuteo MX/CL/CO) con un objeto base y overrides. Las recomendaciones pasaron a `copy.ts`.
+- Landings `/ar/ /mx/ /cl/ /co/` prerenderizadas con `hreflang`, JSON-LD `WebApplication` + `BreadcrumbList`, sitemap y `llms.txt`. Corrigió los 3 bugs menores. 0 px de scroll horizontal en 5 anchos y axe limpio.
+- Avisó dos límites: CO y BR no muestran vecinos (un solo local con datos) y agregó `ar|mx|cl|co` a la exclusión del rewrite de `app/vercel.json`.
 
 ---
 
 ### A9 · Archivista de prompts (este documento)
 
-- **Objetivo:** Reconstruir el historial de prompts y briefs en `docs/prompts/LOG.md`.
+- **Objetivo:** Reconstruir el historial de prompts y briefs en `docs/prompts/LOG.md` y, al cierre (G8), actualizarlo con todo lo posterior.
 - **Salidas:** `docs/prompts/LOG.md`
-- **Corrida:** lanzado 2026-10-27 05:12 (-03); 37+ tool calls registrados; **en curso al momento de archivar**.
+- **Corrida:** lanzado 2026-10-27 05:12 (-03); 47 tool calls registrados; ~350 min.
 
 **Brief (completo):**
 
@@ -567,11 +586,403 @@ Revisá que el LOG no contenga secretos ni tokens (grep de <patrones de claves r
 
 **Feedback recibido:**
 
+1. (2026-10-27 11:01 (-03)) del orquestador, al cierre del proyecto (G8): este mensaje pidió la segunda versión del log:
+
+````text
+Toca cerrar el log (G8). Actualizá `C:\Users\m_rubano\FUDO\docs\prompts\LOG.md` con todo lo que pasó después de tu versión, con el mismo formato y las mismas reglas (sin secretos, sin el email del usuario, grep final vacío):
+- Prompts del usuario nuevos, textuales: "te paso el logo de fudo, tanto para el video como para el sitio"; respuesta a G-OK2: "Aprobado"; "I hit my usage limit while you were working, but it has reset now. Please continue from where you left off."; respuesta a G-OK1: "si, esta aprobada, lo unico me gustaria que el hero sea dinamico, Viernes 21:30. Alguien busca “pizza en Lanús”. alguien busca taqueria en mexico, restaurant en peru etc. , luego elimina la barra de busqueda ya que no funciona, no busca locales reales" y sobre la voz: "si no creaste aun el video no lo crees, solo termina la app y dame el informe , pon una skill de escritura humana".
+- Briefs nuevos completos (sacalos de los transcripts en `~/.claude/projects/C--Users-m-rubano-FUDO/7768c317-4574-4b7d-927a-fc4213f2d995/subagents/agent-*.jsonl`, como hiciste antes): A5 rediseño "menos genérico" (completar resumen), A3 QA, A4 ×4 (Rubén, Mariana, Andrés, Sofía: aclarar que recibieron solo persona + URL), A5 iteración con feedback (+ los SendMessage de seguimiento: retomar tras límite, hero dinámico y sacar buscador), A6 informe (+ seguimiento: retomar, reescritura con skill escritura-humana, 170→177), A7 guion, y tu propio brief (A9).
+- Decisiones/correcciones nuevas en la tabla: G-OK2 guion aprobado; ElevenLabs falló en todas las generaciones (v4, multilingual_v2 e incluso 1 frase) → problema de cuenta; Matías recortó el video; G-OK1 app aprobada con hero dinámico (solo los 5 países de Fudo: Perú no está en el caso) y sin buscador (tarjetas de los 13 locales; Places en producción); skill `.claude/skills/escritura-humana` creada porque no había una en el catálogo; A3 no pudo escribir su archivo y el orquestador lo guardó; los dueños simulados dieron 6/5/5/4 y ninguno crearía cuenta (alta simulada) → primer pedido a producto.
+- Cronología de commits actualizada (`git log`).
+Usá un script en `C:\Users\m_rubano\FUDO\.tmp\a9\` y borralo al final. No hagas commits. Devolveme tamaño y lista de agentes archivados.
+````
+
+**Qué devolvió (resumen mío):**
+
+- Primera versión entregada y commiteada por el orquestador (`87d04aa`). Esta es la segunda versión: suma A3, A4 ×4, A5 (iteración 2), A6 y A7, los prompts nuevos del usuario, las decisiones posteriores y la cronología de commits completa.
+- Fuentes: los JSONL de la sesión del orquestador y de cada subagente (los `.output` de la carpeta `tasks` estaban vacíos o eran de procesos auxiliares), `PLAN.md`, `PROMPT-EJECUCION.md`, `docs/research/costos.md` y `git log`.
+
+---
+
+### A3 · QA responsive y funcional (G4)
+
+- **Objetivo:** Recorrer la app en producción en 360/375/768/1024/1280 con capturas, medir overflow, contraste, errores, teclado, los 4 ruteos y un local real por país, y entregar `docs/qa/report.md`.
+- **Salidas:** `docs/qa/report.md`, `docs/qa/screenshots/`
+- **Corrida:** lanzado 2026-10-27 05:50 (-03); 200 tool calls registrados; ~38 min.
+
+**Brief (completo):**
+
+````text
+Sos A3 (QA responsive y funcional) del proyecto "Caso Fudo: Diagnóstico + Tu Fudo ya armado". Leé `C:\Users\m_rubano\FUDO\PLAN.md` (§2-G2 requisitos y §2-G4 completo; no lo edites) y el `README.md`. App en producción: https://fudo-diagnostico.vercel.app (código en `C:\Users\m_rubano\FUDO\app\`, no lo modifiques: vos reportás, otro agente arregla).
+
+CHECKLIST G4 (todo con navegador real; usá Playwright, ya instalado — skill `webapp-testing` — y axe-core):
+1. Flujo completo en **375 / 768 / 1280** con capturas de cada paso → `C:\Users\m_rubano\FUDO\docs\qa\screenshots\` (nombres `<ancho>-<caso>-<paso>.png`; comprimí a PNG razonables, que la carpeta no pase de ~15 MB en total; elegí las capturas que documentan, no 200).
+2. Revisá: scroll horizontal (también 360 y 1024), solapamientos, cortes de texto, contraste AA (axe), estados de carga, **errores**: local no encontrado (p. ej. "La Parrilla de Tito"), búsqueda con 1 letra, proveedor caído (simulalo bloqueando `/api/*` con `page.route` y mirá qué ve el usuario), doble click en botones, volver atrás en el navegador en medio del cuestionario, recarga en el resultado. **Teclado**: todo el flujo sin mouse, foco visible, orden lógico, Escape cierra el modal.
+3. Los **4 ruteos**: caliente, switcher (cobra "con otro sistema"), nutrir (poco volumen / sin delivery), por-abrir ("Todavía no abrí"), más descartar (4+ locales). Y **al menos un local real por país** (AR, MX, CL, CO, BR: el de BR tiene que decir "Deli", no "Fudo", y avisar que el portugués está fuera de alcance). Voz: voseo en AR, tuteo en MX/CL/CO.
+4. Landings `/ar/ /mx/ /cl/ /co/`, `/blog/` y 2 artículos: que el HTML sin JS traiga el contenido (`curl`), JSON-LD válido (parsealo), canonical, `hreflang`, `sitemap.xml` con todas las URLs y que todas devuelvan 200, `robots.txt`, `llms.txt`. Links internos rotos (crawl simple de todas las URLs del sitemap y sus links internos).
+5. Datos: que cada dato real muestre su badge "real · capturado el 26/10/2026", que lo simulado diga simulado, que los números del ticket de un local coincidan con su JSON en `app/data/snapshots/`. Panel `/debug` registra los eventos del recorrido.
+6. Performance básica: tamaño del JS, Lighthouse si podés correrlo (npx lighthouse con Chrome de Playwright), o al menos tiempos de carga.
+
+SALIDA: `C:\Users\m_rubano\FUDO\docs\qa\report.md` en español: resumen ejecutivo, matriz (caso × ancho → ok/bug), lista de bugs con **severidad (bloqueante / alta / media / baja)**, pasos para reproducir, captura, y sugerencia de arreglo (archivo probable). Separá bugs de "mejoras sugeridas". No hagas commits.
+
+**Listo cuando:** el reporte cubre los 6 puntos con evidencia y las capturas están en `docs/qa/screenshots/`. Devolveme la lista de bugs por severidad (una línea cada uno).
+````
+
+**Feedback recibido:**
+
 Sin feedback posterior al brief.
 
 **Qué devolvió (resumen mío):**
 
-- Es el agente que escribe este archivo. Fuentes usadas: los JSONL de la sesión del orquestador y de cada subagente (los `.output` de la carpeta `tasks` estaban vacíos o eran de procesos auxiliares), `PLAN.md`, `PROMPT-EJECUCION.md`, `docs/research/costos.md` y `git log`.
+- 200 tool calls (Playwright + axe-core + Lighthouse móvil + curl). **Sin bugs bloqueantes**; 1 alta y 8 medias para arreglar antes de la entrevista (doble clic, atrás/recarga en el resultado, texto largo en el buscador, ruteo "por abrir", tuteo mezclado en MX/CL/CO, jerga interna, etc.). Los 3 bugs menores del G2 ya estaban corregidos.
+- Los 13 locales muestran en el ticket los números de su JSON (0 diferencias) con el badge "real · capturado el 26/10/2026"; lo simulado dice "simulado". Lighthouse móvil: performance 84 (home), 81 (`/ar/`), 89 (artículo); accesibilidad 98–100.
+- **No pudo escribir `docs/qa/report.md`**: la herramienta Write rechazó el archivo ("los subagentes devuelven los hallazgos como texto"). No lo escribió por otro camino: devolvió el informe completo como texto y **el orquestador lo guardó** (commit `b2f69b4`). Las ~115 capturas sí quedaron en `docs/qa/screenshots/`.
+
+---
+
+### A4 · Dueño simulado P1: Rubén (pizzería, Lanús, AR)
+
+- **Objetivo:** Hacer de Rubén, 52, pizzería en Lanús, desconfiado, y recorrer la app en el celular. Recibió **solo la persona y la URL**, sin contexto del proyecto, de Fudo ni del caso.
+- **Salidas:** Informe de la persona (el orquestador lo guardó en `docs/feedback/`)
+- **Corrida:** lanzado 2026-10-27 05:50 (-03); 31 tool calls registrados; ~16 min.
+
+**Brief (completo):**
+
+````text
+Vas a hacer de una persona real usando una página web por primera vez. Quedate en el personaje todo el tiempo.
+
+**Quién sos:** Rubén, 52 años. Tenés una pizzería en Lanús, provincia de Buenos Aires (Argentina): "El Campeón de la Pizza", un solo local. Vendés mucho por PedidosYa y también en el mostrador. Facturás a mano. Sos desconfiado: ya te quisieron vender de todo, odiás que te pidan datos y no creés en números que salen de la nada. No sos de la tecnología; usás el celular.
+
+**La página:** https://fudo-diagnostico.vercel.app — un conocido te pasó el link por WhatsApp.
+
+**Cómo hacerlo:** abrí la página con un navegador real automatizado (Playwright con Python o Node, ya instalado en la máquina; usá viewport de celular 375×812). Recorrela como lo haría Rubén: leé lo que aparece, buscá tu local, respondé las preguntas con la verdad de Rubén, mirá el resultado, abrí lo que te dé curiosidad y decidí si harías clic en lo que te propone. Si te ayuda, sacá capturas en una carpeta temporal tuya (no dentro de ninguna carpeta de proyecto) y miralas. No envíes datos personales reales a ningún formulario (si te pide un email, usá rubén@example.com y no hace falta enviarlo).
+
+**Devolveme (en primera persona, como Rubén, en español rioplatense):**
+1. Recorrido pensado en voz alta, paso por paso (qué viste, qué pensaste, qué hiciste).
+2. Fricciones: en qué paso exacto y por qué.
+3. Objeciones que te quedan.
+4. ¿Crearías la cuenta? Sí / no / por qué.
+5. Nota del 1 al 10.
+6. La frase exacta de la página que más te convenció y la que más te espantó (citala textual).
+7. ¿Le creíste al número de plata que "se te escapa"? ¿Por qué?
+Al final, fuera del personaje, 3 líneas con los problemas concretos de la página que encontraste (texto, botones, cosas que no anduvieron).
+````
+
+**Feedback recibido:**
+
+Sin feedback posterior al brief.
+
+**Qué devolvió (resumen mío):**
+
+- Nota **6/10**; **no crearía la cuenta hoy** (el botón es una simulación). Le llegó el "Viernes 21:30" y le gustó que no pida datos; le asustó ver su propio local en la portada antes de entender que son datos públicos.
+- Le creyó "a medias" al número de plata perdida: la lógica sí (comisión 25–35%, merma por cobro a mano), el total no (arranca de 4.000 pedidos estimados por reseñas). Valoró que el desplegable muestre la cuenta y los supuestos.
+- Frase que lo convenció: "Estimación simulada con supuestos propios de la demo, no un dato real de tu negocio." La que lo espantó: "Hoy el alta de fu.do no acepta precarga de datos, así que este botón es una simulación."
+- Bugs: la búsqueda devuelve locales de otros países sin avisar que no encontró el suyo; "× ×1" en la cuenta; nombre pegado al badge ("El Campeón De La Pizzavos"); infiere "canal propio: No" sin preguntarlo.
+
+---
+
+### A4 · Dueño simulado P2: Mariana (taquería, 2 sucursales, CDMX, MX)
+
+- **Objetivo:** Hacer de Mariana, 34, taquería con 2 sucursales en CDMX que usa otro POS, y recorrer la app en celular y escritorio. Recibió **solo la persona y la URL**.
+- **Salidas:** Informe de la persona (guardado en `docs/feedback/`)
+- **Corrida:** lanzado 2026-10-27 05:50 (-03); 43 tool calls registrados; ~17 min.
+
+**Brief (completo):**
+
+````text
+Vas a hacer de una persona real usando una página web por primera vez. Quedate en el personaje todo el tiempo.
+
+**Quién sos:** Mariana, 34 años. Tenés una taquería en Ciudad de México: "Tacos Hola El Güero", con 2 sucursales. Ya usas otro sistema de punto de venta (Soft Restaurant) y lo pagas cada mes; cambiarlo te da flojera y miedo de perder tus datos y de tener problemas con la facturación del SAT. Vendes en el local y un poco por apps. Eres práctica: si algo te sirve lo usas, si te hace perder tiempo te vas.
+
+**La página:** https://fudo-diagnostico.vercel.app — te apareció buscando en Google.
+
+**Cómo hacerlo:** abre la página con un navegador real automatizado (Playwright con Python o Node, ya instalado en la máquina; viewport de celular 375×812 y luego mírala también en computadora 1280×800). Recórrela como lo haría Mariana: lee, busca tu taquería, responde las preguntas con la verdad de Mariana, mira el resultado, abre lo que te dé curiosidad y decide si harías clic en lo que te propone. Si te ayuda, saca capturas en una carpeta temporal tuya (no dentro de ninguna carpeta de proyecto). No envíes datos personales reales (si pide email, usa mariana@example.com sin enviarlo).
+
+**Devuélveme (en primera persona, como Mariana, en español de México):**
+1. Recorrido pensado en voz alta, paso por paso.
+2. Fricciones: en qué paso exacto y por qué.
+3. Objeciones para cambiarte de sistema que te quedan (y si la página las contesta).
+4. ¿Crearías la cuenta? Sí / no / por qué.
+5. Calificación del 1 al 10.
+6. La frase exacta de la página que más te convenció y la que más te espantó (cítala textual).
+7. ¿Sentiste que la página entendía que ya tienes un sistema?
+Al final, fuera del personaje, 3 líneas con los problemas concretos de la página que encontraste.
+````
+
+**Feedback recibido:**
+
+Sin feedback posterior al brief.
+
+**Qué devolvió (resumen mío):**
+
+- Nota **5/10**; no crearía la cuenta (el alta es simulada y no resuelve su miedo: facturar con el SAT sin perder datos al migrar). Se sintió switcher con el bloque "Ya tienes un sistema, así que lo que importa es no perder lo que cargaste"; la guía de Soft Restaurant le pareció muy buena.
+- Objeciones: la raíz está en argentino ("pizza en Lanús", voseo) y mezcla tuteo con voseo; no hay "Taquería" en la pregunta 1; no le pregunta cuál sistema usa; la comparación "4 de 4" usa locales no comparables.
+- Bugs: "Tacos Hola El Güerotú" (tú pegado al nombre), separador de miles inconsistente, jerga interna "Switcher" visible, notas internas ("Borrador de demo") en las guías.
+
+---
+
+### A4 · Dueño simulado P3: Andrés (dark kitchen, Bogotá, CO)
+
+- **Objetivo:** Hacer de Andrés, 29, dark kitchen en Bogotá que vende solo por apps, y recorrer la app en el celular. Recibió **solo la persona y la URL**.
+- **Salidas:** Informe de la persona (guardado en `docs/feedback/`)
+- **Corrida:** lanzado 2026-10-27 05:50 (-03); 47 tool calls registrados; ~19 min.
+
+**Brief (completo):**
+
+````text
+Vas a hacer de una persona real usando una página web por primera vez. Quedate en el personaje todo el tiempo.
+
+**Quién sos:** Andrés, 29 años. Tienes una dark kitchen en Bogotá (Colombia): "Come Como en Casa". No hay salón: vendes solo por apps (Rappi sobre todo). Un solo local. Cobras lo que te paga la app y llevas las cuentas en Excel. Eres joven, rápido con el celular, impaciente, y te molesta cuando las herramientas asumen que tienes mesas y meseros.
+
+**La página:** https://fudo-diagnostico.vercel.app — la viste en un grupo de emprendedores gastronómicos.
+
+**Cómo hacerlo:** abre la página con un navegador real automatizado (Playwright con Python o Node, ya instalado en la máquina; viewport de celular 375×812). Recórrela como lo haría Andrés: busca tu negocio, responde con la verdad de Andrés, mira el resultado, abre lo que te dé curiosidad y decide si harías clic en lo que te propone. Si te ayuda, saca capturas en una carpeta temporal tuya (no dentro de ninguna carpeta de proyecto). No envíes datos personales reales (si pide email, usa andres@example.com sin enviarlo).
+
+**Devuélveme (en primera persona, como Andrés, en español de Colombia):**
+1. Recorrido pensado en voz alta, paso por paso.
+2. Fricciones: en qué paso exacto y por qué.
+3. Objeciones que te quedan.
+4. ¿Crearías la cuenta? Sí / no / por qué.
+5. Calificación del 1 al 10.
+6. La frase exacta de la página que más te convenció y la que más te espantó (cítala textual).
+7. ¿Sentiste que era para un negocio como el tuyo o para un restaurante con salón?
+Al final, fuera del personaje, 3 líneas con los problemas concretos de la página que encontraste.
+````
+
+**Feedback recibido:**
+
+Sin feedback posterior al brief.
+
+**Qué devolvió (resumen mío):**
+
+- Nota **5/10**; no crearía la cuenta. Lo retuvo "Sin tarjeta y sin registro" y encontrar su local a la primera; marcó "Dark kitchen (solo delivery)" y pensó "alguien pensó en mí".
+- Pero se sintió en una app pensada para un restaurante con salón y otro país: la pregunta 3 asume que cobra y factura él ("me paga la app" no existe), recomienda "Deja de cobrar y facturar a mano (DIAN)" y lo compara con una tienda mixta de Medellín.
+- Bugs: ejemplo, voseo y comisiones de Argentina en la home y el cálculo; "NO LO PUDIMOS LEER" repetido pero igual da nota general 62/100; 1.000 pedidos en el cálculo y 400/1.500/4.000 en los supuestos; el pie expone "/debug".
+
+---
+
+### A4 · Dueño simulado P4: Sofía (por abrir una cafetería, Santiago, CL)
+
+- **Objetivo:** Hacer de Sofía, 26, "estoy por abrir una cafetería", y ver si la app la descarta bien hacia el Consultor sin frustrarla. Recibió **solo la persona y la URL**.
+- **Salidas:** Informe de la persona (guardado en `docs/feedback/`)
+- **Corrida:** lanzado 2026-10-27 05:50 (-03); 51 tool calls registrados; ~20 min.
+
+**Brief (completo):**
+
+````text
+Vas a hacer de una persona real usando una página web por primera vez. Quedate en el personaje todo el tiempo.
+
+**Quién sos:** Sofía, 26 años. Estás por abrir tu primera cafetería en Santiago de Chile (Providencia), todavía sin local abierto: tienes el nombre pensado ("Café Lumbre") y estás averiguando todo — permisos, boleta electrónica, qué sistema usar. Te entusiasma el proyecto pero te frustra cuando las herramientas te tratan como si ya tuvieras un negocio andando.
+
+**La página:** https://fudo-diagnostico.vercel.app — te la recomendó una amiga.
+
+**Cómo hacerlo:** abre la página con un navegador real automatizado (Playwright con Python o Node, ya instalado en la máquina; viewport de celular 375×812). Recórrela como lo haría Sofía: intenta buscar tu cafetería, responde con la verdad de Sofía, mira a dónde te lleva, abre lo que te dé curiosidad y decide si harías clic en lo que te propone. Si te ayuda, saca capturas en una carpeta temporal tuya (no dentro de ninguna carpeta de proyecto). No envíes datos personales reales (si pide email, usa sofia@example.com sin enviarlo).
+
+**Devuélveme (en primera persona, como Sofía, en español de Chile):**
+1. Recorrido pensado en voz alta, paso por paso.
+2. Fricciones: en qué paso exacto y por qué.
+3. Objeciones o dudas que te quedan.
+4. ¿Harías clic en lo que te propone al final? Sí / no / por qué.
+5. Calificación del 1 al 10.
+6. La frase exacta de la página que más te convenció y la que más te frustró (cítala textual).
+7. ¿Te sentiste descartada o bien encaminada?
+Al final, fuera del personaje, 3 líneas con los problemas concretos de la página que encontraste.
+````
+
+**Feedback recibido:**
+
+Sin feedback posterior al brief.
+
+**Qué devolvió (resumen mío):**
+
+- Nota **4/10**; no crearía la cuenta (sí haría clic en "Probar el Consultor de Nuevos Negocios", "a pesar de la página, no gracias a ella"). Se sintió vista con "Todavía no abrí", pero el resultado la trató como un café que ya vende.
+- Bug clave: "Café Lumbre" se resuelve por coincidencia aproximada a Casa Salvo Café y le muestra un local ajeno como si fuera suyo, incluido el bloque "Tu Fudo ya viene con tu local cargado" con nombre, dirección y horarios de otro negocio.
+- Además: "Aunque no marcaste las apps, tu local figura en 2" cuando no marcó nada; etiqueta interna "Caliente" visible; el Consultor, lo único pertinente, quedaba al final.
+- No alcanzó a abrir la guía de boleta electrónica ni el link del Consultor (el entorno le cortó comandos): lo declaró.
+
+---
+
+### A5 · Constructor (iteración 2): los 5 cambios de mayor impacto + cambios finales de G-OK1
+
+- **Objetivo:** Aplicar como máximo 5 cambios de mayor impacto salidos del QA y de los 4 dueños simulados (búsqueda honesta, "Estoy por abrir" como ruta propia, home por país, preguntas y "tus números", confianza), y después los 2 cambios finales pedidos al aprobar la app: hero dinámico y sin buscador.
+- **Salidas:** `app/`, README/ARCHITECTURE; `docs/feedback/cambios.md` lo completa el orquestador
+- **Corrida:** lanzado 2026-10-27 06:30 (-03); 160 tool calls registrados; ~266 min.
+
+**Brief (completo):**
+
+````text
+Sos A5 (Constructor, iteración) del proyecto "Caso Fudo: Diagnóstico + Tu Fudo ya armado": una herramienta gratuita que diagnostica la presencia online de un restaurante y lo lleva a crear cuenta en Fudo (SaaS gastronómico; AR/MX/CL/CO; BR = "Deli"). Es una demo para una entrevista: el equipo técnico de Fudo lee el repo y se hace un cambio en vivo de 15 min.
+
+LEÉ PRIMERO, completos: `C:\Users\m_rubano\FUDO\docs\feedback\cambios.md` (tu trabajo: los 5 cambios), `C:\Users\m_rubano\FUDO\docs\qa\report.md` (bugs B-1…B-15 con archivo probable), las 4 devoluciones `docs\feedback\persona-*.md`, y `PLAN.md` (§0, §2-G2, §2-G5), `README.md`, `docs\ARCHITECTURE.md`. Código: `C:\Users\m_rubano\FUDO\app\` (Vite + React + TS strict + Tailwind; copy en `src/content/copy.ts` con base + overrides por país; tokens en `src/theme/tokens.ts`; dominio puro en `src/domain/`; gateway en `src/gateway/`; UI en `src/ui/`; prerender en `scripts/`). Prod: https://fudo-diagnostico.vercel.app. Repo en `main`, pusheado (hacé `git pull` primero).
+
+HACÉ LOS 5 CAMBIOS de cambios.md, en este orden y con un commit (o más) por cambio:
+1. **Búsqueda honesta** (en `src/gateway/shared.ts` / `searchCatalog` y la UI de resultados): solo ofrecer "¿Es este?" con coincidencia real (todas las palabras significativas del nombre, o nombre + ciudad); si no, estado "No encontramos «X»" con sugerencias del país detectado primero (header `x-vercel-ip-country` o la landing desde la que se busca); nunca mezclar países si la búsqueda nombra una ciudad del snapshot. Casos de test obligatorios: "Café Lumbre" → no encontrado (no Casa Salvo); "Pizzería Don Rubén Lanús" → no encontrado con sugerencias AR primero; "El Campeón de la Pizza" → solo El Campeón (no Diavola); "Tacos Hola El Güero, Ciudad de México" → solo Hola El Güero; "Come Como en Casa Bogotá" → solo ese.
+2. **"Estoy por abrir" es otra ruta**: link en la home ("¿Todavía no abriste? …") y opción en P1; ambos llevan a una pantalla propia sin diagnóstico de ningún local, sin plata ni ticket: Consultor de Nuevos Negocios (URL real ya usada en el código) primero, y la/s guía/s del blog del país (CL → boleta SII; AR → ARCA; MX → CFDI; CO → DIAN) + qué datos conviene tener al abrir. Si venía de elegir un local y marca "Todavía no abrí", no mostrar el diagnóstico de ese local. Eliminá `DEFAULTS_BEFORE_OPENING` o su uso para armar un diagnóstico.
+3. **La home habla el idioma del país**: endpoint mínimo `GET /api/geo` (devuelve `{ country }` desde `x-vercel-ip-country`, default AR; en dev, `?country=` para probar) o reutilizá uno existente; la home (`/`) adapta escena del hero (local real del snapshot de ese país: p. ej. MX "tacos en la Roma"/"hamburguesas en Zapopan" según lo que haya), chips (país detectado primero), voz (voseo AR, tuteo MX/CL/CO) y link visible "Ver la versión para <país>" a su landing. El HTML prerenderizado de `/` sigue siendo AR (para SEO); el cambio es en el cliente tras hidratar, sin salto de layout feo. Arreglá voseo filtrado: `pickAtLeastOne` y cualquier "Elegí/Mirá/Probá/Escribí" en MX/CL/CO/BR (agregá un test que recorra todo el copy resuelto por país buscando formas de voseo).
+4. **Preguntas que reflejan el negocio + "tus números"**:
+   - P1: sumar Taquería y Hamburguesería.
+   - P3: sumar "Me paga la app (no cobro directo)". Con esa respuesta, operación no penaliza como "a mano" ni recomienda facturar ante el ente fiscal; recomienda conciliar liquidaciones de las apps (enlazá el módulo de Fudo que corresponda según `docs/research/fudo-tools.md`, o ninguno si no hay).
+   - "Con otro sistema" → sub-pregunta "¿Cuál?" con chips (Soft Restaurant, Maxirest, Bistrosoft, Poster, Toteat, Loyverse, Otro). El bloque switcher lo nombra ("Venís de Soft Restaurant: …") y enlaza la guía si existe (MX: cambiar-de-soft-restaurant).
+   - En "¿Cómo calculamos esto?", inputs editables "Pedidos por mes" y "Ticket promedio" (prellenados con la estimación, rotulados "estimado por reseñas · cambialo por el tuyo"), con recálculo en vivo, en una función pura de `src/domain/moneyLost.ts` con test.
+   - Consistencia: la merma mostrada = % × ventas mostradas; la lista de supuestos coincide con lo usado; sin "× ×1"; la comisión se cita con fuente del país (AR: iProfesional 14/05/2026; otros países: la que haya en `docs/research/` o "sin dato público en <país>: usamos X% (supuesto)").
+   - Dark kitchen sin reseñas: el área no cuenta en la nota general y se explica ("normal en un negocio solo de apps"). "NO LO PUDIMOS LEER" no se repite. Si el delivery no se pudo leer, la recomendación no asume que vende por apps. "Canal propio: No" → "no lo marcaste".
+5. **Confianza + barrido QA**:
+   - Sin rótulos internos de tier ni link a `/debug` en la UI (la ruta queda, `noindex`, con title propio en el HTML).
+   - Badge separado del nombre ("Güerotú", "Pizzavos").
+   - Junto al ticket de ejemplo de la home: "Datos públicos de la ficha de Google, capturados el 26/10/2026 para esta demo".
+   - Separador de miles según el país.
+   - Bugs: B-1 (doble clic → bloquear opciones durante la transición), B-4 (historial con pushState/popstate o sessionStorage: Atrás vuelve al paso anterior, recarga mantiene el resultado), B-5 (`<main>`), B-6 (`break-words` + `maxLength` 80), B-7 (404 real: `404.html` noindex y rewrite que no capture todo; mantené la SPA en `/` y `/debug/`), B-8 (URL del SAT a `wwwmat.sat.gob.mx`: es el único cambio permitido en `app/content/blog/*.md`), B-9, B-10 (`publisher`), B-11 (`llms.txt` con `/blog/`), B-12 (BR: productName en pie legal y aviso de precio), B-14, B-15 (clic fuera cierra el modal).
+
+RESTRICCIONES:
+- Arquitectura: copy solo en `copy.ts`; pesos/umbrales en `scoring.ts`; nada de LLM; lo simulado se marca simulado y lo real lleva fecha.
+- El código del servidor (`app/api`, `src/server`, `src/gateway`, `src/domain`, `src/config`) es ESM con imports relativos **con `.js`** (el paquete es `"type": "module"`). Handlers de `app/api` con `export async function GET/POST(request)`.
+- Responsive 360/375/768/1024/1280 sin scroll horizontal, objetivos ≥44 px, AA, teclado. Verificalo con Playwright (skill `webapp-testing`) contra `npm run build && npm run preview` o `npm run dev`: los 5 casos de búsqueda del cambio 1; Sofía (Café Lumbre → por abrir); Andrés (dark kitchen + "me paga la app"); Mariana (MX, otro sistema = Soft Restaurant, `?country=MX`); Rubén (editar pedidos y ticket). Capturas en `C:\Users\m_rubano\FUDO\.tmp\shots-v3\` (fuera de git). axe en home, resultado, por abrir.
+- Tests: `cd app && npm run lint && npm run typecheck && npm test && npm run build` en verde, con tests nuevos para búsqueda, por-abrir, "me paga la app", "tus números" y voz por país.
+- Git: commits convencionales chicos terminando con `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`; antes de cada commit, `git grep` de patrones de claves (<patrones de claves redactados>) vacío; al final `git push origin main`. **No** hagas `vercel deploy` ni toques la config del proyecto en Vercel (lo hace el orquestador). No toques `PLAN.md`, `docs/feedback/`, `docs/qa/`, `docs/prompts/`. No commitees `.tmp/`, `.vercel/`, `.env.local`. Actualizá README/ARCHITECTURE si cambia algo estructural (ruta por-abrir, /api/geo).
+
+**Listo cuando:** los 5 cambios están en `main` pusheado, CI local en verde y las capturas muestran cada caso. Devolveme: commits, cantidad de tests, qué cambio resolvió qué fricción, capturas clave y lo que no hayas podido cerrar.
+````
+
+**Feedback recibido:**
+
+1. (2026-10-27 09:51 (-03)) del orquestador, tras renovarse el límite de uso:
+
+````text
+Se reseteó el límite de uso: seguí exactamente donde quedaste (estabas en PickPlace y la API del cliente). Antes de seguir, corré `git status` y `git log --oneline -8` para ver qué ya commiteaste. Mismo brief y mismas restricciones; al final lint/typecheck/test/build en verde, capturas en .tmp/shots-v3, push a main y el reporte pedido.
+````
+
+2. (2026-10-27 10:39 (-03)) del orquestador, al aprobar el usuario la app (G-OK1): hero dinámico y sin buscador:
+
+````text
+Matías aprobó la app (G-OK1) con 2 cambios finales. Hacé `git pull` primero (hay commits de docs nuevos en main).
+
+1. **Hero dinámico**: el titular "Viernes 21:30. Alguien busca "pizza en Lanús"." tiene que rotar entre escenas (p. ej. cada ~3 s, con transición suave): "pizza en Lanús", "tacos en la Roma"/"taquería en CDMX", "hamburguesas en Zapopan", "café en Providencia", "comida casera en Bogotá", "pizzaria em Pinheiros"… Usá SOLO ciudades/rubros de los 5 países donde opera Fudo y, en lo posible, que correspondan a locales del snapshot (data-driven: armá la lista desde el catálogo/showcase, no hardcodeada en la UI; el copy de cada escena en copy.ts con la voz del país). Cambiá también el día/hora si queda natural ("Sábado 13:00", "Viernes 21:30"…). Respetá `prefers-reduced-motion` (sin animación: mostrar una sola escena, la del país detectado), `aria-live="off"` en la rotación para no spamear lectores de pantalla (el H1 estático para lectores/SEO puede ser genérico y la escena rotativa decorativa), sin layout shift (altura reservada), y que el HTML prerenderizado siga teniendo un H1 con keyword. Mantené la escena del país detectado primero.
+2. **Sacar la barra de búsqueda**: Matías dice que "no funciona, no busca locales reales" (en la demo solo hay 13). Eliminá el input de texto de la home y de las landings /ar /mx /cl /co. Reemplazalo por una elección honesta: "Elegí un local real de la demo" con tarjetas de los locales del snapshot (país detectado / de la landing primero, agrupados por país, con ciudad, rubro y badge "real · capturado el 26/10/2026"), + el link "¿Todavía no abriste?" y una línea "En producción, acá buscás tu propio local con Google Places (ya implementado en el código, detrás de DATA_SOURCE=places)". Ajustá todo el copy que diga "escribí el nombre de tu local", el `diag_start` (que ya no tiene query: registrá `{ source: 'card' }`), los tests y el prerender. NO borres el gateway ni `/api/places-search` (se usan en producción y en tests): solo sale de la UI. Si `PickPlace`/"No encontramos" quedan sin uso desde la UI, dejá el código mínimo necesario o eliminalo si queda muerto (sin romper tests de gateway).
+Mismas restricciones de antes (ESM con .js en servidor, copy en copy.ts, responsive 360–1280 sin scroll horizontal, ≥44 px, axe, teclado). Verificá con Playwright en 375 y 1280: home AR, home `?country=MX`, landing /co/, reduced motion, y un flujo completo eligiendo una tarjeta. lint/typecheck/test/build en verde, commits convencionales con Co-Authored-By, `git push origin main`. No hagas deploy (lo hago yo). Devolveme commits, tests y capturas en .tmp/shots-v4.
+````
+
+**Qué devolvió (resumen mío):**
+
+- **Primera tanda** (6 commits, `891e747` a `bd3d1a6`; tests 105 → 170): (1) búsqueda honesta (un local se ofrece solo si todas las palabras están en su nombre, ciudad o tipo; si no, "No encontramos" con sugerencias del país detectado); (2) "Estoy por abrir" como pantalla propia, sin diagnóstico, con el Consultor primero; (3) `GET /api/geo` y home por país con voz correcta; (4) opciones nuevas (Taquería, Hamburguesería, "Me paga la app", "¿cuál sistema?") y "tus números" editables con recálculo; (5) sin jerga interna ni `/debug`, aviso de origen de datos y barrido de bugs de QA (B-1, B-4 a B-12, B-15).
+- **Segunda tanda** (commit `21e1d7f`; tests 170 → **177**, 17 archivos): hero con hasta 10 escenas data-driven de los 5 países (una cada 3,2 s con fundido, sin salto de layout, `prefers-reduced-motion` y `aria-live="off"`, H1 estático con la keyword); el input de búsqueda sale de la home y de las landings y entra una sección "Elegí un local real de la demo" con 13 tarjetas agrupadas por país, y la línea de que en producción buscás con Google Places. `diag_start` registra `{ source: 'card' }`. Borró `PickPlace.tsx` y el cliente `searchPlaces`; conservó el gateway y `/api/places-search`.
+- Verificó con Playwright (74 y 59 chequeos), axe sin violaciones y 0 px de scroll horizontal. Trabajó con una pausa de por medio por el límite de uso del orquestador; retomó leyendo `git status` y `git log`.
+
+---
+
+### A6 · Redactor del informe (G6): .docx + .pdf de 2 páginas
+
+- **Objetivo:** Escribir el informe de hasta 2 páginas A4 (secciones a–g del caso), con cada número con fuente, citas de los dueños simulados marcadas como simuladas, y exportarlo a .docx y .pdf.
+- **Salidas:** `docs/informe/Informe-Fudo.md`, `.docx`, `.pdf`
+- **Corrida:** lanzado 2026-10-27 06:31 (-03); 101 tool calls registrados; ~270 min.
+
+**Brief (completo):**
+
+````text
+Sos A6 (Redactor del informe) del proyecto "Caso Fudo: Diagnóstico + Tu Fudo ya armado". Es la entrega de un caso de selección de Fudo (SaaS de gestión para restaurantes en AR/MX/CL/CO/BR) para el puesto de "AI-driven Organic Growth". El caso pide un documento de **hasta 2 páginas**, en español, con estas secciones exactas:
+a. Problema, segmento e hipótesis, incluido cómo filtrás o calificás.
+b. Por qué esta solución.
+c. Distribución: cómo llega el restaurante a la herramienta.
+d. Qué recortaste y por qué.
+e. Cómo lo construiste y por qué así.
+f. Cómo lo medirías, usando los números de referencia.
+g. Qué harías después: de dónde vendrían los datos reales (APIs, scraping, restricciones), costo estimado por diagnóstico y próximos pasos.
+Lo que más evalúan, en orden: razonamiento (para qué restaurante, qué hipótesis, cómo filtrás), recorte de alcance, distribución, decisiones de construcción y datos reales, medición con experimento escrito antes. "El diseño visual no suma puntos." Reglas: herramientas gratuitas y contar cómo se manejaron sus límites.
+
+Números de referencia del caso (ilustrativos, úsalos como línea de base): 80.000 visitas/mes; 1,2% visita→cuenta (≈960 cuentas/mes); USD 20 por cuenta vía pauta; 10% cuenta→pagante a 60 días; CAC ≈ USD 200; ticket USD 50/mes.
+
+LEÉ TODO ANTES DE ESCRIBIR: `C:\Users\m_rubano\FUDO\PLAN.md` (§0 Norte, §2-G6 completo, §4 D1–D4, Bitácora), `README.md`, `docs\ARCHITECTURE.md`, `docs\adr\*.md`, `docs\research\*.md` (en especial costos.md, datos.md, distribucion.md, geo-blog.md, mcp.md, paises.md, benchmark.md, fudo-tools.md), `docs\qa\report.md`, `docs\feedback\persona-*.md` y `docs\feedback\cambios.md` (una iteración está en curso aplicando esos 5 cambios; describilos como aplicados en la versión final y no cites fricciones que esos cambios resuelven como si siguieran abiertas).
+
+CONTENIDO OBLIGATORIO:
+- **a.** Segmento núcleo: restaurantes, bares y pizzerías de 1–3 locales con volumen y delivery; hipótesis; filtro con los tiers caliente / switcher / nutrir / descartar / por abrir (por abrir → Consultor de Nuevos Negocios de Fudo) y qué señales usa (proxy de volumen = reseñas, sistema actual, canales, locales).
+- **b.** Por qué diagnóstico híbrido (datos reales + 4 preguntas de calificación) + "tu cuenta ya armada" y no el diagnóstico solo, el quiz solo o un agente de WhatsApp. Usá el benchmark (Owner Grader, etc.) y que Fudo ya tiene herramientas sueltas en tools.fu.do que esto unifica.
+- **c.** Distribución: SEO/AEO **específico** (no genérico) por país; landings /ar /mx /cl /co; **blog GEO** de 8 guías que responden preguntas reales (ARCA, CFDI y propinas, comisiones de PedidosYa/Rappi/DiDi/Uber Eats, Google Maps, migrar desde Soft Restaurant, boleta SII, factura POS DIAN), escritas para que las citen los LLM (respuesta directa, fuentes, FAQ, JSON-LD, llms.txt, aclarando que FAQPage ya no da rich result en Google y que llms.txt no es estándar); herramienta compartible; alianzas (cámaras, contadores, hardware, fintech) con nombres de docs/research/distribucion.md; pauta solo para validar; **idea de MCP**: un servidor MCP "Fudo Diagnóstico" para usar el diagnóstico y las calculadoras dentro de ChatGPT/Claude/Gemini, donde el dueño ya pregunta (de docs/research/mcp.md: tools, solo lectura, link de alta con utm_source=mcp, riesgos). Por qué no páginas por ciudad (doorway + ToS de Places).
+- **d.** Recortes: BR (se vende como Deli; sin i18n a portugués), Instagram y apps de delivery con métricas simuladas (solo presencia/link real), sin auth real ni CRM, sin LLM en runtime, alta en fu.do simulada porque el alta real no acepta precarga, snapshot en vez de Places en vivo.
+- **e.** Construcción: Claude Code como orquestador + subagentes (investigación, construcción, QA, 4 dueños simulados sin contexto, redacción); stack Vite + React + TS + Vercel Functions; **gateway de datos** con proveedores intercambiables (Snapshot real fechado / Google Places detrás de `DATA_SOURCE` / Mock); scoring por reglas en un archivo; tests y CI; cómo se manejaron los límites gratuitos (Vercel Hobby, sin LLM, snapshot estático, Places con tier gratis). Mencioná brevemente qué se aprendió de los 4 dueños simulados (con 3–4 citas textuales **marcadas como "dueño simulado"**) y que QA no encontró bloqueantes.
+- **f.** Medición: embudo con línea de base (visita→diagnóstico→cuenta→pago), métrica principal cuenta→pago a 60 días (10% → 15%), indicador temprano activación a 7 días, **experimento escrito antes**: hipótesis, brazos (control = alta actual; tratamiento = diagnóstico + cuenta precargada), tamaño ≈ 685 cuentas por brazo para detectar 10%→15% con α=0,05 y potencia 80% (mostrá la fórmula o el cálculo en una línea), duración estimada (explicá el supuesto de qué fracción del tráfico entra al experimento), resultado esperado, criterio para matarlo y guardrails (calidad de lead: % caliente+switcher; CAC). Eventos instrumentados (diag_start…cta_click, panel /debug).
+- **g.** Datos reales: Places API (New) con SKUs y field mask; ToS de caché (por qué el snapshot es solo para la demo y el riesgo declarado de tenerlo en un repo público); Instagram Graph/Business Discovery; apps de delivery sin API pública (partners/ToS); web + PageSpeed. **Costo por diagnóstico** (≈ USD 0,057, 1.000/mes gratis; escenarios de costos.md) contra el CAC del caso. Próximos pasos priorizados: pedirle a producto que el alta acepte precarga (lo que hoy obliga a simular), activar Places, MCP, páginas programáticas con datos propios, revisión de contadores de las guías fiscales, BR en portugués.
+- Incluí las URLs: app https://fudo-diagnostico.vercel.app y repo https://github.com/matiasrubano/fudo-diagnostico. Autor: Matías Rubano. Fecha: octubre 2026.
+
+FORMA:
+- **Cada número con su fuente** (nota corta entre paréntesis o superíndice + línea de fuentes al pie: "caso Fudo", "Google Maps Platform pricing 2026-10", "iProfesional 14/05/2026", etc.). Lo estimado dice "estimado"; lo simulado, "simulado". Nada inventado.
+- Directo, sin relleno, frases cortas, tablas chicas donde ahorren espacio (embudo, experimento, costos).
+- **Entra en 2 páginas A4** (márgenes ~1,8 cm, fuente 9,5–10 pt, títulos a–g visibles). Si no entra, recortá texto, no achiques por debajo de 9 pt.
+
+SALIDA:
+- `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.docx` y `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.pdf` (usá la skill `docx` para el .docx; para el PDF, convertí con LibreOffice si está —`soffice --headless --convert-to pdf`— o generá el PDF con la skill `pdf`; verificá que el PDF tenga **2 páginas o menos**, p. ej. con `pdfinfo` o python, y miralo renderizado para que no haya cortes feos).
+- `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.md` con el mismo texto (para el repo y para revisión).
+- Archivos temporales solo en `C:\Users\m_rubano\FUDO\.tmp\a6\` (borralo al final). No hagas commits.
+
+**Listo cuando:** existen .docx, .pdf (≤2 páginas A4) y .md, con las 7 secciones a–g, las URLs, 3–4 citas de dueños simulados marcadas, y cada número con fuente. Devolveme: cantidad de páginas del PDF, palabras, y la lista de números con su fuente.
+````
+
+**Feedback recibido:**
+
+1. (2026-10-27 09:51 (-03)) del orquestador, tras renovarse el límite de uso:
+
+````text
+Se reseteó el límite de uso: seguí donde quedaste con el informe (revisá qué hay en docs/informe/ y .tmp/a6/). Dato nuevo: el guion del video (video/guion.md) usa n ≈ 685,6 → 686 cuentas por brazo; usá el mismo número. Mismo brief: .docx + .pdf (≤2 páginas A4) + .md, cada número con fuente, y el reporte pedido.
+````
+
+2. (2026-10-27 10:40 (-03)) del orquestador, reescritura con la skill `escritura-humana` y hechos nuevos (video recortado, demo sin buscador, 170 tests):
+
+````text
+Matías aprobó la app (G-OK1) y pidió reescribir el informe con una skill de escritura humana. Leé y aplicá COMPLETA la skill `C:\Users\m_rubano\FUDO\.claude\skills\escritura-humana\SKILL.md` a `docs/informe/Informe-Fudo.md` y regenerá el .docx y el .pdf (mismo método que usaste: Word por PowerShell en línea; Calibri 9,5 pt, márgenes 1,7 cm; **≤2 páginas A4**, verificalo y miralo renderizado). Mismo contenido y mismas fuentes [n]; cambia la voz (primera persona, voseo, sin muletillas ni rayas, prosa para argumentos y tablas solo para datos, un ejemplo concreto por idea). Corré el chequeo final de la skill y devolveme cuántas rayas (—) y muletillas quedaron (deberían ser 0).
+
+Además, actualizá estos hechos (cambiaron después de tu versión):
+1. **Video demo: recortado por decisión de Matías.** El guion quedó aprobado en `video/guion.md` (77 s), pero no se renderizó (además, la cuenta de ElevenLabs falló en todas las generaciones). Sumalo a la tabla de recortes (d) en una línea y no lo nombres como entregable.
+2. **La demo ya no tiene buscador de texto**: en la demo se elige uno de los 13 locales reales del snapshot (país detectado primero) y el hero rota escenas reales por país ("Viernes 21:30, alguien busca pizza en Lanús", "tacos en la Roma"…). En producción, el buscador vuelve con Google Places (ya implementado detrás de `DATA_SOURCE=places`). Ajustá (b), (d) y (e) donde hable de "buscar el local" en la demo.
+3. Tests: 170 (antes decías "más de 100"). Fuente: CI del repo.
+No hagas commits. Devolveme páginas, palabras y el resultado del chequeo.
+````
+
+3. (2026-10-27 11:01 (-03)) del orquestador, el dato de los tests cambió con el último commit (de 170 a 177):
+
+````text
+Un dato cambió después de tu versión: con los últimos cambios de la app (hero dinámico y tarjetas en vez de buscador) el repo tiene **177 tests**, no 170 (CI en verde, commit 21e1d7f). Cambiá "170" por "177" en el .md, el .docx y el .pdf (editá el .docx con Word por PowerShell en línea como antes, o regenerá desde el .md con el mismo formato), y verificá que el PDF siga en 2 páginas A4. Nada más. Devolveme confirmación con el conteo de páginas.
+````
+
+**Qué devolvió (resumen mío):**
+
+- Versión 1: PDF de 2 páginas A4 (Calibri 9,5 pt, márgenes 1,7 cm, exportado con Word lanzado por PowerShell en línea porque no hay LibreOffice), ~1.700 palabras, secciones a–g, fuentes con superíndices [n], 4 citas de dueños simulados. Tamaño del experimento: n ≈ 685,6 → **686 cuentas por brazo** (1.372 en total), el mismo del guion.
+- Versión 2 (reescritura con la skill `escritura-humana`): primera persona, voseo, prosa para los argumentos y tablas solo para datos. Chequeo final de la skill: 0 rayas largas, 0 muletillas; 1.991 palabras en el `.md`; sigue en 2 páginas. Incorpora el video como recorte en una línea (guion aprobado de 77 s, sin renderizar, ElevenLabs falló) y la demo sin buscador de texto.
+- Dice lo que salió mal (los 4 dueños simulados no crearían la cuenta; a Sofía la búsqueda le mostró un café ajeno), lo que no verificó (regresión de la iteración, disponibilidad de MCP para dueños de LATAM, benchmark de Owner/Qamarero) y que borró los scripts de generación: conviene editar desde el `.md`.
+- Al archivar, **en curso**: cambiar "170" por "177" tests en el `.md`, el `.docx` y el `.pdf` y confirmar que siga en 2 páginas.
+
+---
+
+### A7 · Guionista del video demo (G7)
+
+- **Objetivo:** Escribir el guion de 60–90 s: hook con el problema, recorrido con un local real, el momento "Tu Fudo ya armado", números del experimento y cierre con las URLs; con escenas, capturas, motion graphics y subtítulos.
+- **Salidas:** `video/guion.md`
+- **Corrida:** lanzado 2026-10-27 06:31 (-03); 49 tool calls registrados; ~10 min.
+
+**Brief (completo):**
+
+````text
+Sos A7 (Guionista del video demo) del proyecto "Caso Fudo: Diagnóstico + Tu Fudo ya armado": una herramienta gratuita que diagnostica la presencia online de un restaurante (ficha de Google, reseñas, web, apps de delivery, operación) y lo lleva a una cuenta de Fudo "ya armada" con sus datos. Es la entrega de un caso de selección de Fudo; el video acompaña al informe.
+
+LEÉ: `C:\Users\m_rubano\FUDO\PLAN.md` (§0 y §2-G7), `README.md`, `docs\feedback\cambios.md`, `docs\feedback\persona-ruben.md`, `docs\research\costos.md`, y mirá la app en producción https://fudo-diagnostico.vercel.app (podés recorrerla con Playwright, viewport 375×812 y 1280×800). El local real recomendado para el recorrido es **El Campeón de la Pizza (Lanús, AR)**: 4,2 · 6.167 reseñas, sin web propia, en PedidosYa y Rappi (datos reales capturados el 26/10/2026). La plata que "se escapa" es una **estimación simulada** y así hay que decirlo.
+
+ESCRIBÍ `C:\Users\m_rubano\FUDO\video\guion.md` (en español rioplatense neutro, para una voz en off neutra latinoamericana; evitá voseo marcado en la locución para que suene neutra, salvo citas de pantalla):
+- Duración objetivo **75 s** (máximo 90 s, mínimo 60 s). Calculá ~2,4 palabras por segundo y mostrá el conteo de palabras y la duración estimada por escena.
+- Estructura obligatoria: (1) **hook con el problema** ("Viernes 21:30…" / el dueño que no aparece o paga 30% de comisión), (2) **recorrido con el local real** (buscar → confirmar → 4 preguntas → comanda de resultado), (3) **el momento "tu Fudo ya armado"** (cuenta precargada con nombre, dirección y horarios reales; aclarar que el alta es simulada en la demo), (4) **números**: línea base del caso (960 cuentas/mes, 10% → pago, CAC USD 200) y el experimento (10% → 15% cuenta→pago, ~685 cuentas por brazo, costo ≈ USD 0,06 por diagnóstico vs USD 20 por cuenta vía pauta), (5) **cierre con las URLs** (fudo-diagnostico.vercel.app y github.com/matiasrubano/fudo-diagnostico).
+- Tabla por escena: n.º · tiempo (inicio–fin) · locución exacta · qué se ve en pantalla (qué captura/pantalla de la app, en qué ancho: preferí mobile 375 encuadrado en un marco de teléfono sobre fondo de marca, y algún plano 1280) · motion graphics (zoom a qué elemento, contador animado de qué número, texto en pantalla) · subtítulo (líneas ≤ 42 caracteres).
+- Marca: logo oficial en `video/assets/fudo-logo.svg` / `fudo-logo-white.svg`; colores #FF5023 (naranja), #3937FF (azul), #0F1B4E (azul noche), crema #FFFAEC; tipografías Barlow (títulos) + Inter. Incluí un rótulo discreto "Demo de entrevista · no oficial" al inicio o al final.
+- Lista de **capturas a generar** con Playwright (URL, viewport, acciones, nombre de archivo) para que el agente de video las saque tal cual.
+- Nada inventado: cada número del guion con su fuente (caso Fudo, snapshot 26/10/2026, costos.md) en una sección "Fuentes" al final.
+
+No hagas commits ni toques la app. **Listo cuando:** `video/guion.md` existe con la tabla de escenas, el total de palabras/duración (60–90 s), la lista de capturas y las fuentes. Devolveme la locución completa en un bloque de texto y la duración estimada.
+````
+
+**Feedback recibido:**
+
+Sin feedback posterior al brief.
+
+**Qué devolvió (resumen mío):**
+
+- Guion de 9 escenas: 182 palabras ≈ **75,8 s** de voz, ≈ **77 s** de video con 1,5 s de cola. Locución con números en palabras, sin voseo, lista para ElevenLabs; tabla de escenas con captura, motion graphics y subtítulos de ≤42 caracteres; 24 capturas con un script de Playwright y una fila de fuente por cada número.
+- Aclaró que USD 0,06 es por diagnóstico y USD 20 por cuenta (unidades distintas), que la comisión 25–35% viene de iProfesional y que el cálculo da 685,6 por brazo. Avisó qué recortar de las capturas (segunda tarjeta de Diavola, etiqueta "Caliente", link a /debug).
+- El orquestador lo llevó a G-OK2 y el usuario lo aprobó. **El video no se renderizó** (ver sección 4).
 
 ---
 
@@ -597,7 +1008,7 @@ Fechas en hora de Argentina. "Dónde quedó" apunta al archivo del repo o a la s
 | 26/10 23:49 | Artículos fiscales marcados "revisión de un contador local pendiente"; fuentes que dieron 403 no sostienen cifras | Honestidad de fuentes (nada inventado) | `app/content/blog/*.md` |
 | 26/10 23:20 | **Riesgo de ToS: el snapshot trae datos de la ficha de Google** y el ToS de Maps prohíbe cachear y volver a publicar contenido | Riesgo alto si el repo es público | `docs/research/datos.md` y `costos.md`; ADR 0002; PLAN G1 |
 | 27/10 00:13 | Scoring con **"sin datos suficientes"** (si lo legible pesa menos de la mitad) y tope de 60 puntos para un 5,0 con 8 reseñas | La captura de un local con horarios sin leer daba 100/100 en Google | `app/src/domain/scoring.ts`; ADR 0003 |
-| 27/10 00:13 | "Todavía no abrí" corta el cuestionario tras la pregunta 1 y rutea a **por abrir** (Consultor de Nuevos Negocios); `descartar` = 4+ locales o rubro "otro" | No frustrar a quien no abrió; los grandes se derivan a ventas | `app/src/domain/leadTier.ts` |
+| 27/10 00:13 | "Todavía no abrí" corta el cuestionario tras la pregunta 1 y rutea a **por abrir** (Consultor de Nuevos Negocios); `descartar` = 4+ locales o rubro "otro" | No frustrar a quien no abrió; los grandes se derivan a ventas | `app/src/domain/leadTier.ts` (luego reemplazado por una ruta propia, ver más abajo) |
 | 27/10 00:13 | "Plata que se escapa por mes": tres componentes, rango ±40%, supuestos **simulados** salvo la comisión de AR | Ticket y pedidos por país no son datos reales; el cálculo se muestra paso a paso | `app/src/domain/moneyLost.ts` |
 | 27/10 00:13 | La búsqueda con Places no pide `rating` en la máscara | Subiría al SKU Enterprise y al costo | `app/src/gateway/GooglePlacesProvider.ts`; `docs/research/datos.md` |
 | 27/10 00:18 | **G-OK0**: repo `fudo-diagnostico`, **público**, con el riesgo declarado en el ADR 0002 y en el informe (alternativas descartadas: privado con evaluadores invitados; público sin datos de Google) | Lo lee el equipo técnico sin fricción; son datos públicos de 13 negocios, fechados y con fuente; producción usaría la API oficial | PLAN §2-G3 y Bitácora; `docs/adr/0002-snapshot-vs-api.md` |
@@ -605,15 +1016,28 @@ Fechas en hora de Argentina. "Dónde quedó" apunta al archivo del repo o a la s
 | 27/10 00:27 | **Límite de uso del plan de Claude** cortó la sesión; A2 quedó a mitad de un arreglo | Límite del plan | PLAN Bitácora (2026-10-27, G3) |
 | 27/10 ~00:25 | **Fallo de `/api/*` en Vercel** (500, `FUNCTION_INVOCATION_FAILED`). Tres causas: (1) `@vercel/node` emite ESM y Node no resuelve imports relativos sin extensión (`ERR_MODULE_NOT_FOUND`); (2) `defaultSnapshotDir()` usaba `process.cwd()`, pero en la Lambda el cwd es `/var/task` y los datos quedan en `/var/task/app/data/snapshots`; (3) `app/vercel.json` tenía un escape `\.` inválido | A2 no pudo probar Vercel sin CLI; el orquestador lo reprodujo con `vercel build --prod` y ejecutando la función con node | Commit `0ef1c93` (imports con `.js`, `with { type: 'json' }`, candidatos de ruta con test, `vercel.json`) |
 | 27/10 05:09 | Segundo fallo: el launcher de Vercel no carga ESM en un paquete sin `"type"` | Se declara **`"type": "module"`** (todos los configs ya eran ESM), Node 22.x como en CI y los handlers pasan a la firma `export GET/POST(request)` | Commit `84ca323`; `app/package.json`, `app/api/*` |
-| 27/10 | 3 bugs menores de la verificación: recomendación "vendés solo por apps" aunque se marcó mostrador; `place_selected.from_suggestion` en `false` al elegir un chip; `/debug` heredaba el `<title>` de la home | Hallazgos del orquestador al recorrer el flujo en 375 y 1280 | Pedidos a A2 (interrumpido) y luego a A5 (bug de cada punto en el brief); corregidos en el commit `9a0f085` |
-| 27/10 04:56 | **Rediseño "menos genérico"**: logo real de Fudo, hero desde la escena del cliente, ticket de ejemplo real del snapshot, resultado como comanda, comparación con vecinos, voz por país (voseo AR, tuteo MX/CL/CO), landings /ar /mx /cl /co | Pedido del usuario ("sigue, hazla menos generica. y termina"): parecía una plantilla SaaS cualquiera | Brief de A5 (sección 3); resultado pendiente |
-| 27/10 | **Logo oficial de Fudo** en `app/public/brand/` (para el sitio y el video) | El usuario lo aportó ("te paso el logo de fudo, tanto para el video como para el sitio"); para BR se muestra "Deli" en texto | `app/public/brand/` (sin commitear al archivar) |
+| 27/10 05:18 | 3 bugs menores de la verificación: recomendación "vendés solo por apps" aunque se marcó mostrador; `place_selected.from_suggestion` en `false` al elegir un chip; `/debug` heredaba el `<title>` de la home | Hallazgos del orquestador al recorrer el flujo en 375 y 1280 | Commit `9a0f085` (A5) |
+| 27/10 04:56 | **Rediseño "menos genérico"**: logo real de Fudo, hero desde la escena del cliente, ticket de ejemplo real del snapshot, resultado como comanda, comparación con vecinos, voz por país (voseo AR, tuteo MX/CL/CO), landings /ar /mx /cl /co | Pedido del usuario ("sigue, hazla menos generica. y termina"): parecía una plantilla SaaS cualquiera | Commits `2e1ac08` a `b90ff5c` (A5); brief en la sección 3 |
+| 27/10 ~05:10 | **Logo oficial de Fudo** en `app/public/brand/` (sitio y video); para BR se muestra "Deli" en texto | El usuario lo aportó ("te paso el logo de fudo, tanto para el video como para el sitio") | `app/public/brand/`; commit `87d04aa` |
+| 27/10 06:29 | **A3 no pudo escribir `docs/qa/report.md`**: la herramienta Write lo rechazó para el subagente. El agente no buscó otro camino y devolvió el informe como texto; **lo guardó el orquestador** | La herramienta Write respondió que "los subagentes devuelven los hallazgos como texto"; el agente respetó el límite y no buscó otro camino para escribirlo | `docs/qa/report.md` (commit `b2f69b4`) |
+| 27/10 06:10 | **Los dueños simulados dieron 6, 5, 5 y 4 sobre 10 y ninguno crearía la cuenta** (el alta es simulada y la app asumía un local que ya vende en Argentina). Primer pedido a producto: 5 cambios | Rubén 6, Mariana 5, Andrés 5, Sofía 4. Quejas comunes: portada argentina para todos, buscador que devuelve locales de otros países o ajenos (a Sofía le mostró un café que no era el suyo), "este botón es una simulación" | `docs/feedback/` y `docs/feedback/cambios.md`; commits `891e747`, `be6bf0e`, `21559d9`, `286d830`, `d5f3641` |
+| 27/10 06:30 | **Iteración con los 5 cambios**: (1) búsqueda honesta (solo ofrece un local si coincide de verdad; si no, "No encontramos" con sugerencias del país); (2) "Estoy por abrir" es otra ruta, sin diagnóstico, que reemplaza al tier `por-abrir` del dominio; (3) home por país con `GET /api/geo`; (4) preguntas que reflejan el negocio (Taquería, Hamburguesería, "Me paga la app") y "tus números" editables; (5) sin jerga interna ni `/debug`, y barrido de bugs de QA | Responde a lo que más pesó en los 4 informes y al QA (B-1, B-3, B-4, B-13, B-14) | Commits `891e747` a `bd3d1a6`; tests 105 → 170 |
+| 27/10 06:47 | **G-OK2: guion aprobado** tal cual (`video/guion.md`, 182 palabras ≈ 77 s) | El usuario eligió "Aprobado (Recomendado)" | PLAN §2-G7; `video/guion.md` |
+| 27/10 (entre 06:47 y 10:37) | **ElevenLabs falló en todas las generaciones**: con el modelo v4, con multilingual_v2 e incluso con una sola frase | Se concluyó que es un problema de la cuenta (créditos o permisos de la voz), no del texto ni del modelo | PLAN §7 (Video); pregunta del gate G-OK1 |
+| 27/10 09:51 | Segundo **límite de uso** de Claude: A5 (iteración 2) y A6 quedaron a medias; se retomaron con `SendMessage` ("seguí donde quedaste") | Límite del plan | Sección 3 (feedback de A5 y A6) |
+| 27/10 09:51 | Tamaño del experimento: n ≈ 685,6 → **686 cuentas por brazo** (1.372 en total), no "~680" | La fórmula con varianza combinada da 685,6; el guion de A7 dice "unas seiscientas ochenta y cinco" y el informe usa 686 para ser consistente | `docs/informe/Informe-Fudo.md`; `video/guion.md` |
+| 27/10 10:39 | **G-OK1: app aprobada** con dos cambios finales: (1) hero dinámico que rota escenas, (2) sin barra de búsqueda | El usuario: "no funciona, no busca locales reales" (la demo cubre 13) | Commit `21e1d7f`; PLAN §2-G5 |
+| 27/10 10:39 | **Hero dinámico solo con los 5 países de Fudo.** El usuario pidió ejemplos como "restaurant en peru", pero Perú no está en el caso (AR, MX, CL, CO, BR); las escenas salen de los locales del snapshot (data-driven, no hardcodeadas en la UI) y respetan `prefers-reduced-motion` | Nada inventado: solo escenas con un local real detrás | `app/src/ui/heroScenes.ts`, `app/src/content/copy.ts` |
+| 27/10 10:39 | **Sin buscador**: se reemplazó por "Elegí un local real de la demo" con 13 tarjetas por país; en producción buscás con Google Places (ya implementado, `DATA_SOURCE=places`). Se borraron `PickPlace.tsx` y el cliente `searchPlaces` de la UI; el gateway y `/api/places-search` se conservan | Un buscador que no encuentra el local del entrevistador es peor que una lista honesta de lo que cubre la demo; el gateway sigue siendo el punto de venta técnico | Commit `21e1d7f`; README y ARCHITECTURE |
+| 27/10 10:39 | **Video recortado por decisión del usuario**: "si no creaste aun el video no lo crees, solo termina la app y dame el informe". El guion queda aprobado pero sin renderizar; no es entregable | Combinación de la voz que no funciona y la prioridad de cerrar app e informe | PLAN §2-G7 y §7; informe (sección d, línea de recortes) |
+| 27/10 ~10:40 | **Skill `escritura-humana` creada** por el orquestador porque no había una en el catálogo; el informe se reescribe con ella | Pedido del usuario ("pon una skill de escritura humana") | `.claude/skills/escritura-humana/SKILL.md` (sin commitear al archivar) |
+| 27/10 11:01 | Tests: **170 → 177** tras el hero y las tarjetas; el informe se corrige | CI en verde en `21e1d7f`; el informe no puede decir un número viejo | `docs/informe/Informe-Fudo.md`, `.docx` y `.pdf` |
 
 ---
 
 ## 5. Cronología de commits
 
-Salida de `git log --format="%h %ad %s" --date=iso` (del más viejo al más nuevo; la hora incluye la zona -0300). No incluye el trabajo sin commitear al momento de archivar (A5, logo).
+Salida de `git log --format="%h %ad %s" --date=iso` (del más viejo al más nuevo; la hora incluye la zona -0300). No incluye el trabajo sin commitear al momento de archivar (PLAN, README, informe regenerado, `.gitignore`, `.claude/skills/escritura-humana`).
 
 | Hash | Fecha | Mensaje |
 |---|---|---|
@@ -633,5 +1057,19 @@ Salida de `git log --format="%h %ad %s" --date=iso` (del más viejo al más nuev
 | `84ca323` | 2026-10-27 05:09:51 -0300 | fix(api): ESM declarado y handlers GET/POST para el runtime de Vercel |
 | `9a0f085` | 2026-10-27 05:18:20 -0300 | fix: delivery según canales marcados, from_suggestion con chips y título propio en /debug |
 | `2e1ac08` | 2026-10-27 05:20:44 -0300 | feat(domain): comparación con vecinos reales y vidriera por país |
+| `8a62181` | 2026-10-27 05:26:49 -0300 | feat(content): voz por país (voseo en AR, tuteo en MX/CL/CO) en un objeto base + overrides |
+| `25898ee` | 2026-10-27 05:41:33 -0300 | feat(ui): marca Fudo, escena del cliente, comanda de ticket y comparación con vecinos |
+| `4c3bd9f` | 2026-10-27 05:41:35 -0300 | feat(seo): landings por país /ar/ /mx/ /cl/ /co/ prerenderizadas con hreflang, JSON-LD y sitemap |
+| `3d10e22` | 2026-10-27 05:45:03 -0300 | fix(ui): tabla de eventos de /debug enfocable con teclado |
+| `b90ff5c` | 2026-10-27 05:45:04 -0300 | docs: landings por país, comparación con vecinos y voz por país en README y ARCHITECTURE |
+| `87d04aa` | 2026-10-27 05:48:44 -0300 | docs: log de prompts (G8 borrador), cierre de G3 en el PLAN y logo para el video |
+| `891e747` | 2026-10-27 09:53:53 -0300 | feat(search): búsqueda honesta con coincidencia real y sugerencias por país detectado |
+| `be6bf0e` | 2026-10-27 09:59:34 -0300 | feat(opening): "Estoy por abrir" es otra ruta, sin diagnóstico de ningún local |
+| `21559d9` | 2026-10-27 10:04:18 -0300 | feat(geo): la home habla el idioma del país (GET /api/geo, escena, ejemplos y voz) |
+| `286d830` | 2026-10-27 10:15:08 -0300 | feat(questions): preguntas que reflejan el negocio y "tus números" en la cuenta |
+| `d5f3641` | 2026-10-27 10:31:08 -0300 | fix(ui): confianza y barrido de QA (sin jerga interna, 404 real, pie por país) |
+| `bd3d1a6` | 2026-10-27 10:31:09 -0300 | docs: ruta por abrir, /api/geo, historial, tus números y 404 en README y ARCHITECTURE |
+| `b2f69b4` | 2026-10-27 10:36:49 -0300 | docs: QA, dueños simulados, cambios de la iteración, informe y guion del video |
+| `21e1d7f` | 2026-10-27 10:55:47 -0300 | feat(home): escenas del hero que rotan y tarjetas de locales reales en lugar del buscador |
 
-Total: 16 commits.
+Total: 30 commits.
