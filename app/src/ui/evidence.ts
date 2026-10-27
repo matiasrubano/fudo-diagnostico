@@ -92,7 +92,7 @@ export function rowSummary(area: AreaId, d: Diagnosis): string {
       return (
         [evidenceFor('rating', d).text, evidenceFor('volume', d).text]
           .filter((text) => text !== copy.evidence.notFound)
-          .join(' · ') || copy.confirm.noRating
+          .join(' · ') || copy.places.noRating
       )
     }
     case 'web':

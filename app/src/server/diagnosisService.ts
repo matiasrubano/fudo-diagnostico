@@ -139,6 +139,8 @@ export interface ShowcaseResponse {
   /** diagnóstico del local destacado con respuestas de ejemplo (SIMULADAS); null si el catálogo no lo tiene */
   featured: DiagnosisResponse | null
   places: PlaceSummary[]
+  /** TODOS los locales reales de la demo (de todos los países): las tarjetas para elegir y las escenas del hero */
+  catalog: PlaceSummary[]
 }
 
 export async function buildShowcase(
@@ -146,13 +148,13 @@ export async function buildShowcase(
   provider: PlaceDataProvider = getGateway(),
 ): Promise<ShowcaseResponse> {
   const all = (await provider.suggest?.()) ?? []
-  const places = (country ? all.filter((p) => p.country === country) : all).sort(
+  const places = (country ? all.filter((p) => p.country === country) : [...all]).sort(
     (a, b) =>
       (a.country ?? '').localeCompare(b.country ?? '') ||
       (b.reviewCount ?? -1) - (a.reviewCount ?? -1),
   )
   const featuredId = FEATURED_PLACE[country ?? 'AR']
   const id = places.some((p) => p.id === featuredId) ? featuredId : places[0]?.id
-  if (!id) return { country, featured: null, places }
-  return { country, featured: await runSampleDiagnosis(id, provider), places }
+  if (!id) return { country, featured: null, places, catalog: all }
+  return { country, featured: await runSampleDiagnosis(id, provider), places, catalog: all }
 }

@@ -34,35 +34,34 @@ export const copy = {
 
   hero: {
     eyebrow: 'Diagnóstico gratis para restaurantes',
-    time: 'Viernes 21:30.',
-    /** Fallback mientras no llegan los datos del local de ejemplo (en producción viene embebido en el HTML) */
-    queryFallback: 'pizza cerca',
-    /** Qué escribiría el cliente, según el tipo real del local de ejemplo: "pizza en Lanús" */
-    queryNoun: {
-      pizzeria: 'pizza',
-      bar: 'bar',
-      cafeteria: 'café',
-      taqueria: 'tacos',
-      hamburgueseria: 'hamburguesas',
-      'dark-kitchen': 'delivery',
-      restaurante: 'restaurante',
-    } as Record<string, string>,
-    query: (noun: string, city: string) => `${noun} en ${city}`,
+    /** Para lectores de pantalla y buscadores: la escena que rota es decorativa (aria-hidden) */
+    h1Keyword: 'Diagnóstico gratis para restaurantes.',
+    /** Escena de respaldo si todavía no hay locales (en producción los datos vienen embebidos en el HTML) */
+    fallbackScene: { time: 'Viernes 21:30', query: 'pizza cerca' },
     scene: (query: string) => `Alguien busca “${query}”.`,
+    /** Día y hora de la escena según el tipo real del local */
+    times: {
+      pizzeria: 'Viernes 21:30',
+      hamburgueseria: 'Viernes 21:30',
+      taqueria: 'Viernes 14:00',
+      bar: 'Sábado 23:00',
+      cafeteria: 'Sábado 11:00',
+      'dark-kitchen': 'Domingo 13:00',
+      restaurante: 'Sábado 13:00',
+    } as Record<string, string>,
+    /** Ciudades con nombre largo, como las escribiría el cliente: "tacos en CDMX" */
+    cityShort: { 'Ciudad de México': 'CDMX' } as Record<string, string>,
     question: '¿Te encuentra, ve que estás abierto y te puede pedir?',
-    searchLabel: 'Nombre de tu local',
-    searchButton: 'Diagnosticar',
-    searching: 'Buscando…',
-    /** Ejemplos tocables (locales reales del snapshot) por país: el del dueño va primero, después los demás */
-    examples: {
-      AR: ['Piki', 'El Campeón'],
-      MX: ["Red's Burger", 'Hola El Güero', 'Ladina'],
-      CL: ['Davvero', 'Casa Salvo'],
-      CO: ['El Social', 'Come Como en Casa'],
-      BR: ['Diavola'],
-    } as Record<CountryCode, string[]>,
     /** Link a la landing del país: "Ver la versión para México" */
     versionFor: (country: string) => `Ver la versión para ${country}`,
+  },
+
+  /** Tarjetas de los locales reales de la demo (reemplazan al buscador) */
+  places: {
+    countryGroup: (country: string) => `Locales de ${country}`,
+    noRating: 'Sin reseñas que podamos leer',
+    reviews: (n: string) => `${n} reseñas`,
+    ratingLabel: 'Rating',
   },
 
   proof: {
@@ -74,7 +73,7 @@ export const copy = {
     source: (date: string) =>
       `Datos públicos de la ficha de Google, capturados el ${date} para esta demo`,
     cta: 'Ver su diagnóstico completo',
-    tryMine: 'Hacer el diagnóstico de mi local',
+    tryMine: 'Elegir otro local de la demo',
   },
 
   home: {
@@ -83,7 +82,7 @@ export const copy = {
       {
         n: '1',
         title: 'Tu local',
-        body: 'Lo buscamos y traemos de su ficha pública el rating, las reseñas, los horarios, la web y las apps.',
+        body: 'Se elige un local real de la demo y se traen de su ficha pública el rating, las reseñas, los horarios, la web y las apps.',
       },
       {
         n: '2',
@@ -134,16 +133,6 @@ export const copy = {
     documentTitle: 'Página no encontrada | Diagnóstico gratis para restaurantes',
     home: 'Ir al diagnóstico',
     guides: 'Ver las guías',
-  },
-
-  confirm: {
-    titleOne: '¿Es este tu local?',
-    titleMany: '¿Cuál es tu local?',
-    yes: 'Sí, es este',
-    pick: 'Elegir este',
-    back: 'Buscar de nuevo',
-    noRating: 'Sin reseñas que podamos leer',
-    reviews: (n: string) => `${n} reseñas`,
   },
 
   questions: {
@@ -480,10 +469,17 @@ const base = {
       apps.length
         ? `Revisamos tu ficha de Google, tus reseñas, tu web y tus apps (${andList(apps)}) en 60 segundos. Sin tarjeta y sin registro.`
         : 'Revisamos tu ficha de Google, tus reseñas, tu web y tus apps de delivery en 60 segundos. Sin tarjeta y sin registro.',
-    placeholder: 'Ej.: Pizzería Piki, Lanús',
-    examplesLabel: 'O probá con un local real de la demo:',
-    tooShort: 'Escribí al menos 2 letras.',
-    searchError: 'No pudimos buscar ahora. Probá de nuevo en un rato.',
+    /** Qué escribiría el cliente según el tipo real del local: "pizza en Lanús" */
+    sceneNoun: {
+      pizzeria: 'pizza',
+      bar: 'bar',
+      cafeteria: 'café',
+      taqueria: 'tacos',
+      hamburgueseria: 'hamburguesas',
+      'dark-kitchen': 'comida casera',
+      restaurante: 'restaurante',
+    } as Record<string, string>,
+    sceneQuery: (noun: string, zone: string) => `${noun} en ${zone}`,
     trust: [
       'Usa datos públicos de tu local',
       'Sin tarjeta ni registro',
@@ -491,10 +487,21 @@ const base = {
     ],
   },
 
+  /** Elección honesta: la demo tiene pocos locales reales, no un buscador */
+  places: {
+    cta: 'Elegir un local de la demo',
+    title: 'Elegí un local real de la demo',
+    intro: (n: number) =>
+      `Son ${n} locales reales, con los datos públicos de su ficha de Google. Elegí uno y respondé cuatro preguntas.`,
+    production:
+      'En producción, acá buscás tu propio local con Google Places (ya implementado en el código, detrás de DATA_SOURCE=places).',
+    pick: 'Diagnosticar este local',
+  },
+
   result: {
     notApplicable: 'No aplica: no vendés por delivery',
     sampleBanner:
-      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
+      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Elegí otro local de la demo.',
   },
 
   noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, podés leer las guías.',
@@ -502,16 +509,6 @@ const base = {
   loading: {
     title: 'Armando tu diagnóstico…',
     error: 'No pudimos armar el diagnóstico. Probá de nuevo.',
-  },
-
-  /** Búsqueda sin coincidencia real: nunca se muestra otro local como si fuera el del dueño */
-  notFound: {
-    title: (query: string) => `No encontramos «${query}»`,
-    body: (n: number) =>
-      `Esta demo cubre ${n} locales reales y puede que el tuyo no esté. Nunca te mostramos otro local como si fuera el tuyo. En producción la búsqueda usa Google Places y encuentra cualquier local.`,
-    pickIn: (country: string) => `Probá con uno de la demo en ${country}:`,
-    pickOthers: 'Locales de otros países:',
-    pickAny: 'Probá con uno de la demo:',
   },
 
   questions: {
@@ -779,7 +776,7 @@ const base = {
     title: (f: LandingFacts, fiscalPhrase: string) =>
       `Diagnóstico gratis para tu restaurante en ${f.country}: Google Maps, ${f.apps.slice(0, 2).join(', ')} y ${fiscalPhrase}`,
     description: (f: LandingFacts) =>
-      `Buscá tu local en ${f.country}: ¿te encuentran en Google Maps, estás en ${andList(f.apps.slice(0, 2))} y facturás bien ante ${f.authority}? Gratis, sin registro, en ${f.currencyCode}.`,
+      `Diagnóstico gratis de un restaurante de ${f.country}: ficha de Google Maps, apps (${andList(f.apps.slice(0, 2))}) y facturación ante ${f.authority}. Sin registro, en ${f.currencyCode}.`,
     factsTitle: (country: string) => `Lo que mira el diagnóstico en ${country}`,
     factApps: (apps: string) => `Apps de delivery: ${apps}. Vemos en cuáles está tu local y si tenés canal propio.`,
     factFiscal: (authority: string, system: string) =>
@@ -788,8 +785,6 @@ const base = {
       `Moneda: ${currencyName} (${code}). La plata que se te escapa se calcula con un ticket promedio supuesto de ${ticket} (simulado).`,
     factPlan: (name: string, price: string, date: string) =>
       `Fudo: ${name} desde ${price} por mes, precio publicado en fu.do (capturado el ${date}).`,
-    placesTitle: (country: string) => `Locales reales de la demo en ${country}`,
-    placesIntro: 'Tocá uno para ver su diagnóstico con respuestas de ejemplo, o buscá el tuyo arriba.',
     guidesTitle: (country: string) => `Guías para restaurantes de ${country}`,
     otherCountries: 'Otros países',
     breadcrumbHome: 'Inicio',
@@ -813,26 +808,26 @@ type DeepPartial<T> = T extends (...args: never[]) => unknown
 const tuteo: DeepPartial<Voice> = {
   voice: 'tuteo',
   hero: {
-    examplesLabel: 'O prueba con un local real de la demo:',
-    tooShort: 'Escribe al menos 2 letras.',
-    searchError: 'No pudimos buscar ahora. Prueba de nuevo en un rato.',
     trust: [
       'Usa datos públicos de tu local',
       'Sin tarjeta ni registro',
       'La nota sale de reglas que puedes ver',
     ],
   },
+  places: {
+    title: 'Elige un local real de la demo',
+    intro: (n) =>
+      `Son ${n} locales reales, con los datos públicos de su ficha de Google. Elige uno y responde cuatro preguntas.`,
+    production:
+      'En producción, aquí buscas tu propio local con Google Places (ya implementado en el código, detrás de DATA_SOURCE=places).',
+  },
   result: {
     notApplicable: 'No aplica: no vendes por delivery',
     sampleBanner:
-      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Prueba con el tuyo.',
+      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Elige otro local de la demo.',
   },
   noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, puedes leer las guías.',
   loading: { error: 'No pudimos armar el diagnóstico. Prueba de nuevo.' },
-  notFound: {
-    pickIn: (country) => `Prueba con uno de la demo en ${country}:`,
-    pickAny: 'Prueba con uno de la demo:',
-  },
   questions: {
     pickAtLeastOne: 'Elige al menos una',
     channelsTitle: '¿Por dónde vendes hoy?',
@@ -958,7 +953,6 @@ const tuteo: DeepPartial<Voice> = {
     factApps: (apps) => `Apps de delivery: ${apps}. Vemos en cuáles está tu local y si tienes canal propio.`,
     factFiscal: (authority, system) =>
       `Facturación: ${authority} (${system}). Te preguntamos cómo cobras y facturas hoy.`,
-    placesIntro: 'Toca uno para ver su diagnóstico con respuestas de ejemplo, o busca el tuyo arriba.',
   },
 }
 
@@ -967,7 +961,6 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   AR: {},
   MX: {
     ...tuteo,
-    hero: { ...tuteo.hero, placeholder: "Ej.: Red's Burger, Zapopan" },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'factura CFDI del SAT',
@@ -976,7 +969,6 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   },
   CL: {
     ...tuteo,
-    hero: { ...tuteo.hero, placeholder: 'Ej.: Davvero, Ñuñoa' },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'boleta electrónica del SII',
@@ -985,7 +977,6 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
   },
   CO: {
     ...tuteo,
-    hero: { ...tuteo.hero, placeholder: 'Ej.: El Social, Medellín' },
     landing: {
       ...tuteo.landing,
       fiscalPhrase: 'factura electrónica de la DIAN',
@@ -993,7 +984,22 @@ const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
     },
   },
   // Brasil: el contenido sigue en español (recorte declarado); usa tuteo neutro
-  BR: { ...tuteo, hero: { ...tuteo.hero, placeholder: 'Ej.: Diavola Pizzaria, Pinheiros' } },
+  BR: {
+    ...tuteo,
+    hero: {
+      ...tuteo.hero,
+      sceneNoun: {
+        pizzeria: 'pizzaria',
+        bar: 'bar',
+        cafeteria: 'café',
+        taqueria: 'tacos',
+        hamburgueseria: 'hambúrguer',
+        'dark-kitchen': 'comida caseira',
+        restaurante: 'restaurante',
+      },
+      sceneQuery: (noun, zone) => `${noun} em ${zone}`,
+    },
+  },
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

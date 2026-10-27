@@ -85,7 +85,7 @@ describe('separador de miles y decimales por país', () => {
   it('la lista de resultados y el ticket usan el mismo formato para el mismo local', async () => {
     const res = await provider.search('Hola El Güero')
     expect(res[0]?.reviewCount).toBe(1600)
-    expect(copy.confirm.reviews(formatNumber(1600, 'MX'))).toBe('1,600 reseñas')
+    expect(copy.places.reviews(formatNumber(1600, 'MX'))).toBe('1,600 reseñas')
   })
 })
 
@@ -119,10 +119,7 @@ describe('la home explica de dónde salen los datos del ticket de ejemplo', () =
         detected: 'MX',
         showcase,
         guides: [],
-        initialQuery: '',
-        loading: false,
-        error: null,
-        onSearch: noop,
+        onPickPlace: noop,
         onOpenSample: noop,
         onOpening: noop,
       }),
@@ -130,11 +127,11 @@ describe('la home explica de dónde salen los datos del ticket de ejemplo', () =
     expect(html).toContain('Ver la versión para México')
     expect(html).toContain('href="/mx/"')
     expect(html).toContain('hamburguesas en Zapopan') // escena del hero con un local real de MX
-    expect(html).toContain('prueba con') // tuteo
-    expect(html).not.toMatch(/Probá|Escribí/)
-    // los ejemplos de México van primero
-    expect(html.indexOf('Red&#x27;s Burger')).toBeGreaterThan(-1)
-    expect(html.indexOf('Red&#x27;s Burger')).toBeLessThan(html.indexOf('Piki'))
+    expect(html).toContain('Elige un local real de la demo') // tuteo
+    expect(html).not.toMatch(/Probá|Escribí|Elegí/)
+    // las tarjetas de México van primero
+    expect(html.indexOf('Red&#x27;s Burger Shop')).toBeGreaterThan(-1)
+    expect(html.indexOf('Red&#x27;s Burger Shop')).toBeLessThan(html.indexOf('Pizzeria Piki'))
   })
 })
 

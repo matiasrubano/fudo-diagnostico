@@ -1,10 +1,11 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState } from 'react'
 import { getCountry } from '../../config/countries'
 import { copy, copyFor, type LandingFacts } from '../../content/copy'
 import { ASSUMPTIONS } from '../../domain/moneyLost'
 import { LANDING_COUNTRIES, type LandingCountry } from '../../domain/showcase'
 import type { CountryCode, PlaceSummary } from '../../domain/types'
 import type { ShowcaseResponse } from '../../server/diagnosisService'
+import { buildHeroScenes, type HeroScene } from '../heroScenes'
 import { ProvenanceBadge } from '../components/ProvenanceBadge'
 import { ScreenTitle } from '../components/ScreenTitle'
 import { Ticket } from '../components/Ticket'
@@ -19,28 +20,17 @@ export interface GuideLink {
 export interface HomeProps {
   /** null = la home; si no, la landing de ese país (/ar/, /mx/, /cl/, /co/) */
   country: LandingCountry | null
-  /** solo en la home (country = null): país detectado por IP. Adapta la voz, la escena, los ejemplos y el link a su landing */
+  /** solo en la home (country = null): país detectado por IP. Adapta la voz, las escenas, el orden de las tarjetas y el link a su landing */
   detected?: LandingCountry | null
   showcase: ShowcaseResponse | null
   showcaseError?: boolean
   guides: GuideLink[]
-  initialQuery: string
-  loading: boolean
-  error: string | null
-  onSearch: (query: string, byExample?: boolean) => void
+  /** el dueño eligió un local real de la demo: empieza el diagnóstico */
+  onPickPlace: (place: PlaceSummary) => void
   /** abre el diagnóstico completo de un local de la demo, con respuestas de ejemplo (simuladas) */
   onOpenSample: (placeId: string, country: CountryCode | null) => void
   /** "¿Todavía no abriste?": lleva a la ruta de quien está por abrir (sin diagnóstico) */
   onOpening: () => void
-}
-
-/** Ejemplos tocables de la home: los locales del país del dueño primero, después los de los demás (hasta 6) */
-export function exampleChips(first: CountryCode): string[] {
-  const order: CountryCode[] = [
-    first,
-    ...(['AR', 'MX', 'CL', 'CO', 'BR'] as const).filter((c) => c !== first),
-  ]
-  return order.flatMap((c) => copy.hero.examples[c]).slice(0, 6)
 }
 
 export function landingFacts(code: CountryCode): LandingFacts {
@@ -53,101 +43,129 @@ export function landingFacts(code: CountryCode): LandingFacts {
   }
 }
 
-function SearchBlock({
-  country,
-  initialQuery,
-  loading,
-  error,
-  examples,
-  onSearch,
-  onOpening,
-}: Pick<HomeProps, 'initialQuery' | 'loading' | 'error' | 'onSearch' | 'onOpening'> & {
-  country: CountryCode | null
-  examples: string[]
-}) {
-  const v = copyFor(country).hero
-  const [query, setQuery] = useState(initialQuery)
-  const [touched, setTouched] = useState(false)
-  const tooShort = touched && query.trim().length < 2
+/** Milisegundos que dura cada escena del hero */
+export const SCENE_MS = 3200
 
-  function submit(event: FormEvent) {
-    event.preventDefault()
-    setTouched(true)
-    if (query.trim().length >= 2) onSearch(query.trim())
-  }
+/**
+ * La escena del hero ("Viernes 21:30. Alguien busca «pizza en Lanús»."). Rota entre locales reales del snapshot.
+ * Es decorativa: aria-hidden y aria-live="off", así los lectores de pantalla leen solo el H1.
+ * Todas las escenas ocupan la misma celda de una grilla: la altura es la de la más larga, sin saltos de layout.
+ * Con prefers-reduced-motion no hay rotación ni transición: queda la primera, la del país detectado (el CSS esconde el resto).
+ */
+function HeroSceneRotator({ scenes, className }: { scenes: HeroScene[]; className: string }) {
+  const [active, setActive] = useState(0)
+  const key = scenes.map((s) => s.placeId).join('|')
+  useEffect(() => {
+    setActive(0)
+    if (scenes.length < 2) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => setActive((a) => (a + 1) % scenes.length), SCENE_MS)
+    return () => window.clearInterval(id)
+    // `key` resume el contenido de `scenes`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key])
 
+  const list: Pick<HeroScene, 'placeId' | 'time' | 'query'>[] =
+    scenes.length > 0 ? scenes : [{ placeId: 'fallback', ...copy.hero.fallbackScene }]
   return (
-    <>
-      <form onSubmit={submit} className="mt-8" noValidate>
-        <label htmlFor="place-query" className="mb-2 block text-sm font-semibold text-white">
-          {copy.hero.searchLabel}
-        </label>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            id="place-query"
-            type="search"
-            enterKeyHint="search"
-            autoComplete="off"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={v.placeholder}
-            aria-invalid={tooShort}
-            aria-describedby={tooShort || error ? 'search-error' : undefined}
-            maxLength={80}
-            className="input flex-1 border-transparent"
-          />
-          <button type="submit" disabled={loading} className="btn btn-brand sm:min-w-[170px]">
-            {loading ? copy.hero.searching : copy.hero.searchButton}
-          </button>
-        </div>
-        {(tooShort || error) && (
-          <p
-            id="search-error"
-            role="alert"
-            className="mt-2 rounded-lg bg-white px-3 py-2 text-sm font-medium text-danger"
-          >
-            {tooShort ? v.tooShort : error}
-          </p>
-        )}
-      </form>
-
-      <p className="mt-5 text-sm text-on-night-muted">
-        {copyFor(country).opening.prompt}{' '}
-        <a
-          href="#por-abrir"
-          onClick={(event) => {
-            event.preventDefault()
-            onOpening()
-          }}
-          className="inline-flex min-h-touch items-center font-semibold text-white underline underline-offset-4"
+    <p aria-hidden="true" aria-live="off" className={`hero-scene grid ${className}`}>
+      {list.map((scene, i) => (
+        <span
+          key={scene.placeId}
+          className={`col-start-1 row-start-1 transition-opacity duration-500 ${i === active ? 'opacity-100' : 'opacity-0'}`}
         >
-          {copyFor(country).opening.link}
-        </a>
-      </p>
+          <span className="font-mono text-on-night-accent">{scene.time}.</span>{' '}
+          {copy.hero.scene(scene.query)}
+        </span>
+      ))}
+    </p>
+  )
+}
 
-      {examples.length > 0 && (
-        <div className="mt-2">
-          <p className="mb-2 text-sm text-on-night-muted">{v.examplesLabel}</p>
-          <ul className="flex flex-wrap gap-2">
-            {examples.map((example) => (
-              <li key={example}>
+function ratingOf(p: PlaceSummary): number {
+  return p.reviewCount ?? -1
+}
+
+/**
+ * Elección honesta: la demo tiene pocos locales reales, no un buscador. Tarjetas agrupadas por país,
+ * con el del visitante (o el de la landing) primero.
+ */
+function PlaceCards({
+  catalog,
+  first,
+  onPick,
+}: {
+  catalog: PlaceSummary[]
+  first: CountryCode
+  onPick: HomeProps['onPickPlace']
+}) {
+  const v = copyFor(first).places
+  const order: CountryCode[] = [
+    first,
+    ...(['AR', 'MX', 'CL', 'CO', 'BR'] as const).filter((c) => c !== first),
+  ]
+  const groups = order
+    .map((code) => ({
+      code,
+      places: catalog.filter((p) => p.country === code).sort((a, b) => ratingOf(b) - ratingOf(a)),
+    }))
+    .filter((g) => g.places.length > 0)
+  const types = copy.questions.items.businessType.options as Record<string, string>
+  return (
+    <section id="locales" aria-labelledby="places-title" className="scroll-mt-4 py-12">
+      <h2 id="places-title" className="text-3xl font-extrabold">
+        {v.title}
+      </h2>
+      <p className="mt-1 text-muted">{v.intro(catalog.length)}</p>
+      <p className="mt-1 text-sm text-muted">{v.production}</p>
+      {groups.map((group) => (
+        <div key={group.code} className="mt-8">
+          <h3 className="text-xl font-bold">
+            {copy.places.countryGroup(getCountry(group.code).name)}
+          </h3>
+          <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {group.places.map((p) => (
+              <li key={p.id} className="card flex flex-col gap-3">
+                <div>
+                  <h4 className="break-words text-xl font-bold leading-tight">{p.name}</h4>
+                  <p className="mt-0.5 break-words text-sm text-muted">
+                    {[p.city, p.businessType ? types[p.businessType] : null]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </p>
+                  <p className="mt-1 font-mono text-sm font-medium tabular-nums">
+                    {p.rating !== null ? (
+                      <>
+                        <span aria-hidden="true" className="text-warning-text">
+                          ★
+                        </span>{' '}
+                        <span className="sr-only">{copy.places.ratingLabel} </span>
+                        {formatRating(p.rating, group.code)}
+                        {p.reviewCount !== null &&
+                          ` · ${copy.places.reviews(formatNumber(p.reviewCount, group.code))}`}
+                      </>
+                    ) : (
+                      <span className="font-sans text-muted">{copy.places.noRating}</span>
+                    )}
+                  </p>
+                  <div className="mt-2">
+                    <ProvenanceBadge provenance={p.provenance} />
+                  </div>
+                </div>
                 <button
                   type="button"
-                  className="chip-night"
-                  disabled={loading}
-                  onClick={() => {
-                    setQuery(example)
-                    onSearch(example, true)
-                  }}
+                  className="btn btn-primary mt-auto w-full"
+                  onClick={() => onPick(p)}
                 >
-                  {example}
+                  {v.pick}
+                  <span className="sr-only"> de {p.name}</span>
                 </button>
               </li>
             ))}
           </ul>
         </div>
-      )}
-    </>
+      ))}
+    </section>
   )
 }
 
@@ -296,71 +314,16 @@ function LandingFactsBlock({ country }: { country: LandingCountry }) {
   )
 }
 
-function PlacesList({
-  country,
-  places,
-  onOpenSample,
-}: {
-  country: LandingCountry
-  places: PlaceSummary[]
-  onOpenSample: HomeProps['onOpenSample']
-}) {
-  const v = copyFor(country).landing
-  if (places.length === 0) return null
-  return (
-    <section aria-labelledby="places-title" className="pb-12">
-      <h2 id="places-title" className="text-3xl font-extrabold">
-        {v.placesTitle(getCountry(country).name)}
-      </h2>
-      <p className="mt-1 text-muted">{v.placesIntro}</p>
-      <ul className="mt-6 grid gap-4 md:grid-cols-2">
-        {places.map((p) => (
-          <li key={p.id} className="card flex flex-col gap-3">
-            <div>
-              <h3 className="break-words text-xl font-bold leading-tight">{p.name}</h3>
-              <p className="mt-0.5 break-words text-sm text-muted">{p.addressLine}</p>
-              <p className="mt-1 font-mono text-sm font-medium tabular-nums">
-                {p.rating !== null ? (
-                  <>
-                    <span aria-hidden="true" className="text-warning-text">
-                      ★
-                    </span>{' '}
-                    <span className="sr-only">Rating </span>
-                    {formatRating(p.rating, country)}
-                    {p.reviewCount !== null && ` · ${formatNumber(p.reviewCount, country)} reseñas`}
-                  </>
-                ) : (
-                  <span className="font-sans text-muted">{copy.confirm.noRating}</span>
-                )}
-              </p>
-              <div className="mt-2">
-                <ProvenanceBadge provenance={p.provenance} />
-              </div>
-            </div>
-            <button
-              type="button"
-              className="btn btn-secondary mt-auto w-full"
-              onClick={() => onOpenSample(p.id, p.country)}
-            >
-              {copy.proof.cta}
-              <span className="sr-only"> de {p.name}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
-
 /**
  * Home (country = null) y landings por país. Se renderiza igual en el navegador y en el prerender (HTML estático):
- * la escena del hero, el ticket de ejemplo real y los bloques por país salen de los mismos datos.
+ * las escenas del hero, el ticket de ejemplo real, las tarjetas y los bloques por país salen de los mismos datos.
  */
 export function Home(props: HomeProps) {
   const { country, showcase, onOpenSample } = props
   // La home prerenderizada es la de Argentina (SEO); en el navegador se adapta al país detectado
   const detected = country ? null : (props.detected ?? null)
   const voiceCountry = country ?? detected
+  const first: CountryCode = voiceCountry ?? 'AR'
   const featured = showcase?.featured ?? null
   const v = copyFor(voiceCountry)
   const guides = detected
@@ -370,19 +333,30 @@ export function Home(props: HomeProps) {
     : props.guides
 
   const place = featured?.place
-  const noun =
-    copy.hero.queryNoun[place?.fields.businessType.value ?? ''] ?? copy.hero.queryNoun.restaurante!
   const city = place?.fields.address.value?.city
-  const query = place && city ? copy.hero.query(noun as string, city) : copy.hero.queryFallback
+  const scenes = buildHeroScenes(showcase?.catalog ?? [], first)
   const apps = country
     ? landingFacts(country).apps.slice(0, 2)
     : detected && detected !== 'AR'
       ? landingFacts(detected).apps.slice(0, 2)
       : []
-  const examples = country
-    ? (showcase?.places ?? []).slice(0, 3).map((p) => p.name)
-    : exampleChips(detected ?? 'AR')
   const versionCountry = country ? null : (detected ?? 'AR')
+
+  const openingLink = (
+    <p className="mt-5 text-sm text-on-night-muted">
+      {v.opening.prompt}{' '}
+      <a
+        href="#por-abrir"
+        onClick={(event) => {
+          event.preventDefault()
+          props.onOpening()
+        }}
+        className="inline-flex min-h-touch items-center font-semibold text-white underline underline-offset-4"
+      >
+        {v.opening.link}
+      </a>
+    </p>
+  )
 
   return (
     <>
@@ -398,39 +372,40 @@ export function Home(props: HomeProps) {
                 >
                   {v.landing.title(landingFacts(country), v.landing.fiscalPhrase)}
                 </ScreenTitle>
-                <p className="mt-5 font-display text-2xl font-bold leading-snug text-white sm:text-3xl">
-                  <span className="font-mono text-on-night-accent">{copy.hero.time}</span>{' '}
-                  {copy.hero.scene(query)}{' '}
-                  <span className="text-on-night-muted">{copy.hero.question}</span>
+                <HeroSceneRotator
+                  scenes={scenes}
+                  className="mt-5 font-display text-2xl font-bold leading-snug text-white sm:text-3xl"
+                />
+                <p className="mt-2 font-display text-2xl font-bold leading-snug text-on-night-muted sm:text-3xl">
+                  {copy.hero.question}
                 </p>
               </>
             ) : (
-              <ScreenTitle
-                eyebrow={copy.hero.eyebrow}
-                eyebrowClassName="mb-3 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-on-night-accent"
-                titleClassName="font-display text-[34px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[54px]"
-              >
-                <span className="font-mono text-on-night-accent">{copy.hero.time}</span>{' '}
-                {copy.hero.scene(query)}
-                <span className="mt-3 block text-2xl font-bold text-on-night-muted sm:text-3xl lg:text-[34px]">
+              <>
+                <p className="mb-3 font-mono text-sm font-semibold uppercase tracking-[0.18em] text-on-night-accent">
+                  {copy.hero.eyebrow}
+                </p>
+                <HeroSceneRotator
+                  scenes={scenes}
+                  className="font-display text-[34px] font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[54px]"
+                />
+                <ScreenTitle titleClassName="mt-3 block break-words font-display text-2xl font-bold leading-tight tracking-tight text-on-night-muted sm:text-3xl lg:text-[34px]">
+                  <span className="sr-only">{copy.hero.h1Keyword} </span>
                   {copy.hero.question}
-                </span>
-              </ScreenTitle>
+                </ScreenTitle>
+              </>
             )}
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-on-night-muted">
               {v.hero.subtitle(apps)}
             </p>
-            <SearchBlock
-              country={voiceCountry}
-              initialQuery={props.initialQuery}
-              loading={props.loading}
-              error={props.error}
-              examples={examples}
-              onSearch={props.onSearch}
-              onOpening={props.onOpening}
-            />
+            <p className="mt-8">
+              <a href="#locales" className="btn btn-brand w-full sm:w-auto">
+                {v.places.cta}
+              </a>
+            </p>
+            {openingLink}
             {versionCountry && (
-              <p className="mt-2">
+              <p className="mt-1">
                 <a
                   href={`/${versionCountry.toLowerCase()}/`}
                   className="inline-flex min-h-touch items-center text-sm font-semibold text-white underline underline-offset-4"
@@ -486,15 +461,9 @@ export function Home(props: HomeProps) {
       </section>
 
       <div className="mx-auto max-w-6xl px-4">
+        <PlaceCards catalog={showcase?.catalog ?? []} first={first} onPick={props.onPickPlace} />
         {country ? (
-          <>
-            <LandingFactsBlock country={country} />
-            <PlacesList
-              country={country}
-              places={showcase?.places ?? []}
-              onOpenSample={onOpenSample}
-            />
-          </>
+          <LandingFactsBlock country={country} />
         ) : (
           <>
             <Steps />

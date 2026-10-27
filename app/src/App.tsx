@@ -3,25 +3,18 @@ import { track } from './analytics/events'
 import { copy, copyFor } from './content/copy'
 import { isLandingCountry, type LandingCountry } from './domain/showcase'
 import type { Answers, CountryCode, PlaceSummary } from './domain/types'
-import type { DiagnosisResponse, SearchResponse, ShowcaseResponse } from './server/diagnosisService'
-import {
-  fetchGeo,
-  fetchShowcase,
-  requestDiagnosis,
-  requestSampleDiagnosis,
-  searchPlaces,
-} from './ui/api'
+import type { DiagnosisResponse, ShowcaseResponse } from './server/diagnosisService'
+import { fetchGeo, fetchShowcase, requestDiagnosis, requestSampleDiagnosis } from './ui/api'
 import { Footer, Header, Page } from './ui/components/Layout'
 import { ScreenTitle } from './ui/components/ScreenTitle'
 import { landingCountryFromPath, readPageData } from './ui/pageData'
 import { Debug } from './ui/screens/Debug'
 import { Home } from './ui/screens/Home'
-import { PickPlace } from './ui/screens/PickPlace'
 import { PorAbrir } from './ui/screens/PorAbrir'
 import { Questions, TOTAL_QUESTIONS } from './ui/screens/Questions'
 import { Result } from './ui/screens/Result'
 
-type Stage = 'search' | 'pick' | 'questions' | 'result' | 'porAbrir'
+type Stage = 'search' | 'questions' | 'result' | 'porAbrir'
 
 /**
  * Todo lo que define una pantalla del recorrido. Cada paso se guarda en el historial del navegador
@@ -29,14 +22,10 @@ type Stage = 'search' | 'pick' | 'questions' | 'result' | 'porAbrir'
  */
 interface Snapshot {
   /** versión del formato: si cambia, un estado viejo del historial se ignora */
-  v: 1
+  v: 2
   /** posición en el recorrido: 0 = el primero; > 0 = hay una pantalla anterior a la que volver */
   idx: number
   stage: Stage
-  query: string
-  /** true si la búsqueda salió de tocar un ejemplo (chip) en vez de escribir */
-  searchedByExample: boolean
-  response: SearchResponse | null
   place: PlaceSummary | null
   step: number
   answers: Partial<Answers>
@@ -50,12 +39,9 @@ interface Snapshot {
 const OPENING_HASH = '#por-abrir'
 
 const BLANK: Snapshot = {
-  v: 1,
+  v: 2,
   idx: 0,
   stage: 'search',
-  query: '',
-  searchedByExample: false,
-  response: null,
   place: null,
   step: 0,
   answers: {},
@@ -67,7 +53,7 @@ const BLANK: Snapshot = {
 /** Pantalla con la que arranca la página: la del historial (recarga) o la que pide la URL (#por-abrir) */
 function snapshotFromLocation(): Snapshot {
   const state = window.history.state as Partial<Snapshot> | null
-  if (state && state.v === 1 && state.stage) return { ...BLANK, ...state } as Snapshot
+  if (state && state.v === 2 && state.stage) return { ...BLANK, ...state } as Snapshot
   if (window.location.hash === OPENING_HASH) return { ...BLANK, stage: 'porAbrir' }
   return BLANK
 }
@@ -85,14 +71,12 @@ export default function App() {
   // Copia síncrona del estado actual: varias acciones seguidas parten siempre de la última pantalla
   const snapRef = useRef(snap)
   snapRef.current = snap
-  const [searching, setSearching] = useState(false)
-  const [searchError, setSearchError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [diagnosisError, setDiagnosisError] = useState<string | null>(null)
   /** descarta la respuesta de un pedido si el dueño ya se fue a otra pantalla (Atrás) */
   const requestId = useRef(0)
 
-  const { stage, query, response, place, step, answers, diagnosis, sample } = snap
+  const { stage, place, step, answers, diagnosis, sample } = snap
   const voice = copyFor(landing ?? detected)
 
   // En desarrollo (sin prerender) el ticket de ejemplo se pide al servidor
@@ -147,7 +131,6 @@ export default function App() {
       requestId.current += 1
       setLoading(false)
       setDiagnosisError(null)
-      setSearching(false)
       const restored = snapshotFromLocation()
       snapRef.current = restored
       setSnap(restored)
@@ -179,31 +162,16 @@ export default function App() {
     else go({ ...BLANK, stage: 'search' })
   }
 
-  async function search(q: string, byExample = false) {
-    setSearching(true)
-    setSearchError(null)
-    track('diag_start', { query_length: q.length })
-    try {
-      const found = await searchPlaces(q, landing ?? detected)
-      go({ stage: 'pick', query: q, searchedByExample: byExample, response: found })
-    } catch {
-      setSearchError(voice.hero.searchError)
-    } finally {
-      setSearching(false)
-    }
-  }
-
-  function pick(selected: PlaceSummary, fromSuggestion = false) {
+  /** El dueño eligió una tarjeta: un local real de la demo. Empiezan las preguntas. */
+  function pickPlace(selected: PlaceSummary) {
+    track('diag_start', { source: 'card' })
     go({ stage: 'questions', place: selected, answers: {}, step: 0, sample: false })
-    track('place_selected', {
-      country: selected.country,
-      // sugerencia = local elegido de la lista "en la demo cubrimos…" o de un ejemplo (chip)
-      from_suggestion: fromSuggestion || (response?.notFound ?? false) || snap.searchedByExample,
-    })
+    // el local sale de la lista de la demo, no de una búsqueda
+    track('place_selected', { country: selected.country, from_suggestion: true })
   }
 
   /** "Estoy por abrir": otra ruta, sin diagnóstico de ningún local */
-  function openOpening(from: 'home' | 'p1' | 'not-found', country: CountryCode | null) {
+  function openOpening(from: 'home' | 'p1', country: CountryCode | null) {
     go({
       stage: 'porAbrir',
       place: null,
@@ -302,10 +270,7 @@ export default function App() {
             detected={detected}
             showcaseError={showcaseError}
             guides={pageData?.guides ?? []}
-            initialQuery={query}
-            loading={searching}
-            error={searchError}
-            onSearch={search}
+            onPickPlace={pickPlace}
             onOpenSample={openSample}
             onOpening={() => openOpening('home', null)}
           />
@@ -321,15 +286,6 @@ export default function App() {
                 </button>
               )}
             </section>
-          )}
-          {!busy && stage === 'pick' && response && (
-            <PickPlace
-              query={query}
-              response={response}
-              onPick={(selected, fromSuggestion) => pick(selected, fromSuggestion)}
-              onBack={back}
-              onOpening={() => openOpening('not-found', response.priorityCountry ?? landing)}
-            />
           )}
           {!busy && stage === 'questions' && place && (
             <Questions

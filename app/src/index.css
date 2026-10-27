@@ -153,3 +153,13 @@
     @apply rounded bg-surface px-1.5 py-0.5 text-[15px];
   }
 }
+
+/* Escenas del hero: sin movimiento, queda solo la primera (la del país detectado) */
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene > * {
+    transition: none !important;
+  }
+  .hero-scene > :not(:first-child) {
+    display: none;
+  }
+}

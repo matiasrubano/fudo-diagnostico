@@ -27,10 +27,7 @@ export function StaticPage({
           country={country}
           showcase={showcase}
           guides={guides}
-          initialQuery=""
-          loading={false}
-          error={null}
-          onSearch={noop}
+          onPickPlace={noop}
           onOpenSample={noop}
           onOpening={noop}
         />

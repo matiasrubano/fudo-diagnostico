@@ -146,7 +146,7 @@ describe('todo el copy resuelto por país', () => {
   it('"Elegí al menos una" no se filtra a MX/CL/CO/BR', () => {
     for (const code of ['MX', 'CL', 'CO', 'BR'] as const) {
       expect(copyFor(code).questions.pickAtLeastOne).toBe('Elige al menos una')
-      expect(copyFor(code).notFound.pickIn('X')).toMatch(/^Prueba/)
+      expect(copyFor(code).places.title).toBe('Elige un local real de la demo')
       expect(copyFor(code).loading.error).toMatch(/Prueba/)
     }
   })

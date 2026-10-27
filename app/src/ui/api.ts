@@ -1,9 +1,5 @@
 import type { Answers, CountryCode } from '../domain/types'
-import type {
-  DiagnosisResponse,
-  SearchResponse,
-  ShowcaseResponse,
-} from '../server/diagnosisService'
+import type { DiagnosisResponse, ShowcaseResponse } from '../server/diagnosisService'
 
 // Único punto donde el frontend habla con el servidor. No conoce el proveedor de datos ni keys.
 
@@ -11,15 +7,6 @@ async function readJson<T>(response: Response): Promise<T> {
   const body = (await response.json().catch(() => ({}))) as T & { error?: string }
   if (!response.ok) throw new Error(body.error ?? `Error ${response.status}`)
   return body
-}
-
-/** `country` = la landing (o el país detectado) desde la que se busca: ordena las sugerencias si no hay coincidencia */
-export async function searchPlaces(
-  query: string,
-  country?: string | null,
-): Promise<SearchResponse> {
-  const bias = country ? `&country=${encodeURIComponent(country)}` : ''
-  return readJson(await fetch(`/api/places-search?q=${encodeURIComponent(query)}${bias}`))
 }
 
 export async function requestDiagnosis(

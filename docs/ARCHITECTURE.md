@@ -6,10 +6,14 @@ Vite + React + TypeScript (strict) + Tailwind en el front; funciones serverless 
 
 ```
 0. Home            GET  /api/geo[?country=MX]         → { country }  (IP; AR por defecto). Adapta voz, escena y ejemplos en el cliente
-1. Hero            GET  /api/places-search?q=...[&country=] → { results, suggestions, notFound, priorityCountry, onlyPriority }
+1. Hero            La UI ya NO tiene buscador: la home y las landings muestran tarjetas con los locales reales del snapshot
+                   (`/api/showcase` → `catalog`), el país detectado/de la landing primero, y las escenas del hero rotan con esos mismos
+                   locales (`src/ui/heroScenes.ts`, data-driven; el texto sale de copy.ts). `diag_start` registra `{ source: 'card' }`.
+                   El endpoint y el gateway siguen (producción con Places, tests):
+                   GET  /api/places-search?q=...[&country=] → { results, suggestions, notFound, priorityCountry, onlyPriority }
                    (búsqueda HONESTA: "¿Es este?" solo si todas las palabras están en nombre/ciudad/tipo; si no, "No encontramos «X»"
                     con sugerencias del país de la ciudad nombrada o del país detectado, sin mezclar países)
-2. "¿Es este?"     (el usuario elige un resultado o una sugerencia)
+2. Elección        (la tarjeta lleva directo a las preguntas; "¿Es este?" volverá con la búsqueda real de Places)
 3. 4 preguntas     (estado local del navegador)
 4. Resultado       POST /api/diagnose { placeId, answers } → Diagnosis + neighbors
    Vidriera        GET  /api/showcase?country=AR → ticket de ejemplo real + locales de la demo
