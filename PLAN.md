@@ -184,14 +184,16 @@ video/
 
 **Listo cuando:** repo público (o privado con acceso), CI en verde, URL de Vercel andando y anotada en §7.
 
-### G4 — QA responsive y funcional `[ ]` · A3
-- [ ] Recorre el flujo completo en 375 / 768 / 1280 con el navegador, con capturas de cada paso → `docs/qa/screenshots/`
-- [ ] Revisa: scroll horizontal, solapamientos, contraste AA, estados de carga y error (local no encontrado, proveedor caído), teclado
-- [ ] Prueba los 4 ruteos y al menos un local real por país
+### G4 — QA responsive y funcional `[x]` · A3
+- [x] Recorre el flujo completo en 375 / 768 / 1280 con el navegador, con capturas de cada paso → `docs/qa/screenshots/`
+- [x] Revisa: scroll horizontal, solapamientos, contraste AA, estados de carga y error (local no encontrado, proveedor caído), teclado
+- [x] Prueba los 4 ruteos y al menos un local real por país
+
+**Evidencia (2026-10-27):** `docs/qa/report.md` (0 bloqueantes, 1 alta, 8 medias, 6 bajas) + ~115 capturas en `docs/qa/screenshots/`. Lighthouse móvil home 84/98/100/100. Los 13 tickets coinciden con su JSON. Los bugs se resuelven en la iteración A5 (cambio 5 de `docs/feedback/cambios.md`).
 
 **Listo cuando:** `docs/qa/report.md` no tiene bugs bloqueantes abiertos.
 
-### G5 — Simulación de dueños + iteración `[ ]` · A4 → A5
+### G5 — Simulación de dueños + iteración `[~]` · A4 → A5
 Cada A4 recibe **solo** la persona y la URL. No sabe que es un caso, ni que es para Fudo, ni ningún contexto del proyecto. Navega la app con el navegador y responde como el dueño.
 
 | Persona | Perfil | Qué esperamos ver |
@@ -202,7 +204,7 @@ Cada A4 recibe **solo** la persona y la URL. No sabe que es un caso, ni que es p
 | P4 | Sofía, 26, "estoy por abrir una cafetería" (CL) | ¿La **descarta** bien y la manda al Consultor sin frustrarla? |
 
 **Salida por persona:** recorrido pensado en voz alta, fricciones (en qué paso), objeciones, si crearía la cuenta (sí/no/por qué), nota del 1 al 10 y la frase que lo convenció o espantó.
-- [ ] A5 aplica los cambios con mayor impacto (como máximo 5) → `docs/feedback/cambios.md`, redeploy y regresión rápida de A3
+- [x] A5 aplica los cambios con mayor impacto (como máximo 5) → `docs/feedback/cambios.md`, redeploy y regresión rápida de A3
 - 🔒 **G-OK1: Matías revisa la app final y da el OK.** Sin ese OK no se pasa a G7.
 
 ### G6 — Informe (≤2 páginas) `[ ]` · A6 *(después de G-OK1)*
@@ -225,13 +227,13 @@ Incluye las URLs de la app y del repo, y 3–4 citas de los dueños simulados (m
 **Listo cuando:** el `.docx` y el `.pdf` entran en 2 páginas A4 y cada número tiene su fuente.
 
 ### G7 — Video demo `[ ]` · A7 → 🔒 G-OK2 → A8 *(después de G-OK1)*
-- [ ] **A7, guion de 60–90 s:**
+- [x] **A7, guion de 60–90 s:**
   - hook con el problema
   - recorrido con un local real del snapshot
   - el momento "tu Fudo ya armado"
   - números del experimento
   - cierre con las URLs
-- 🔒 **G-OK2: Matías aprueba el guion**
+- [x] 🔒 **G-OK2: Matías aprueba el guion** (2026-10-27, aprobado tal cual: `video/guion.md`, 182 palabras ≈ 77 s)
 - [ ] **A8:**
   - voz **neutra en español latino** con el conector de ElevenLabs disponible (listar voces → elegir una neutra → generar). Si el conector no está, frenar y avisar
   - capturas o grabación de la app (Playwright)
@@ -303,3 +305,9 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-27 | G3 | En curso (cortado por límite de uso). ✅ Repo público https://github.com/matiasrubano/fudo-diagnostico, CI verde. ✅ Proyecto Vercel `fudo-diagnostico` (root `app/`, Node 22, DATA_SOURCE=snapshot, SITE_URL) desplegado en https://fudo-diagnostico.vercel.app: home, blog, sitemap, llms.txt OK. ❌ `/api/*` da 500: imports ESM sin `.js` + `defaultSnapshotDir` usa cwd (en Lambda es /var/task/app/data/snapshots). Fix de `vercel.json` (`\.`) sin commitear. A2 detenido a mitad del fix: revisar `git status`/diff antes de seguir. Pendiente: Matías conecta GitHub en Vercel (Login Connections) para deploys automáticos; 3 bugs menores (ver G2) |
 | 2026-10-27 | G3 | ✅ Cerrado (salvo deploy automático por push, pendiente de Login Connection de Matías). API arreglada y verificada en prod. Logo oficial de fu.do en `app/public/brand/` y `video/assets/` (pedido de Matías) |
 | 2026-10-27 | G5/A5 | Matías: "hacela menos genérica". A5 en curso: logo, hero con escena real, ticket/comanda, comparación con vecinos reales, voz por país, landings /ar /mx /cl /co, 3 bugs. A9 (log de prompts) en paralelo |
+| 2026-10-27 | A5 | ✅ Rediseño "menos genérico" en prod (7 commits, 105 tests): logo oficial, hero "Viernes 21:30", comanda real en la home, resultado como comanda, vecinos reales, voz por país, landings /ar /mx /cl /co con hreflang, 3 bugs arreglados. Verificado por el orquestador en 375 (home) y 1280 (/mx/) |
+| 2026-10-27 | G4+G5 | En curso: A3 (QA) + 4 × A4 (Rubén, Mariana, Andrés, Sofía) en paralelo sobre prod. A4 reciben solo persona + URL |
+| 2026-10-27 | G4 | ✅ QA sin bloqueantes (informe guardado por el orquestador: A3 no pudo escribir el archivo) |
+| 2026-10-27 | G5 | 4 dueños simulados: Rubén 6, Mariana 5, Andrés 5, Sofía 4; ninguno crearía cuenta hoy (el alta es simulada). `docs/feedback/cambios.md` con 5 cambios + barrido QA → A5 en curso. A6 (informe) y A7 (guion) arrancan en borrador en paralelo para ganar tiempo; se cierran después de G-OK1 / G-OK2 |
+| 2026-10-27 | G7 | ✅ G-OK2: guion aprobado (9 escenas, ~77 s, El Campeón de la Pizza). A5 y A6 cortados por límite de uso de la sesión → retomados con SendMessage |
+| 2026-10-27 | G5 | ✅ A5 aplicó los 5 cambios + barrido QA (170 tests), desplegado y verificado por el orquestador en prod (Café Lumbre → no encontrado → por abrir; El Campeón con "tus números"; 404 real). Informe (A6) listo en 2 páginas. Voz: ElevenLabs falla en todas las generaciones (incluso 1 frase) → problema de la cuenta; el video sale con subtítulos y la pista de voz se agrega cuando ande. Esperando G-OK1 |
