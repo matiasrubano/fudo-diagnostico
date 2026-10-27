@@ -91,7 +91,7 @@ Tamaño del experimento: para ver 10% → 15% (cuenta→pago) con α=0,05 y pote
 
 **Listo cuando:** todos los ítems tienen fuente (link). Lo que no se encontró se declara como "no encontrado", sin inventar.
 
-### G2 — Arquitectura y app `[~]` · A2
+### G2 — Arquitectura y app `[x]` · A2
 **Stack:** Vite + React + TypeScript + Tailwind en el front, con **funciones serverless de Vercel** en `app/api/`. Es todo gratis y se puede editar en vivo.
 
 **Gateway de datos (el corazón técnico):**
@@ -128,11 +128,13 @@ Frontend ──► /api/diagnose ──► DiagnosisService ──► DataGatewa
 6. **Instrumentación:** eventos `diag_start`, `place_selected`, `q_answered_n`, `result_viewed`, `lead_tier`, `cta_click`, en un panel `/debug` para la entrevista
 
 **Requisitos no negociables:**
-- [ ] **Responsive** en 360, 375, 768, 1024 y 1280 px, sin scroll horizontal, objetivos táctiles ≥44 px
-- [ ] Tokens de Fudo en un único `src/theme/tokens.ts`
-- [ ] Copy en `src/content/copy.ts`; reglas de scoring y pesos en `src/domain/scoring.ts` (puro); recomendaciones por país en `src/domain/recommendations.ts`. **El cambio en vivo de la entrevista tiene que salir tocando un solo archivo**
-- [ ] Gemini es **opcional** (D3). Sin key, las recomendaciones salen de plantillas por reglas
-- [ ] **(D4) Blog GEO** en `app/content/blog/*.md` (6–8 artículos de `docs/research/geo-blog.md`), cada página con respuesta directa arriba, FAQ, JSON-LD `Article` + `FAQPage`, CTA al diagnóstico; `public/llms.txt`, `sitemap.xml`, `robots.txt`, meta/OG por página y HTML prerenderizado (indexable sin JS)
+- [x] **Responsive** en 360, 375, 768, 1024 y 1280 px, sin scroll horizontal, objetivos táctiles ≥44 px
+- [x] Tokens de Fudo en un único `src/theme/tokens.ts`
+- [x] Copy en `src/content/copy.ts`; reglas de scoring y pesos en `src/domain/scoring.ts` (puro); recomendaciones por país en `src/domain/recommendations.ts`. **El cambio en vivo de la entrevista tiene que salir tocando un solo archivo**
+- [x] Gemini es **opcional** (D3). Sin key, las recomendaciones salen de plantillas por reglas
+- [x] **(D4) Blog GEO** en `app/content/blog/*.md` (6–8 artículos de `docs/research/geo-blog.md`), cada página con respuesta directa arriba, FAQ, JSON-LD `Article` + `FAQPage`, CTA al diagnóstico; `public/llms.txt`, `sitemap.xml`, `robots.txt`, meta/OG por página y HTML prerenderizado (indexable sin JS)
+
+**Evidencia (2026-10-27, verificado por el orquestador):** `npm ci/lint/typecheck/test/build` en verde (64 tests, 7 archivos); flujo El Campeón (AR, caliente) recorrido en 375 y 1280 sin scroll horizontal; modal de alta simulada; `/debug` con los 9 eventos; `dist/blog/<slug>/index.html` con artículo + JSON-LD Article/FAQPage/BreadcrumbList; `llms.txt`, `sitemap.xml`, `robots.txt`. A2 reporta 241 capturas Playwright (9 recorridos, 5 países, 4 ruteos) y axe sin violaciones. **Para G4:** (1) recomendación de delivery dice "vendés solo por apps" aunque se marcó mostrador; (2) `place_selected.from_suggestion` da `false` al elegir un chip; (3) `/debug` hereda el `<title>` de la home.
 
 **Listo cuando:** el flujo completo anda en mobile y desktop con `DATA_SOURCE=snapshot`, y `GooglePlacesProvider` compila y tiene test con fixture.
 
@@ -294,3 +296,4 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-26 | G1 | En curso. A1 corre en 4 instancias paralelas: (a) marca + países + tools de Fudo + benchmark, (b) snapshot de locales reales, (c) datos/Places/costos, (d) distribución + GEO + MCP |
 | 2026-10-26 | G1 | ✅ Cerrado. 10 docs de research + countries.json + 13 snapshots reales con provenance. Verificado por el orquestador (JSON válidos, links, sin datos personales). Ver evidencia en G1 |
 | 2026-10-26 | G2 | En curso. A2 (app, gateway, dominio, prerender del blog, repo local con commits, sin remoto) + A2b (8 artículos en `app/content/blog/`) en paralelo. `countries.json` suma `productName` (BR = Deli). gh 2.103.3 y vercel 65.3.1 instalados; falta login de Matías |
+| 2026-10-27 | G2 | ✅ Cerrado. App + gateway + dominio + blog prerenderizado (8 guías) + README/ARCHITECTURE/4 ADR/CI. 10 commits locales en `main`, sin remoto. 3 bugs menores anotados para G4 |
