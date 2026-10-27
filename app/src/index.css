@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-cream-soft font-sans text-base text-ink antialiased;
+    overflow-x: hidden;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight text-ink;
+  }
+  /* Foco visible en todo: azul de marca, contrasta con crema, blanco y naranja */
+  :focus-visible {
+    outline: 3px solid theme('colors.blue.500');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* El título de cada pantalla recibe foco al cambiar de paso, pero sin aro */
+  h1:focus,
+  h2:focus {
+    outline: none;
+  }
+  dialog::backdrop {
+    background: rgb(15 27 78 / 0.6);
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex min-h-touch items-center justify-center gap-2 rounded-pill px-6 py-3 text-base font-semibold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  /* #D03F00 con texto blanco: 4,78:1. El #FF5023 de marca no pasa AA con texto chico. */
+  .btn-primary {
+    @apply bg-primary-700 text-white hover:bg-primary-800;
+  }
+  .btn-secondary {
+    @apply border-2 border-ink bg-white text-ink hover:bg-ink hover:text-white;
+  }
+  .btn-night {
+    @apply bg-night text-white hover:bg-blue-900;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-white p-5 shadow-card;
+  }
+  .eyebrow {
+    @apply text-sm font-bold uppercase tracking-[0.08em] text-primary-text;
+  }
+  .chip {
+    @apply inline-flex min-h-touch items-center rounded-pill border border-line bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-ink;
+  }
+  .option {
+    @apply flex min-h-[56px] w-full items-center gap-3 rounded-xl border-2 border-line bg-white px-4 py-3 text-left text-base font-medium text-ink transition-colors hover:border-ink;
+  }
+  .option[aria-checked='true'],
+  .option[aria-pressed='true'] {
+    @apply border-night bg-blue-50;
+  }
+  .input {
+    @apply min-h-touch w-full rounded-pill border-2 border-line bg-white px-5 py-3 text-base text-ink placeholder:text-muted;
+  }
+
+  /* Texto de artículos del blog (HTML prerenderizado, scripts/prerender.ts) */
+  .prose-fudo {
+    @apply text-[17px] leading-[1.7] text-body;
+  }
+  .prose-fudo > * + * {
+    @apply mt-4;
+  }
+  .prose-fudo h2 {
+    @apply mt-10 text-[28px] font-extrabold leading-tight;
+  }
+  .prose-fudo h3 {
+    @apply mt-8 text-xl font-bold;
+  }
+  .prose-fudo a {
+    @apply font-medium text-blue-500 underline underline-offset-2 hover:text-blue-700;
+  }
+  .prose-fudo ul {
+    @apply list-disc pl-6;
+  }
+  .prose-fudo ol {
+    @apply list-decimal pl-6;
+  }
+  .prose-fudo li + li {
+    @apply mt-1.5;
+  }
+  .prose-fudo blockquote {
+    @apply border-l-4 border-primary-500 bg-cream py-2 pl-4 pr-3 text-ink;
+  }
+  .prose-fudo table {
+    @apply block w-full overflow-x-auto text-left text-[15px];
+  }
+  .prose-fudo th {
+    @apply border-b-2 border-ink bg-surface px-3 py-2 font-semibold text-ink;
+  }
+  .prose-fudo td {
+    @apply border-b border-line px-3 py-2 align-top;
+  }
+  .prose-fudo code {
+    @apply rounded bg-surface px-1.5 py-0.5 text-[15px];
+  }
+}

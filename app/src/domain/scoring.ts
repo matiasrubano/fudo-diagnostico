@@ -43,6 +43,8 @@ export const THRESHOLDS = {
   operationNoSystemLocals: 25,
   /** Puntos por apps de delivery encontradas: 1 app, 2 o más */
   appsPoints: { one: 70, many: 100 },
+  /** Si lo que pudimos leer pesa menos que esto dentro del área, no damos nota (mejor "sin datos suficientes" que un 100 engañoso) */
+  minKnownShare: 0.5,
   /** Corte de nota general / por área para la etiqueta (muy bien, bien, a mejorar, urgente) */
   grade: { great: 80, good: 60, fair: 40 },
   /** Corte de cada chequeo para el semáforo */
@@ -95,7 +97,8 @@ function makeCheck(id: string, weight: number, score: number | null): Check {
 function weighted(checks: Check[]): number | null {
   const known = checks.filter((c) => c.score !== null)
   const total = known.reduce((sum, c) => sum + c.weight, 0)
-  if (total === 0) return null
+  const all = checks.reduce((sum, c) => sum + c.weight, 0)
+  if (total === 0 || total / all < THRESHOLDS.minKnownShare) return null
   return Math.round(known.reduce((sum, c) => sum + (c.score as number) * c.weight, 0) / total)
 }
 

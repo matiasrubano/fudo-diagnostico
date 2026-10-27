@@ -88,6 +88,9 @@ const COMMISSION_FACT: Partial<Record<CountryCode, string>> = {
   AR: 'En Argentina la prensa informa comisiones de PedidosYa de 25% a 35% de la venta (iProfesional, 14/05/2026).',
 }
 
+/** Nombre corto del ente fiscal para títulos (en countries.json BR trae el nombre completo) */
+const FISCAL_SHORT: Partial<Record<CountryCode, string>> = { BR: 'NFC-e' }
+
 function appNames(ctx: RecContext): string {
   const names = ctx.country.deliveryApps.slice(0, 2).map((a) => a.name)
   return names.join(' y ')
@@ -229,7 +232,7 @@ const RULES: Rule[] = [
     bonus: 25,
     when: ({ answers }) => answers.billing === 'manual',
     build: (ctx) => ({
-      title: `Dejá de cobrar y facturar a mano (${ctx.country.fiscal.authority})`,
+      title: `Dejá de cobrar y facturar a mano (${FISCAL_SHORT[ctx.country.code] ?? ctx.country.fiscal.authority})`,
       body: `Cobrar a mano genera errores de caja y comprobantes tardíos. ${BILLING_PITCH[ctx.country.code]}`,
       action: paid(`Tus Cobros (${ctx.country.productName})`, moduleUrl(ctx.country, 'cobros')),
     }),

@@ -35,6 +35,13 @@ describe('scoring', () => {
     expect(hours?.status).toBe('unknown')
   })
 
+  it('si casi todo el área es desconocida, no damos nota (en vez de un 100 engañoso)', async () => {
+    // Piki: sin horarios ni precio → solo dirección y categoría (40% del área)
+    const card = scoreProfile(await place(IDS.piki), answers())
+    expect(card.areas.google.score).toBeNull()
+    expect(card.areas.google.applicable).toBe(true)
+  })
+
   it('absent sí penaliza: web verificada como inexistente da 0 en ese chequeo', async () => {
     const campeon = await place(IDS.campeon)
     expect(campeon.fields.website.status).toBe('absent')
