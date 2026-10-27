@@ -247,7 +247,7 @@ Incluye las URLs de la app y del repo, y 3–4 citas de los dueños simulados (m
 ### G8 — Log de prompts y empaquetado `[x]` · A9 + orquestador
 - [x] `docs/prompts/LOG.md`: los briefs de cada agente, prompts clave y decisiones (entregable #3 del caso)
 - [x] §7 completo con rutas y URLs
-- 🔒 **G-OK3: Matías da el OK para entregar**
+- [x] 🔒 **G-OK3: Matías da el OK para entregar** (2026-10-27)
 
 ---
 
@@ -315,3 +315,4 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-27 | G5 | ✅ A5 aplicó los 5 cambios + barrido QA (170 tests), desplegado y verificado por el orquestador en prod (Café Lumbre → no encontrado → por abrir; El Campeón con "tus números"; 404 real). Informe (A6) listo en 2 páginas. Voz: ElevenLabs falla en todas las generaciones (incluso 1 frase) → problema de la cuenta; el video sale con subtítulos y la pista de voz se agrega cuando ande. Esperando G-OK1 |
 | 2026-10-27 | G-OK1 | ✅ App aprobada con 2 cambios: hero dinámico (escenas por país) y sin buscador de texto (tarjetas de los 13 locales reales; Places en producción). Video recortado. Informe: reescritura con la skill nueva `.claude/skills/escritura-humana` (pedido de Matías; no había una en el catálogo) |
 | 2026-10-27 | G6+G8 | ✅ Informe final (2 páginas, escritura humana, 177 tests). Log de prompts cerrado (16 corridas de subagentes, ~140 KB, sin secretos). README con links finales. App final desplegada: hero dinámico + tarjetas de los 13 locales, 177 tests. Esperando G-OK3 |
+| 2026-10-27 | G-OK3 | ✅ Matías: "OK, damos por entregado". Proyecto cerrado |
