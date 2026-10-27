@@ -8,9 +8,9 @@ import type { CountryCode } from '../src/domain/types'
 import { SnapshotProvider } from '../src/gateway/SnapshotProvider'
 import { answers, IDS, place } from './helpers'
 
-/** Formas verbales de voseo que no pueden aparecer en las voces con tuteo */
+/** Formas verbales de voseo que no pueden aparecer en las voces con tuteo (lookarounds Unicode:  no reconoce las tildes) */
 const VOSEO =
-  /\b(vos|vendés|cobrás|facturás|tenés|querés|podés|usás|dejás|pasate|mandame|elegí|completá|reforzá|armá|dejá|conseguí|entendé|juntá|conectá|leé|revisá|mirá|tocá|sacale|hacé|sumá|pensá|creala|revisala|marcá|escribí)\b/i
+  /(?<!\p{L})(vos|sos|vendés|cobrás|facturás|tenés|querés|podés|usás|dejás|hacés|sabés|decís|venís|elegís|pasate|mandame|elegí|completá|reforzá|armá|dejá|conseguí|entendé|juntá|conectá|leé|revisá|mirá|tocá|sacale|hacé|sumá|pensá|creala|revisala|marcá|escribí|probá|volvé|buscá|subí|cargá|compará|medí|pedí|agregá|ingresá|seguí|empezá|fijate|contanos|decime)(?!\p{L})/iu
 
 function leaves(value: unknown, out: string[] = []): string[] {
   if (typeof value === 'string') out.push(value)
@@ -22,7 +22,7 @@ function leaves(value: unknown, out: string[] = []): string[] {
         'Ejemplo',
         'Ejemplo',
       )
-      if (typeof result === 'string') out.push(result)
+      leaves(result, out)
     } catch {
       /* funciones que piden un objeto: se prueban aparte */
     }
@@ -119,6 +119,36 @@ describe('voz por país: voseo en AR, tuteo en MX, CL y CO', () => {
       Infinity,
     ).find((r) => r.id === 'delivery-commission')
     expect(rec?.body).toContain('Hoy vendes solo por apps (DiDi Food y Rappi')
+  })
+})
+
+describe('todo el copy resuelto por país', () => {
+  it.each(['MX', 'CL', 'CO', 'BR'] as const)(
+    '%s: ni el copy común ni el de la voz tienen voseo (Elegí, Mirá, Probá, Escribí…)',
+    (code) => {
+      const found = [...leaves(copy), ...leaves(copyFor(code))].filter((t) => VOSEO.test(t))
+      expect(found).toEqual([])
+    },
+  )
+
+  it('el detector de voseo detecta voseo (para que el test de arriba no pase en vacío)', () => {
+    for (const text of [
+      'Elegí al menos una',
+      'Mirá cómo estás',
+      'Probá de nuevo',
+      'Escribí tu local',
+    ]) {
+      expect(text).toMatch(VOSEO)
+    }
+    expect(copyFor('AR').questions.pickAtLeastOne).toMatch(VOSEO)
+  })
+
+  it('"Elegí al menos una" no se filtra a MX/CL/CO/BR', () => {
+    for (const code of ['MX', 'CL', 'CO', 'BR'] as const) {
+      expect(copyFor(code).questions.pickAtLeastOne).toBe('Elige al menos una')
+      expect(copyFor(code).notFound.pickIn('X')).toMatch(/^Prueba/)
+      expect(copyFor(code).loading.error).toMatch(/Prueba/)
+    }
   })
 })
 

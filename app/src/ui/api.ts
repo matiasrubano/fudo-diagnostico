@@ -1,4 +1,4 @@
-import type { Answers } from '../domain/types'
+import type { Answers, CountryCode } from '../domain/types'
 import type {
   DiagnosisResponse,
   SearchResponse,
@@ -44,6 +44,12 @@ export async function requestSampleDiagnosis(placeId: string): Promise<Diagnosis
       body: JSON.stringify({ placeId, sample: true }),
     }),
   )
+}
+
+/** País desde el que entra el dueño (IP); `forced` = el ?country= de la URL, para probar */
+export async function fetchGeo(forced?: string | null): Promise<{ country: CountryCode }> {
+  const query = forced ? `?country=${encodeURIComponent(forced)}` : ''
+  return readJson(await fetch(`/api/geo${query}`))
 }
 
 export async function fetchShowcase(country: string | null): Promise<ShowcaseResponse> {

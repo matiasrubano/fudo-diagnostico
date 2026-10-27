@@ -19,6 +19,8 @@ export interface GuideLink {
 export interface HomeProps {
   /** null = la home; si no, la landing de ese país (/ar/, /mx/, /cl/, /co/) */
   country: LandingCountry | null
+  /** solo en la home (country = null): país detectado por IP. Adapta la voz, la escena, los ejemplos y el link a su landing */
+  detected?: LandingCountry | null
   showcase: ShowcaseResponse | null
   showcaseError?: boolean
   guides: GuideLink[]
@@ -30,6 +32,15 @@ export interface HomeProps {
   onOpenSample: (placeId: string, country: CountryCode | null) => void
   /** "¿Todavía no abriste?": lleva a la ruta de quien está por abrir (sin diagnóstico) */
   onOpening: () => void
+}
+
+/** Ejemplos tocables de la home: los locales del país del dueño primero, después los de los demás (hasta 6) */
+export function exampleChips(first: CountryCode): string[] {
+  const order: CountryCode[] = [
+    first,
+    ...(['AR', 'MX', 'CL', 'CO', 'BR'] as const).filter((c) => c !== first),
+  ]
+  return order.flatMap((c) => copy.hero.examples[c]).slice(0, 6)
 }
 
 export function landingFacts(code: CountryCode): LandingFacts {
@@ -346,19 +357,32 @@ function PlacesList({
  * la escena del hero, el ticket de ejemplo real y los bloques por país salen de los mismos datos.
  */
 export function Home(props: HomeProps) {
-  const { country, showcase, guides, onOpenSample } = props
+  const { country, showcase, onOpenSample } = props
+  // La home prerenderizada es la de Argentina (SEO); en el navegador se adapta al país detectado
+  const detected = country ? null : (props.detected ?? null)
+  const voiceCountry = country ?? detected
   const featured = showcase?.featured ?? null
-  const v = copyFor(country)
+  const v = copyFor(voiceCountry)
+  const guides = detected
+    ? [...props.guides].sort(
+        (a, b) => Number(b.country === detected) - Number(a.country === detected),
+      )
+    : props.guides
 
   const place = featured?.place
   const noun =
     copy.hero.queryNoun[place?.fields.businessType.value ?? ''] ?? copy.hero.queryNoun.restaurante!
   const city = place?.fields.address.value?.city
   const query = place && city ? copy.hero.query(noun as string, city) : copy.hero.queryFallback
-  const apps = country ? landingFacts(country).apps.slice(0, 2) : []
+  const apps = country
+    ? landingFacts(country).apps.slice(0, 2)
+    : detected && detected !== 'AR'
+      ? landingFacts(detected).apps.slice(0, 2)
+      : []
   const examples = country
     ? (showcase?.places ?? []).slice(0, 3).map((p) => p.name)
-    : copy.hero.examples
+    : exampleChips(detected ?? 'AR')
+  const versionCountry = country ? null : (detected ?? 'AR')
 
   return (
     <>
@@ -397,7 +421,7 @@ export function Home(props: HomeProps) {
               {v.hero.subtitle(apps)}
             </p>
             <SearchBlock
-              country={country}
+              country={voiceCountry}
               initialQuery={props.initialQuery}
               loading={props.loading}
               error={props.error}
@@ -405,7 +429,17 @@ export function Home(props: HomeProps) {
               onSearch={props.onSearch}
               onOpening={props.onOpening}
             />
-            <ul className="mt-8 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            {versionCountry && (
+              <p className="mt-2">
+                <a
+                  href={`/${versionCountry.toLowerCase()}/`}
+                  className="inline-flex min-h-touch items-center text-sm font-semibold text-white underline underline-offset-4"
+                >
+                  {copy.hero.versionFor(getCountry(versionCountry).name)}
+                </a>
+              </p>
+            )}
+            <ul className="mt-6 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
               {v.hero.trust.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm font-medium text-white">
                   <span aria-hidden="true" className="mt-0.5 text-on-night-accent">

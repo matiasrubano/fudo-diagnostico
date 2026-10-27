@@ -52,7 +52,16 @@ export const copy = {
     searchLabel: 'Nombre de tu local',
     searchButton: 'Diagnosticar',
     searching: 'Buscando…',
-    examples: ['Piki', 'El Campeón', "Red's Burger", 'Davvero', 'Ladina', 'Diavola'],
+    /** Ejemplos tocables (locales reales del snapshot) por país: el del dueño va primero, después los demás */
+    examples: {
+      AR: ['Piki', 'El Campeón'],
+      MX: ["Red's Burger", 'Hola El Güero', 'Ladina'],
+      CL: ['Davvero', 'Casa Salvo'],
+      CO: ['El Social', 'Come Como en Casa'],
+      BR: ['Diavola'],
+    } as Record<CountryCode, string[]>,
+    /** Link a la landing del país: "Ver la versión para México" */
+    versionFor: (country: string) => `Ver la versión para ${country}`,
   },
 
   proof: {
@@ -104,8 +113,8 @@ export const copy = {
   },
 
   countriesNav: {
-    title: 'Elegí tu país',
-    lead: 'El diagnóstico usa las apps, el ente fiscal y la moneda de tu país.',
+    title: 'Diagnóstico por país',
+    lead: 'Usa las apps, el ente fiscal y la moneda del país de tu local.',
     link: (country: string) => `Diagnóstico para restaurantes en ${country}`,
   },
 
@@ -129,8 +138,6 @@ export const copy = {
     next: 'Siguiente',
     back: 'Volver',
     seeResult: 'Ver mi diagnóstico',
-    pickOne: 'Elegí una opción',
-    pickAtLeastOne: 'Elegí al menos una',
     items: {
       businessType: {
         title: '¿Qué tipo de negocio es?',
@@ -375,7 +382,7 @@ export const copy = {
     funnel: 'Embudo',
     funnelHint: 'Sesiones únicas que llegaron a cada paso',
     events: 'Eventos',
-    empty: 'Todavía no hay eventos. Hacé un diagnóstico y volvé.',
+    empty: 'Todavía no hay eventos: aparecen aquí después de un diagnóstico.',
     clear: 'Limpiar eventos',
     back: 'Volver al diagnóstico',
     cols: { time: 'Hora', session: 'Sesión', event: 'Evento', props: 'Datos' },
@@ -444,6 +451,7 @@ const base = {
   },
 
   questions: {
+    pickAtLeastOne: 'Elegí al menos una',
     channelsTitle: '¿Por dónde vendés hoy?',
     channelsHint: 'Podés marcar varias.',
     billingTitle: '¿Cómo cobrás y facturás hoy?',
@@ -736,6 +744,7 @@ const tuteo: DeepPartial<Voice> = {
     pickAny: 'Prueba con uno de la demo:',
   },
   questions: {
+    pickAtLeastOne: 'Elige al menos una',
     channelsTitle: '¿Por dónde vendes hoy?',
     channelsHint: 'Puedes marcar varias.',
     billingTitle: '¿Cómo cobras y facturas hoy?',

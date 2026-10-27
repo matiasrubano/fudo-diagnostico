@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { track } from './analytics/events'
 import { copy, copyFor } from './content/copy'
+import { isLandingCountry, type LandingCountry } from './domain/showcase'
 import type { Answers, CountryCode, PlaceSummary } from './domain/types'
 import type { DiagnosisResponse, SearchResponse, ShowcaseResponse } from './server/diagnosisService'
-import { fetchShowcase, requestDiagnosis, requestSampleDiagnosis, searchPlaces } from './ui/api'
+import {
+  fetchGeo,
+  fetchShowcase,
+  requestDiagnosis,
+  requestSampleDiagnosis,
+  searchPlaces,
+} from './ui/api'
 import { Footer, Header, Page } from './ui/components/Layout'
 import { ScreenTitle } from './ui/components/ScreenTitle'
 import { landingCountryFromPath, readPageData } from './ui/pageData'
@@ -71,6 +78,8 @@ export default function App() {
   const landing = pageData?.country ?? landingCountryFromPath(window.location.pathname)
   const [showcase, setShowcase] = useState<ShowcaseResponse | null>(pageData?.showcase ?? null)
   const [showcaseError, setShowcaseError] = useState(false)
+  /** país desde el que entra el dueño (solo en la home): adapta voz, escena y ejemplos tras detectarlo */
+  const [detected, setDetected] = useState<LandingCountry | null>(null)
 
   const [snap, setSnap] = useState<Snapshot>(snapshotFromLocation)
   // Copia síncrona del estado actual: varias acciones seguidas parten siempre de la última pantalla
@@ -84,7 +93,7 @@ export default function App() {
   const requestId = useRef(0)
 
   const { stage, query, response, place, step, answers, diagnosis, sample } = snap
-  const voice = copyFor(landing)
+  const voice = copyFor(landing ?? detected)
 
   // En desarrollo (sin prerender) el ticket de ejemplo se pide al servidor
   useEffect(() => {
@@ -97,6 +106,27 @@ export default function App() {
       cancelled = true
     }
   }, [showcase, landing])
+
+  // La home prerenderizada es la de Argentina (SEO). Acá se detecta el país (IP, o ?country= para probar) y se
+  // adapta la home de una sola vez, ya con el ticket de ejemplo de ese país: sin parpadeos a mitad de camino.
+  useEffect(() => {
+    if (landing) return
+    let cancelled = false
+    const forced = new URLSearchParams(window.location.search).get('country')
+    fetchGeo(forced)
+      .then(async ({ country }) => {
+        if (!isLandingCountry(country)) return // Brasil u otro: se queda la home de siempre
+        if (country === 'AR') return !cancelled && setDetected('AR')
+        const local = await fetchShowcase(country)
+        if (cancelled) return
+        setShowcase(local)
+        setDetected(country)
+      })
+      .catch(() => undefined) // sin geo la home queda como está
+    return () => {
+      cancelled = true
+    }
+  }, [landing])
 
   // El estado inicial queda en el historial, así "Atrás" siempre tiene a dónde volver
   useEffect(() => {
@@ -154,7 +184,7 @@ export default function App() {
     setSearchError(null)
     track('diag_start', { query_length: q.length })
     try {
-      const found = await searchPlaces(q, landing)
+      const found = await searchPlaces(q, landing ?? detected)
       go({ stage: 'pick', query: q, searchedByExample: byExample, response: found })
     } catch {
       setSearchError(voice.hero.searchError)
@@ -180,7 +210,7 @@ export default function App() {
       answers: {},
       step: 0,
       diagnosis: null,
-      openingCountry: country ?? landing ?? null,
+      openingCountry: country ?? landing ?? detected,
     })
     track('lead_tier', { tier: 'por-abrir', volume: null, from })
   }
@@ -267,6 +297,7 @@ export default function App() {
           <Home
             country={landing}
             showcase={showcase}
+            detected={detected}
             showcaseError={showcaseError}
             guides={pageData?.guides ?? []}
             initialQuery={query}
@@ -311,7 +342,10 @@ export default function App() {
             <Result d={diagnosis} sample={sample} onRestart={restart} />
           )}
           {!busy && stage === 'porAbrir' && (
-            <PorAbrir country={snap.openingCountry ?? landing ?? 'AR'} onOpenLocal={restart} />
+            <PorAbrir
+              country={snap.openingCountry ?? landing ?? detected ?? 'AR'}
+              onOpenLocal={restart}
+            />
           )}
         </Page>
       )}

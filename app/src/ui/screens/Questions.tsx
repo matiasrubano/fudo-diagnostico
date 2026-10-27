@@ -82,12 +82,14 @@ function SingleChoice<V extends string>({
 function MultiChoice({
   title,
   hint,
+  pickAtLeastOne,
   options,
   initial,
   onDone,
 }: {
   title: string
   hint: string
+  pickAtLeastOne: string
   options: Option<SalesChannel>[]
   initial: SalesChannel[]
   onDone: (values: SalesChannel[]) => void
@@ -129,9 +131,7 @@ function MultiChoice({
       >
         {copy.questions.next}
       </button>
-      {selected.length === 0 && (
-        <p className="mt-2 text-sm text-muted">{copy.questions.pickAtLeastOne}</p>
-      )}
+      {selected.length === 0 && <p className="mt-2 text-sm text-muted">{pickAtLeastOne}</p>}
     </>
   )
 }
@@ -180,6 +180,7 @@ export function Questions({
           key="q2"
           title={v.channelsTitle}
           hint={v.channelsHint}
+          pickAtLeastOne={v.pickAtLeastOne}
           options={channelOptions}
           initial={answers.channels ?? []}
           onDone={(v) => onAnswer('channels', v)}
