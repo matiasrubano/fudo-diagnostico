@@ -2,6 +2,7 @@ import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types.js'
 import { GooglePlacesProvider } from './GooglePlacesProvider.js'
 import { MockProvider } from './MockProvider.js'
 import type { PlaceDataProvider } from './PlaceDataProvider.js'
+import type { SuggestionPlan } from './shared.js'
 import { SnapshotProvider } from './SnapshotProvider.js'
 
 export type { PlaceDataProvider } from './PlaceDataProvider.js'
@@ -50,6 +51,11 @@ export class FallbackProvider implements PlaceDataProvider {
   /** Las sugerencias de "en la demo cubrimos estos locales" siempre salen del catálogo cerrado */
   async suggest(geoBias?: GeoBias): Promise<PlaceSummary[]> {
     return (await this.fallback.suggest?.(geoBias)) ?? []
+  }
+
+  async suggestFor(query: string, geoBias?: GeoBias): Promise<SuggestionPlan> {
+    const plan = await this.fallback.suggestFor?.(query, geoBias)
+    return plan ?? { suggestions: await this.suggest(geoBias), priority: null, restricted: false }
   }
 }
 

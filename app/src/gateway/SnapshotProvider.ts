@@ -2,7 +2,13 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types.js'
 import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider.js'
-import { countryFromCode, searchCatalog, suggestFromCatalog } from './shared.js'
+import {
+  countryFromCode,
+  planSuggestions,
+  searchCatalog,
+  suggestFromCatalog,
+  type SuggestionPlan,
+} from './shared.js'
 
 /** Forma de cada archivo app/data/snapshots/<pais>-<slug>.json */
 interface SnapshotFile {
@@ -66,5 +72,9 @@ export class SnapshotProvider implements PlaceDataProvider {
 
   async suggest(geoBias?: GeoBias): Promise<PlaceSummary[]> {
     return suggestFromCatalog(this.load(), geoBias)
+  }
+
+  async suggestFor(query: string, geoBias?: GeoBias): Promise<SuggestionPlan> {
+    return planSuggestions(this.load(), query, geoBias)
   }
 }

@@ -34,7 +34,7 @@ export function evidenceFor(checkId: string, d: Diagnosis): Evidence {
     case 'price':
       return fromField(f.priceLevel, (v) => v)
     case 'rating':
-      return fromField(f.rating, (v) => copy.evidence.ratingOnGoogle(formatRating(v)))
+      return fromField(f.rating, (v) => copy.evidence.ratingOnGoogle(formatRating(v, d.country)))
     case 'volume':
       return fromField(f.reviewCount, (v) => copy.evidence.reviews(formatNumber(v, d.country)))
     case 'website':

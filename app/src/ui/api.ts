@@ -13,8 +13,13 @@ async function readJson<T>(response: Response): Promise<T> {
   return body
 }
 
-export async function searchPlaces(query: string): Promise<SearchResponse> {
-  return readJson(await fetch(`/api/places-search?q=${encodeURIComponent(query)}`))
+/** `country` = la landing (o el país detectado) desde la que se busca: ordena las sugerencias si no hay coincidencia */
+export async function searchPlaces(
+  query: string,
+  country?: string | null,
+): Promise<SearchResponse> {
+  const bias = country ? `&country=${encodeURIComponent(country)}` : ''
+  return readJson(await fetch(`/api/places-search?q=${encodeURIComponent(query)}${bias}`))
 }
 
 export async function requestDiagnosis(

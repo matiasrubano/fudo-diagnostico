@@ -116,12 +116,6 @@ export const copy = {
     all: 'Ver todas las guías',
   },
 
-  notFound: {
-    title: (query: string) => `No encontramos “${query}” en la demo`,
-    body: 'En la demo cubrimos estos locales reales. En producción, la búsqueda usa Google Places y encuentra cualquier local.',
-    pick: 'Tocá uno para probar:',
-  },
-
   confirm: {
     titleOne: '¿Es este tu local?',
     titleMany: '¿Cuál es tu local?',
@@ -129,7 +123,7 @@ export const copy = {
     pick: 'Elegir este',
     back: 'Buscar de nuevo',
     noRating: 'Sin reseñas que podamos leer',
-    reviews: (n: number) => `${n.toLocaleString('es-AR')} reseñas`,
+    reviews: (n: string) => `${n} reseñas`,
   },
 
   questions: {
@@ -444,6 +438,16 @@ const base = {
       'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
   },
 
+  /** Búsqueda sin coincidencia real: nunca se muestra otro local como si fuera el del dueño */
+  notFound: {
+    title: (query: string) => `No encontramos «${query}»`,
+    body: (n: number) =>
+      `Esta demo cubre ${n} locales reales y puede que el tuyo no esté. Nunca te mostramos otro local como si fuera el tuyo. En producción la búsqueda usa Google Places y encuentra cualquier local.`,
+    pickIn: (country: string) => `Probá con uno de la demo en ${country}:`,
+    pickOthers: 'Locales de otros países:',
+    pickAny: 'Probá con uno de la demo:',
+  },
+
   questions: {
     channelsTitle: '¿Por dónde vendés hoy?',
     channelsHint: 'Podés marcar varias.',
@@ -700,6 +704,10 @@ const tuteo: DeepPartial<Voice> = {
     notApplicable: 'No aplica: no vendes por delivery',
     sampleBanner:
       'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Prueba con el tuyo.',
+  },
+  notFound: {
+    pickIn: (country) => `Prueba con uno de la demo en ${country}:`,
+    pickAny: 'Prueba con uno de la demo:',
   },
   questions: {
     channelsTitle: '¿Por dónde vendes hoy?',

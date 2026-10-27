@@ -71,7 +71,11 @@ export function Neighbors({ n, country }: { n: NeighborComparison; country: Coun
         )}
         {n.ratingRank && own.rating !== null && (
           <li>
-            {v.ratingRank(n.ratingRank.position, n.ratingRank.outOf, formatRating(own.rating))}
+            {v.ratingRank(
+              n.ratingRank.position,
+              n.ratingRank.outOf,
+              formatRating(own.rating, country),
+            )}
           </li>
         )}
         {n.reviews && (
@@ -79,7 +83,10 @@ export function Neighbors({ n, country }: { n: NeighborComparison; country: Coun
         )}
         {n.rating && (
           <li className="text-muted">
-            {v.ratingRange(formatRating(n.rating.min), formatRating(n.rating.max))}
+            {v.ratingRange(
+              formatRating(n.rating.min, country),
+              formatRating(n.rating.max, country),
+            )}
           </li>
         )}
         {n.sameCityCount > 0 && own.city && (
@@ -152,7 +159,7 @@ export function Neighbors({ n, country }: { n: NeighborComparison; country: Coun
                   </span>
                 </td>
                 <td className="whitespace-nowrap px-3 py-2 text-right font-mono tabular-nums">
-                  {e.rating !== null ? formatRating(e.rating) : copy.neighbors.noData}
+                  {e.rating !== null ? formatRating(e.rating, country) : copy.neighbors.noData}
                 </td>
                 <td className="whitespace-nowrap px-3 py-2 text-right font-mono tabular-nums">
                   {e.reviewCount !== null ? fmt(e.reviewCount) : copy.neighbors.noData}

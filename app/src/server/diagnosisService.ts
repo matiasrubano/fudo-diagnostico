@@ -6,6 +6,7 @@ import {
   type Answers,
   type BillingSetup,
   type BusinessType,
+  type CountryCode,
   type GeoBias,
   type LocalsBand,
   type PlaceSummary,
@@ -20,6 +21,10 @@ export interface SearchResponse {
   /** locales reales de la demo para sugerir cuando no hubo resultados */
   suggestions: PlaceSummary[]
   notFound: boolean
+  /** país con el que se ordenaron las sugerencias (el de la ciudad que nombra la búsqueda, o el detectado); null = ninguno */
+  priorityCountry: CountryCode | null
+  /** true = la búsqueda nombra una ciudad: las sugerencias son solo de ese país */
+  onlyPriority: boolean
 }
 
 const BUSINESS_TYPES: BusinessType[] = [
@@ -58,8 +63,10 @@ export function parseAnswers(input: unknown): Answers | null {
 }
 
 /** La IP solo sesga la búsqueda: el país del local sale de su dirección. */
-export function geoBiasFromHeaders(headers: Headers): GeoBias {
-  const country = headers.get('x-vercel-ip-country')?.toUpperCase()
+export function geoBiasFromHeaders(headers: Headers, override?: string | null): GeoBias {
+  // `override` = el país de la landing desde la que se busca (o ?country= para probar): gana sobre la IP
+  const forced = override?.toUpperCase()
+  const country = isCountryCode(forced) ? forced : headers.get('x-vercel-ip-country')?.toUpperCase()
   const lat = Number(headers.get('x-vercel-ip-latitude'))
   const lng = Number(headers.get('x-vercel-ip-longitude'))
   return {
@@ -75,8 +82,21 @@ export async function searchPlaces(
   provider: PlaceDataProvider = getGateway(),
 ): Promise<SearchResponse> {
   const results = await provider.search(query, geoBias)
-  if (results.length > 0) return { results, suggestions: [], notFound: false }
-  return { results: [], suggestions: (await provider.suggest?.(geoBias)) ?? [], notFound: true }
+  if (results.length > 0) {
+    return { results, suggestions: [], notFound: false, priorityCountry: null, onlyPriority: false }
+  }
+  const plan = (await provider.suggestFor?.(query, geoBias)) ?? {
+    suggestions: (await provider.suggest?.(geoBias)) ?? [],
+    priority: null,
+    restricted: false,
+  }
+  return {
+    results: [],
+    suggestions: plan.suggestions,
+    notFound: true,
+    priorityCountry: plan.priority,
+    onlyPriority: plan.restricted,
+  }
 }
 
 /** Lo que devuelve /api/diagnose: el diagnóstico + la comparación con otros locales reales de la demo */

@@ -1,6 +1,13 @@
 import type { GeoBias, PlaceProfile, PlaceSummary, Provenance } from '../domain/types.js'
 import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider.js'
-import { field, notFound, searchCatalog, suggestFromCatalog } from './shared.js'
+import {
+  field,
+  notFound,
+  planSuggestions,
+  searchCatalog,
+  suggestFromCatalog,
+  type SuggestionPlan,
+} from './shared.js'
 
 const PROV: Provenance = {
   source: 'Mock (datos ficticios para tests)',
@@ -84,5 +91,9 @@ export class MockProvider implements PlaceDataProvider {
 
   async suggest(geoBias?: GeoBias): Promise<PlaceSummary[]> {
     return suggestFromCatalog(this.catalog, geoBias)
+  }
+
+  async suggestFor(query: string, geoBias?: GeoBias): Promise<SuggestionPlan> {
+    return planSuggestions(this.catalog, query, geoBias)
   }
 }

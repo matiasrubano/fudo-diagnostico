@@ -1,9 +1,11 @@
-import { copy } from '../../content/copy'
+import { getCountry } from '../../config/countries'
+import { copy, copyFor } from '../../content/copy'
 import type { PlaceSummary } from '../../domain/types'
 import type { SearchResponse } from '../../server/diagnosisService'
 import { ProvenanceBadge } from '../components/ProvenanceBadge'
 import { ScreenTitle } from '../components/ScreenTitle'
-import { formatRating, initialOf } from '../format'
+import { formatNumber, formatRating, initialOf } from '../format'
+import { NO_CLICKS, useSettled } from '../useSettled'
 
 function PlaceCard({
   place,
@@ -34,8 +36,9 @@ function PlaceCard({
                   ★
                 </span>{' '}
                 <span className="sr-only">Rating </span>
-                {formatRating(place.rating)}
-                {place.reviewCount !== null && ` · ${copy.confirm.reviews(place.reviewCount)}`}
+                {formatRating(place.rating, place.country ?? 'AR')}
+                {place.reviewCount !== null &&
+                  ` · ${copy.confirm.reviews(formatNumber(place.reviewCount, place.country ?? 'AR'))}`}
               </>
             ) : (
               <span className="text-muted">{copy.confirm.noRating}</span>
@@ -68,33 +71,50 @@ export function PickPlace({
   onPick: (place: PlaceSummary, fromSuggestion: boolean) => void
   onBack: () => void
 }) {
-  const { results, suggestions, notFound } = response
+  const { results, suggestions, notFound, priorityCountry, onlyPriority } = response
+  const { settled, guard } = useSettled()
 
   if (notFound) {
+    const v = copyFor(priorityCountry).notFound
+    const first = priorityCountry
+      ? suggestions.filter((s) => s.country === priorityCountry)
+      : suggestions
+    const others = priorityCountry ? suggestions.filter((s) => s.country !== priorityCountry) : []
+    const groups = [
+      {
+        title: priorityCountry ? v.pickIn(getCountry(priorityCountry).name) : v.pickAny,
+        places: first,
+      },
+      ...(others.length > 0 && !onlyPriority ? [{ title: v.pickOthers, places: others }] : []),
+    ]
     return (
       <section>
-        <ScreenTitle>{copy.notFound.title(query)}</ScreenTitle>
-        <p className="mt-4 text-lg text-muted">{copy.notFound.body}</p>
-        <p className="mb-3 mt-6 text-sm font-semibold">{copy.notFound.pick}</p>
-        <ul className="grid gap-2 sm:grid-cols-2">
-          {suggestions.map((s) => (
-            <li key={s.id}>
-              <button
-                type="button"
-                onClick={() => onPick(s, true)}
-                className="option flex-col items-start gap-0 !py-3"
-              >
-                <span className="font-semibold">{s.name}</span>
-                <span className="text-sm font-normal text-muted">
-                  {s.city} · {s.country}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        <button type="button" className="btn btn-secondary mt-8" onClick={onBack}>
+        <ScreenTitle>{v.title(query)}</ScreenTitle>
+        <p className="mt-4 text-lg text-muted">{v.body(suggestions.length)}</p>
+        <button type="button" className="btn btn-secondary mt-6" onClick={onBack}>
           {copy.confirm.back}
         </button>
+        {groups.map((group) => (
+          <div key={group.title} className="mt-8">
+            <h2 className="mb-3 text-base font-bold">{group.title}</h2>
+            <ul className="grid gap-2 sm:grid-cols-2" style={settled ? undefined : NO_CLICKS}>
+              {group.places.map((s) => (
+                <li key={s.id}>
+                  <button
+                    type="button"
+                    onClick={guard(() => onPick(s, true))}
+                    className="option flex-col items-start gap-0 !py-3"
+                  >
+                    <span className="font-semibold">{s.name}</span>
+                    <span className="text-sm font-normal text-muted">
+                      {s.city} · {s.country}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </section>
     )
   }
@@ -103,13 +123,13 @@ export function PickPlace({
   return (
     <section>
       <ScreenTitle>{many ? copy.confirm.titleMany : copy.confirm.titleOne}</ScreenTitle>
-      <ul className="mt-8 space-y-4">
+      <ul className="mt-8 space-y-4" style={settled ? undefined : NO_CLICKS}>
         {results.map((r) => (
           <PlaceCard
             key={r.id}
             place={r}
             action={many ? copy.confirm.pick : copy.confirm.yes}
-            onPick={(selected) => onPick(selected, false)}
+            onPick={guard((selected: PlaceSummary) => onPick(selected, false))}
           />
         ))}
       </ul>

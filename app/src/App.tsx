@@ -62,7 +62,7 @@ export default function App() {
     setSearchError(null)
     track('diag_start', { query_length: q.length })
     try {
-      setResponse(await searchPlaces(q))
+      setResponse(await searchPlaces(q, landing))
       setStage('pick')
     } catch {
       setSearchError(copyFor(landing).hero.searchError)

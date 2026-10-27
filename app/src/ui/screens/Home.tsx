@@ -297,7 +297,7 @@ function PlacesList({
                       ★
                     </span>{' '}
                     <span className="sr-only">Rating </span>
-                    {formatRating(p.rating)}
+                    {formatRating(p.rating, country)}
                     {p.reviewCount !== null && ` · ${formatNumber(p.reviewCount, country)} reseñas`}
                   </>
                 ) : (

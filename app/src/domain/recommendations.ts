@@ -1,6 +1,7 @@
 import type { CountryConfig } from '../config/countries.js'
 import { copyFor, type RecsCopy } from '../content/copy.js'
 import { withUtm } from './links.js'
+import { formatRating } from './numbers.js'
 import { appsFound, type Scorecard } from './scoring.js'
 import type { Answers, AreaId, CountryCode, PlaceProfile } from './types.js'
 
@@ -168,9 +169,9 @@ const RULES: Rule[] = [
     area: 'reviews',
     bonus: 10,
     when: ({ profile }) => (profile.fields.rating.value ?? 5) < 4.0,
-    build: ({ profile }, t) => ({
+    build: ({ profile, country }, t) => ({
       title: t.reviewsRating.title,
-      body: t.reviewsRating.body(String(profile.fields.rating.value).replace('.', ',')),
+      body: t.reviewsRating.body(formatRating(profile.fields.rating.value ?? 0, country.code)),
       action: free(TOOLS.reviewAnalyst),
     }),
   },
