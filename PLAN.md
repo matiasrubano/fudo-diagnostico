@@ -175,7 +175,7 @@ video/
 
 **Publicación:**
 - [ ] Revisar `gh auth status` y `vercel whoami`. **Si alguno no está logueado, frenar y pedirle a Matías que se loguee.** Nunca escribir credenciales
-- [ ] 🔒 **G-OK0**: confirmar con Matías nombre del repo (propuesta: `fudo-diagnostico`) y visibilidad (propuesta: pública, porque lo lee el equipo técnico)
+- [x] 🔒 **G-OK0** (2026-10-27: `fudo-diagnostico`, **público** con el riesgo de ToS declarado en ADR 0002 y en el informe): confirmar con Matías nombre del repo (propuesta: `fudo-diagnostico`) y visibilidad (propuesta: pública, porque lo lee el equipo técnico)
 - [ ] `gh repo create` → push de `main`
 - [ ] Vercel conectado al repo: root directory `app/`, deploy automático en `main` y previews por PR. Variables de entorno: `DATA_SOURCE=snapshot` (y `GOOGLE_PLACES_API_KEY` vacía)
 - [ ] CI en verde
@@ -297,3 +297,4 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-26 | G1 | ✅ Cerrado. 10 docs de research + countries.json + 13 snapshots reales con provenance. Verificado por el orquestador (JSON válidos, links, sin datos personales). Ver evidencia en G1 |
 | 2026-10-26 | G2 | En curso. A2 (app, gateway, dominio, prerender del blog, repo local con commits, sin remoto) + A2b (8 artículos en `app/content/blog/`) en paralelo. `countries.json` suma `productName` (BR = Deli). gh 2.103.3 y vercel 65.3.1 instalados; falta login de Matías |
 | 2026-10-27 | G2 | ✅ Cerrado. App + gateway + dominio + blog prerenderizado (8 guías) + README/ARCHITECTURE/4 ADR/CI. 10 commits locales en `main`, sin remoto. 3 bugs menores anotados para G4 |
+| 2026-10-27 | G-OK0 | ✅ Matías: repo `fudo-diagnostico`, público, riesgo de ToS del snapshot declarado (ADR 0002 + informe). Falta `gh auth login` y `vercel login` para G3 |

@@ -8,3 +8,6 @@ video/out
 .tmp
 *.log
 .DS_Store
+
+# Config local de Claude Code (launch.json del preview)
+.claude/
