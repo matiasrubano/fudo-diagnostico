@@ -1,0 +1,166 @@
+{
+  "id": "mx-la-taqueria-del-pueblo-tlahuac",
+  "country": "MX",
+  "profile": "mala-presencia",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "La Taqueria del Pueblo",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Av. Tláhuac 7120 B, La Asunción",
+        "city": "Ciudad de México",
+        "region": "Ciudad de México",
+        "postalCode": "13000",
+        "country": "MX"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "taqueria",
+      "status": "found",
+      "provenance": {
+        "source": "Nombre del local y categoría de Google (\"Restaurante familiar\")",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "rating": {
+      "value": 5,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google con solo 8 opiniones."
+      }
+    },
+    "reviewCount": {
+      "value": 8,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"8 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha de Google muestra \"Agregar el horario de atención\": el local no cargó horarios."
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "absent",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha muestra \"Agregar sitio web\" y no hay dominio propio en los resultados de búsqueda."
+      }
+    },
+    "instagram": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda por nombre y dirección)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No apareció perfil de Instagram propio entre los resultados."
+      }
+    },
+    "delivery": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (resultados de búsqueda por nombre y dirección)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se encontró listado en Rappi, Uber Eats, DiDi Food. La ficha tiene un botón \"Pedir en línea\" cuyo destino no se pudo leer. No se verificó dentro de cada app."
+      }
+    },
+    "locationsCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se encontró información de sucursales."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona MXN 100–200; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara opciones de servicio."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara opciones de servicio."
+      }
+    },
+    "deliveryOffered": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=La+Taquer%C3%ADa+del+Pueblo+Av.+Tl%C3%A1huac+7120+Ciudad+de+M%C3%A9xico&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha muestra \"Pedir en línea\" pero no se pudo leer su destino."
+      }
+    }
+  },
+  "notes": "Taquería de barrio de reciente apertura en Tláhuac (CDMX): 5,0 pero con solo 8 reseñas en Google, ficha sin horarios ni sitio web (\"Agregar el horario de atención\", \"Agregar sitio web\"), sin Instagram propio ni listados en apps de delivery encontrados; su presencia son publicaciones de grupos de Facebook locales. Caso de mala presencia online."
+}

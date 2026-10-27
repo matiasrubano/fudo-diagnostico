@@ -1,0 +1,168 @@
+{
+  "id": "ar-pizzeria-piki-lanus",
+  "country": "AR",
+  "profile": "mala-presencia",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Pizzeria Piki",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Av. Pres. Bernardino Rivadavia 2722",
+        "city": "Lanús",
+        "region": "Buenos Aires",
+        "postalCode": "B1824",
+        "country": "AR"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "pizzeria",
+      "status": "found",
+      "provenance": {
+        "source": "Instagram/Facebook del local (\"Pizzas al molde y a la piedra. Empanadas\")",
+        "url": "https://www.instagram.com/pizzeriapiki/",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google la clasifica genéricamente como \"Restaurante\"."
+      }
+    },
+    "rating": {
+      "value": 3.7,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google con solo 3 opiniones."
+      }
+    },
+    "reviewCount": {
+      "value": 3,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"3 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha de Google muestra \"Agregar el horario de atención\": el local no cargó horarios. La bio de Instagram dice \"Lunes y Martes cerrado\", pero sin horario completo."
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "absent",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha de Google muestra \"Agregar sitio web\" y no hay dominio propio en los resultados de búsqueda."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@pizzeriapiki",
+        "url": "https://www.instagram.com/pizzeriapiki/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda: Instagram)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda \"pizzeria piki lanús\") + resultados de PedidosYa/Rappi",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se encontró un listado propio en PedidosYa, Rappi, Uber Eats, DiDi ni iFood. Un resultado de Rappi (\"Pizzas Pi\", La Rioja 1652) es otro comercio. Hacen delivery propio por teléfono según su Instagram/Facebook. No se verificó dentro de cada app."
+      }
+    },
+    "locationsCount": {
+      "value": 1,
+      "status": "found",
+      "provenance": {
+        "source": "Instagram/Facebook del local (única dirección publicada: Rivadavia 2722)",
+        "url": "https://www.instagram.com/pizzeriapiki/",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido: es la única dirección publicada en sus perfiles."
+      }
+    },
+    "priceLevel": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha de Google no muestra precio por persona."
+      }
+    },
+    "dineIn": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara opciones de servicio."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Piki+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara opciones de servicio."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Instagram @pizzeriapiki (bio: \"Delivery\") y Facebook (\"Contamos con Delivery\")",
+        "url": "https://www.instagram.com/pizzeriapiki/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    }
+  },
+  "notes": "Pizzería de barrio en Lanús con 3 reseñas en Google (3,7), ficha sin horarios ni sitio web (\"Agregar el horario de atención\", \"Agregar sitio web\" en la ficha), sin nivel de precio y sin listados detectados en apps de delivery. Opera con pedidos por teléfono/WhatsApp e Instagram (~1,3 k seguidores). Caso típico de mala presencia online."
+}

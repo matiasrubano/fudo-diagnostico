@@ -1,0 +1,182 @@
+{
+  "id": "cl-davvero-pizzeria-nunoa",
+  "country": "CL",
+  "profile": "pizzeria-delivery",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Davvero Pizzería",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Ortúzar 315",
+        "city": "Ñuñoa",
+        "region": "Región Metropolitana",
+        "postalCode": "7750000",
+        "country": "CL"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "pizzeria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Pizzería."
+      }
+    },
+    "rating": {
+      "value": 4.8,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google."
+      }
+    },
+    "reviewCount": {
+      "value": 218,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"218 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: cerrado",
+        "martes: 18:00–22:00",
+        "miércoles: 18:00–22:00",
+        "jueves: 18:00–22:00",
+        "viernes: 13:00–22:00",
+        "sábado: 13:00–22:00",
+        "domingo: 13:00–16:30"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Coincide con el sitio oficial (Locales)."
+      }
+    },
+    "website": {
+      "value": "http://www.davveropizzeria.cl/",
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sitio abierto en el navegador: incluye pedido online (\"Pedir\"), zona de delivery y página de locales."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@davveropizzeria",
+        "url": "https://www.instagram.com/davveropizzeria/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial davveropizzeria.cl (enlace a Instagram)",
+        "url": "https://www.davveropizzeria.cl/locales/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": "https://www.rappi.cl/restaurantes/900048501-davvero-pizzeria",
+        "ubereats": "https://www.ubereats.com/cl/store/davvero-pizzeria/a0vYpSCPVxelv11DDumScw",
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi y Uber Eats (fichas abiertas desde resultados de Google)",
+        "url": "https://www.rappi.cl/restaurantes/900048501-davvero-pizzeria",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Además tiene pedido propio en su web. PedidosYa y DiDi Food no aparecen para este local en la búsqueda (no verificado dentro de cada app)."
+      }
+    },
+    "locationsCount": {
+      "value": 1,
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial davveropizzeria.cl (Locales: solo Ortúzar 315)",
+        "url": "https://www.davveropizzeria.cl/locales/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona CLP 10.000–15.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara consumo en el local; el sitio se presenta como \"pizza napoletana a domicilio\"."
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir para llevar\" en la ficha."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Davvero+Pizzer%C3%ADa+Ort%C3%BAzar+315+%C3%91u%C3%B1oa&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir a domicilio\" en la ficha; delivery propio, Uber Eats y Rappi."
+      }
+    }
+  },
+  "notes": "Pizzería napoletana de Ñuñoa (Santiago) enfocada en delivery (\"Pizza napoletana a domicilio\"): 4,8 con 218 reseñas, web propia con pedido online y zona de reparto, Instagram de ~27 k y listados en Uber Eats y Rappi. Un solo local. Caso de pizzería con delivery en Chile."
+}

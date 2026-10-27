@@ -1,0 +1,708 @@
+{
+  "AR": {
+    "code": "AR",
+    "name": "Argentina",
+    "language": "es-AR",
+    "currency": {
+      "code": "ARS",
+      "symbol": "$"
+    },
+    "fiscal": {
+      "authority": "ARCA",
+      "system": "Factura electrónica (Comprobantes en línea) o controlador fiscal",
+      "url": "https://www.arca.gob.ar/fe/",
+      "notes": "ARCA (Agencia de Recaudación y Control Aduanero) es el nombre actual del organismo que antes se llamaba AFIP; el micrositio oficial se titula 'Factura electrónica | ARCA'. Fudo es compatible con impresoras fiscales Epson o Hasar y ofrece el módulo 'Facturación Electrónica' (+$13.500/mes). La prensa informa que la RG 5893/2026 amplía la obligación de emitir comprobantes electrónicos (monotributo social desde 2026-11-01, sujetos no alcanzados por IVA desde 2027-03-01); fuente secundaria, verificar el texto oficial en el Boletín Oficial antes de citarlo."
+    },
+    "deliveryApps": [
+      {
+        "name": "PedidosYa",
+        "url": "https://www.pedidosya.com.ar",
+        "source": "https://www.iprofesional.com/negocios/454816-mas-pedidos-y-cargos-de-hasta-35-por-cento-la-presion-del-delivery-sobre-comercios-y-repartidores",
+        "note": "Plataforma líder junto con Rappi (iProfesional, 14/05/2026). El artículo cita comisiones del 25% al 35% de las ventas. Cuota de mercado por empresa: no encontrada."
+      },
+      {
+        "name": "Rappi",
+        "url": "https://www.rappi.com.ar",
+        "source": "https://www.iprofesional.com/negocios/454816-mas-pedidos-y-cargos-de-hasta-35-por-cento-la-presion-del-delivery-sobre-comercios-y-repartidores",
+        "note": "Plataforma líder junto con PedidosYa (misma nota). Rappi declara comisiones de hasta 25%."
+      },
+      {
+        "name": "Mercado Libre (delivery)",
+        "url": "https://www.mercadolibre.com.ar",
+        "source": "https://www.iprofesional.com/negocios/454816-mas-pedidos-y-cargos-de-hasta-35-por-cento-la-presion-del-delivery-sobre-comercios-y-repartidores",
+        "note": "Entrante reciente, con comisiones cercanas al 13% según la misma nota. Sin datos de cuota."
+      },
+      {
+        "name": "Uber Eats",
+        "url": "https://www.ubereats.com/ar",
+        "source": "https://www.iprofesional.com/negocios/446682-uber-eats-vuelve-a-argentina-para-competir-con-rappi-y-pedidosya-en-el-delivery",
+        "note": "Anunció su regreso a Argentina en 2026 (iProfesional, 22/01/2026); había salido en octubre de 2020. Fudo lo lista entre las apps integrables (https://fu.do/es-ar/tu-gestion/)."
+      }
+    ],
+    "fudoPlans": [
+      {
+        "name": "Plan Inicial",
+        "priceMonthly": 22500,
+        "currency": "ARS",
+        "billing": "mensual",
+        "taxNote": "Precio final en pesos argentinos; la página muestra 'Sin impuestos nacionales: $18.595'.",
+        "priceMonthlyExNationalTaxes": 18595,
+        "includes": [
+          "Ventas por mostrador",
+          "Arqueos y movimientos de caja",
+          "Impresión de comandas",
+          "Configuración de descuentos",
+          "Carta QR"
+        ],
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Avanzado",
+        "priceMonthly": 43900,
+        "currency": "ARS",
+        "billing": "mensual",
+        "taxNote": "Precio final en pesos argentinos; la página muestra 'Sin impuestos nacionales: $36.281'.",
+        "priceMonthlyExNationalTaxes": 36281,
+        "includes": [
+          "Todo lo del Plan Inicial",
+          "Control de inventario",
+          "Carga de recetas",
+          "Gestión de clientes y proveedores",
+          "Reportes gráficos y estadísticos",
+          "Pedido desde la mesa con Carta QR"
+        ],
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Pro",
+        "priceMonthly": 69500,
+        "currency": "ARS",
+        "billing": "mensual",
+        "taxNote": "Precio final en pesos argentinos; la página muestra 'Sin impuestos nacionales: $57.438'.",
+        "priceMonthlyExNationalTaxes": 57438,
+        "includes": [
+          "Todo lo del Plan Avanzado",
+          "Múltiples cajas y turnos",
+          "Estado de resultados",
+          "Diferentes listas de precios",
+          "Inventario valorizado"
+        ],
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoModules": [
+      {
+        "name": "Gestión de Mesas",
+        "priceMonthly": 8500,
+        "currency": "ARS",
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Facturación Electrónica",
+        "priceMonthly": 13500,
+        "currency": "ARS",
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Delivery Apps",
+        "priceMonthly": 19500,
+        "currency": "ARS",
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Recepcionista IA",
+        "priceMonthly": 55000,
+        "currency": "ARS",
+        "source": "https://fu.do/es-ar/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoPricingNotes": "La página publica el precio mensual por defecto. Descuentos publicados: pago semestral -10% y pago anual -15%, por adelantado; además 'Con suscripción mensual obtenés un 5% de descuento' (texto literal de la página, condiciones no detalladas). Todos los planes incluyen usuarios ilimitados y capacitaciones gratuitas. Sin tarjeta de crédito para probar.",
+    "fudoSignupUrl": "https://fu.do/es-ar/crear-cuenta/",
+    "fudoSiteUrl": "https://fu.do/es-ar/",
+    "sources": [
+      "https://fu.do/es-ar/precios/",
+      "https://fu.do/es-ar/crear-cuenta/",
+      "https://fu.do/es-ar/preguntas-frecuentes/",
+      "https://fu.do/es-ar/tu-gestion/",
+      "https://www.arca.gob.ar/fe/",
+      "https://www.perfil.com/noticias/economia/arca-extiende-la-obligacion-de-emitir-factura-electronica-a-quienes-afecta-a40.phtml",
+      "https://www.iprofesional.com/negocios/454816-mas-pedidos-y-cargos-de-hasta-35-por-cento-la-presion-del-delivery-sobre-comercios-y-repartidores",
+      "https://www.iprofesional.com/negocios/446682-uber-eats-vuelve-a-argentina-para-competir-con-rappi-y-pedidosya-en-el-delivery"
+    ],
+    "productName": "Fudo"
+  },
+  "MX": {
+    "code": "MX",
+    "name": "México",
+    "language": "es-MX",
+    "currency": {
+      "code": "MXN",
+      "symbol": "$"
+    },
+    "fiscal": {
+      "authority": "SAT",
+      "system": "CFDI (Comprobante Fiscal Digital por Internet), versión 4.0",
+      "url": "https://www.sat.gob.mx/",
+      "notes": "SAT = Servicio de Administración Tributaria. La obligación de expedir CFDI está en el Código Fiscal de la Federación (art. 29-A según el Anexo 20 del SAT) y la guía técnica es el Anexo 20 del SAT. Fuentes secundarias coinciden en que CFDI 4.0 es la versión vigente; no pude abrir las páginas JS del SAT para confirmar la fecha exacta de obligatoriedad. Fudo ofrece el módulo 'Facturación Electrónica' (+$200 MXN/mes, sin IVA)."
+    },
+    "deliveryApps": [
+      {
+        "name": "DiDi Food",
+        "url": "https://www.didi-food.com/es-MX/",
+        "source": "https://expansion.mx/tecnologia/2025/05/30/mexico-segundo-mercado-delivery-latinoamerica",
+        "note": "38% de usuarios activos mensuales en 2024 (Sensor Tower, citado por Expansión, 30/05/2025)."
+      },
+      {
+        "name": "Rappi",
+        "url": "https://www.rappi.com.mx",
+        "source": "https://expansion.mx/tecnologia/2025/05/30/mexico-segundo-mercado-delivery-latinoamerica",
+        "note": "36% de usuarios activos mensuales en 2024 (misma fuente)."
+      },
+      {
+        "name": "Uber Eats",
+        "url": "https://www.ubereats.com/mx",
+        "source": "https://expansion.mx/tecnologia/2025/05/30/mexico-segundo-mercado-delivery-latinoamerica",
+        "note": "Opera en México (la nota cita un estudio de Quadrant Strategies sobre MiPymes afiliadas). Cuota de mercado: no encontrada."
+      }
+    ],
+    "fudoPlans": [
+      {
+        "name": "Plan Inicial",
+        "priceMonthly": 360,
+        "currency": "MXN",
+        "billing": "mensual",
+        "taxNote": "MXN, no incluye IVA.",
+        "includes": [
+          "Ventas por mostrador",
+          "Arqueos y movimientos de caja",
+          "Impresión de comandas",
+          "Configuración de descuentos",
+          "Carta QR"
+        ],
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Avanzado",
+        "priceMonthly": 690,
+        "currency": "MXN",
+        "billing": "mensual",
+        "taxNote": "MXN, no incluye IVA.",
+        "includes": [
+          "Todo lo del Plan Inicial",
+          "Control de inventario",
+          "Carga de recetas",
+          "Gestión de clientes y proveedores",
+          "Reportes gráficos y estadísticos",
+          "Pedido desde la mesa con Carta QR"
+        ],
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Pro",
+        "priceMonthly": 1050,
+        "currency": "MXN",
+        "billing": "mensual",
+        "taxNote": "MXN, no incluye IVA.",
+        "includes": [
+          "Todo lo del Plan Avanzado",
+          "Múltiples cajas y turnos",
+          "Estado de resultados",
+          "Diferentes listas de precios",
+          "Conteo de inventario"
+        ],
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoModules": [
+      {
+        "name": "Ventas por Comensal",
+        "priceMonthly": 100,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Monitor de Cocina (KDS)",
+        "priceMonthly": 200,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Delivery Apps",
+        "priceMonthly": 200,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Gestión de Mesas",
+        "priceMonthly": 100,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Facturación Electrónica",
+        "priceMonthly": 200,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Recepcionista IA",
+        "priceMonthly": 850,
+        "currency": "MXN",
+        "source": "https://fu.do/es-mx/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoPricingNotes": "Precios en pesos mexicanos, sin IVA. Descuentos publicados: pago semestral -10% y pago anual -15% por adelantado; 'Con débito automático obtienes un 5% de descuento sobre el pago mensual' (texto literal). Sin tarjeta de crédito para probar.",
+    "fudoSignupUrl": "https://fu.do/es-mx/crear-cuenta/",
+    "fudoSiteUrl": "https://fu.do/es-mx/",
+    "sources": [
+      "https://fu.do/es-mx/precios/",
+      "https://fu.do/es-mx/crear-cuenta/",
+      "https://www.sat.gob.mx/",
+      "http://omawww.sat.gob.mx/tramitesyservicios/Paginas/documentos/Anexo_20_Guia_de_llenado_CFDI.pdf",
+      "https://www.siigo.com/mx/blog/obligaciones-fiscales/datos-relevantes-cfdi-4-0/",
+      "https://expansion.mx/tecnologia/2025/05/30/mexico-segundo-mercado-delivery-latinoamerica"
+    ],
+    "productName": "Fudo"
+  },
+  "CL": {
+    "code": "CL",
+    "name": "Chile",
+    "language": "es-CL",
+    "currency": {
+      "code": "CLP",
+      "symbol": "$"
+    },
+    "fiscal": {
+      "authority": "SII",
+      "system": "Boleta electrónica y factura electrónica (DTE)",
+      "url": "https://www.sii.cl/factura_electronica/",
+      "notes": "SII = Servicio de Impuestos Internos. La boleta electrónica de ventas y servicios es obligatoria desde 2021 (Ley 21.210) y debe enviarse al SII. La Resolución Exenta N° 12 de 2025 refuerza la entrega al cliente: copia impresa desde 2025-05-01 y envío digital (correo, SMS, WhatsApp o QR) para quienes no tengan impresora desde 2026-03-01 (según resumen de búsqueda sobre sii.cl; verificar en la resolución). Fudo incluye boleta electrónica sin costo en todos los planes y conexión directa con el SII."
+    },
+    "deliveryApps": [
+      {
+        "name": "PedidosYa",
+        "url": "https://www.pedidosya.cl",
+        "source": "https://sensortower.com/blog/2025-q4-unified-top-5-food-delivery-services-units-cl-63da96fbe1714cfff1c1e5a1",
+        "note": "Líder en usuarios activos semanales en T4 2025 (~1,36 M a fines de diciembre, Sensor Tower). Otra medición (AIM Chile 2024, vía ODECU) da 34,4% de preferencia declarada."
+      },
+      {
+        "name": "Uber Eats",
+        "url": "https://www.ubereats.com/cl",
+        "source": "https://sensortower.com/blog/2025-q4-unified-top-5-food-delivery-services-units-cl-63da96fbe1714cfff1c1e5a1",
+        "note": "Segundo (~926 mil usuarios activos semanales en diciembre 2025). AIM Chile 2024: 23,9% de preferencia (https://odecu.cl/practicas-de-las-plataformas-de-delivery-y-su-impacto-en-los-consumidores-en-chile-minuta-n15/minuta-15-delivery)."
+      },
+      {
+        "name": "Rappi",
+        "url": "https://www.rappi.cl",
+        "source": "https://sensortower.com/blog/2025-q4-unified-top-5-food-delivery-services-units-cl-63da96fbe1714cfff1c1e5a1",
+        "note": "Tercero (~406 mil usuarios activos semanales). Ranking tomado del orden del artículo, no de una cifra de cuota."
+      }
+    ],
+    "fudoPlans": [
+      {
+        "name": "Plan Inicial",
+        "priceMonthly": 25500,
+        "currency": "CLP",
+        "billing": "mensual",
+        "taxNote": "Pesos chilenos, sin IVA.",
+        "includes": [
+          "Ventas por mostrador",
+          "Arqueos y movimientos de caja",
+          "Impresión de comandas",
+          "Configuración de descuentos",
+          "Carta QR",
+          "Boleta electrónica incluida"
+        ],
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Avanzado",
+        "priceMonthly": 34500,
+        "currency": "CLP",
+        "billing": "mensual",
+        "taxNote": "Pesos chilenos, sin IVA.",
+        "includes": [
+          "Todo lo del Plan Inicial",
+          "Control de inventario",
+          "Carga de recetas",
+          "Gestión de clientes y proveedores",
+          "Reportes gráficos y estadísticos",
+          "Pedido desde la mesa con Carta QR"
+        ],
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Pro",
+        "priceMonthly": 52500,
+        "currency": "CLP",
+        "billing": "mensual",
+        "taxNote": "Pesos chilenos, sin IVA.",
+        "includes": [
+          "Todo lo del Plan Avanzado",
+          "Múltiples cajas y turnos",
+          "Estado de resultados",
+          "Diferentes listas de precios",
+          "Inventario valorizado"
+        ],
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoModules": [
+      {
+        "name": "Ventas por Comensal",
+        "priceMonthly": 4500,
+        "currency": "CLP",
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Delivery Apps",
+        "priceMonthly": 9500,
+        "currency": "CLP",
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Gestión de Mesas",
+        "priceMonthly": 4500,
+        "currency": "CLP",
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Monitor de Cocina (KDS)",
+        "priceMonthly": 9500,
+        "currency": "CLP",
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Recepcionista IA",
+        "priceMonthly": 42500,
+        "currency": "CLP",
+        "source": "https://fu.do/es-cl/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoPricingNotes": "Precios en pesos chilenos, sin IVA. Descuentos publicados: semestral -10% y anual -15% por adelantado; 'Con suscripción mensual obtienes un 5% de descuento' (texto literal). Boleta electrónica sin costo en todos los planes. Terminal Fudo sin arriendo. En la página de Chile el módulo 'Facturación Electrónica' no aparece en la lista de módulos.",
+    "fudoSignupUrl": "https://fu.do/es-cl/crear-cuenta/",
+    "fudoSiteUrl": "https://fu.do/es-cl/",
+    "sources": [
+      "https://fu.do/es-cl/precios/",
+      "https://fu.do/es-cl/crear-cuenta/",
+      "https://www.sii.cl/factura_electronica/",
+      "https://www.sii.cl/preguntas_frecuentes/bol_electr_vtas_serv/001_380_7666.htm",
+      "https://www.sii.cl/noticias/2025/270225noti01aav.htm",
+      "https://sensortower.com/blog/2025-q4-unified-top-5-food-delivery-services-units-cl-63da96fbe1714cfff1c1e5a1",
+      "https://odecu.cl/practicas-de-las-plataformas-de-delivery-y-su-impacto-en-los-consumidores-en-chile-minuta-n15/minuta-15-delivery"
+    ],
+    "productName": "Fudo"
+  },
+  "CO": {
+    "code": "CO",
+    "name": "Colombia",
+    "language": "es-CO",
+    "currency": {
+      "code": "COP",
+      "symbol": "$"
+    },
+    "fiscal": {
+      "authority": "DIAN",
+      "system": "Factura electrónica de venta (con validación previa)",
+      "url": "https://www.dian.gov.co/impuestos/factura-electronica/Paginas/inicio.aspx",
+      "notes": "DIAN = Dirección de Impuestos y Aduanas Nacionales. La guía de la DIAN para el facturador (que cita la Resolución 000165 de 2023) indica que los responsables de IVA y del impuesto nacional al consumo, los inscritos en el régimen SIMPLE y las personas jurídicas deben facturar electrónicamente; las personas naturales, si superan 3.500 UVT de ingresos brutos o cumplen otros requisitos. Fudo ofrece 'Facturación Electrónica' desde $9.000 COP/mes."
+    },
+    "deliveryApps": [
+      {
+        "name": "Rappi",
+        "url": "https://www.rappi.com.co",
+        "source": "https://www.larepublica.co/empresas/cual-sera-el-nuevo-competidor-de-rappi-en-el-delivery-luego-de-la-salida-de-ifood-3482380",
+        "note": "51% del delivery de comida en septiembre de 2022 (GIG Latam, vía La República, 03/11/2022). Dato de 2022: no encontré una cifra más reciente."
+      },
+      {
+        "name": "DiDi Food",
+        "url": "https://www.didi-food.com/es-CO/",
+        "source": "https://www.larepublica.co/empresas/cual-sera-el-nuevo-competidor-de-rappi-en-el-delivery-luego-de-la-salida-de-ifood-3482380",
+        "note": "8% en septiembre de 2022 (misma fuente); se proyectaba como principal competidor de Rappi tras la salida de iFood en noviembre de 2022."
+      }
+    ],
+    "fudoPlans": [
+      {
+        "name": "Plan Inicial",
+        "priceMonthly": 62900,
+        "currency": "COP",
+        "billing": "mensual",
+        "taxNote": "Pesos colombianos, sin IVA.",
+        "includes": [
+          "Ventas por mostrador",
+          "Arqueos y movimientos de caja",
+          "Impresión de comandas",
+          "Configuración de descuentos",
+          "Carta QR"
+        ],
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Avanzado",
+        "priceMonthly": 118900,
+        "currency": "COP",
+        "billing": "mensual",
+        "taxNote": "Pesos colombianos, sin IVA.",
+        "includes": [
+          "Todo lo del Plan Inicial",
+          "Control de inventario",
+          "Carga de recetas",
+          "Gestión de clientes y proveedores",
+          "Reportes gráficos y estadísticos",
+          "Pedido desde la mesa con Carta QR"
+        ],
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plan Pro",
+        "priceMonthly": 144900,
+        "currency": "COP",
+        "billing": "mensual",
+        "taxNote": "Pesos colombianos, sin IVA.",
+        "includes": [
+          "Todo lo del Plan Avanzado",
+          "Múltiples cajas y turnos",
+          "Estado de resultados",
+          "Diferentes listas de precios",
+          "Inventario valorizado"
+        ],
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoModules": [
+      {
+        "name": "Ventas por Comensal",
+        "priceMonthly": 12900,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Facturación Electrónica (desde)",
+        "priceMonthly": 9000,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Gestión de Mesas",
+        "priceMonthly": 12900,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Delivery Apps",
+        "priceMonthly": 38900,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Monitor de Cocina (KDS)",
+        "priceMonthly": 38900,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Tu Delivery",
+        "priceMonthly": 110900,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Recepcionista IA",
+        "priceMonthly": 135000,
+        "currency": "COP",
+        "source": "https://fu.do/es-co/precios/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoPricingNotes": "Precios en pesos colombianos, sin IVA. Descuentos publicados: semestral -10% y anual -15% por adelantado; 'Con suscripción obtienes un 5% de descuento' (texto literal). Colombia es el único país donde la página lista el módulo 'Tu Delivery' (tienda online) con precio.",
+    "fudoSignupUrl": "https://fu.do/es-co/crear-cuenta/",
+    "fudoSiteUrl": "https://fu.do/es-co/",
+    "sources": [
+      "https://fu.do/es-co/precios/",
+      "https://fu.do/es-co/crear-cuenta/",
+      "https://www.dian.gov.co/impuestos/factura-electronica/Paginas/inicio.aspx",
+      "https://www.dian.gov.co/impuestos/factura-electronica/Documents/Abece-FE-Facturador.pdf",
+      "https://www.dian.gov.co/impuestos/sociedades/Paginas/obligadosfacturar.aspx",
+      "https://www.larepublica.co/empresas/cual-sera-el-nuevo-competidor-de-rappi-en-el-delivery-luego-de-la-salida-de-ifood-3482380"
+    ],
+    "productName": "Fudo"
+  },
+  "BR": {
+    "code": "BR",
+    "name": "Brasil",
+    "language": "pt-BR",
+    "currency": {
+      "code": "BRL",
+      "symbol": "R$"
+    },
+    "fiscal": {
+      "authority": "SEFAZ estadual / Receita Federal (Portal Nacional da NF-e)",
+      "system": "NFC-e (Nota Fiscal de Consumidor Eletrônica, modelo 65) para venta al consumidor; NF-e para operaciones entre empresas",
+      "url": "https://www.nfe.fazenda.gov.br/",
+      "notes": "La NFC-e la autoriza cada SEFAZ estadual; las notas técnicas viven en el Portal Nacional da NF-e. Los restaurantes son contribuyentes del ICMS y deben emitir NFC-e por cada comida, incluido el delivery (SEFAZ-AM; ejemplo estatal, confirmar la regla de cada estado). Requiere certificado digital ICP-Brasil (e-CNPJ) y software emisor. En Brasil Fudo opera bajo la marca Deli (Comandarina Brasil Ltda): plan Pro con emisión ilimitada de notas fiscales; módulo 'Gestão Fiscal' R$ 1,50 por cada 25 notas (gratis en el Plan Pro)."
+    },
+    "deliveryApps": [
+      {
+        "name": "iFood",
+        "url": "https://www.ifood.com.br",
+        "source": "https://www.moneytimes.com.br/nossa-lideranca-nao-vem-de-amarras-contratuais-ifood-responde-a-concorrencia-e-detalha-estrategia-para-se-manter-no-topo/",
+        "note": "Líder del delivery en Brasil (Money Times, 12/06/2026). Cuota de mercado: no encontrada en una fuente verificable (circula ~80% atribuido a Abrasel/Sebrae, pero no pude confirmarlo)."
+      },
+      {
+        "name": "99Food",
+        "url": "https://www.99app.com/food",
+        "source": "https://mercadoeconsumo.com.br/16/09/2026/noticias/ifood-anuncia-investimento-recorde-de-r-24-bi-em-meio-a-disputas-na-justica-e-no-cade/",
+        "note": "Entrante (DiDi); litigio con iFood en la justicia de São Paulo (Mercado & Consumo, 16/09/2026)."
+      },
+      {
+        "name": "Keeta",
+        "url": "https://www.keeta.com.br",
+        "source": "https://mercadoeconsumo.com.br/16/09/2026/noticias/ifood-anuncia-investimento-recorde-de-r-24-bi-em-meio-a-disputas-na-justica-e-no-cade/",
+        "note": "Entrante (Meituan); iFood presentó una denuncia ante el Cade por prácticas predatorias (misma nota)."
+      }
+    ],
+    "fudoPlans": [
+      {
+        "name": "Plano Inicial",
+        "priceMonthly": 83.9,
+        "currency": "BRL",
+        "billing": "mensual",
+        "taxNote": "La página no aclara si el precio incluye impuestos (no encontrado).",
+        "includes": [
+          "Vendas no balcão",
+          "Contagem e movimentação de caixa",
+          "Impressão de comandas",
+          "Configuração de descontos",
+          "Cardápio Digital e Cardápio QR"
+        ],
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plano Avançado",
+        "priceMonthly": 125.9,
+        "currency": "BRL",
+        "billing": "mensual",
+        "taxNote": "La página no aclara si el precio incluye impuestos (no encontrado).",
+        "includes": [
+          "Tudo do Plano Inicial",
+          "Controle de estoque",
+          "Cadastro de receitas",
+          "Gestão de clientes e fornecedores",
+          "Relatórios gráficos e estatísticos"
+        ],
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Plano Pro",
+        "priceMonthly": 178.9,
+        "currency": "BRL",
+        "billing": "mensual",
+        "taxNote": "La página no aclara si el precio incluye impuestos (no encontrado).",
+        "includes": [
+          "Tudo do Plano Avançado",
+          "Emissão de notas fiscais ilimitadas",
+          "Múltiplos caixas e turnos",
+          "Resultado do Exercício (DRE)",
+          "Contagem de caixa às cegas"
+        ],
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoModules": [
+      {
+        "name": "Comandas Individuais",
+        "priceMonthly": 24.9,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Monitor de Cozinha (KDS)",
+        "priceMonthly": 49.9,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Vendas por Delivery",
+        "priceMonthly": 49.9,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Gestão de Mesas",
+        "priceMonthly": 24.9,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Recepcionista IA",
+        "priceMonthly": 160,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      },
+      {
+        "name": "Balanças",
+        "priceMonthly": 49.9,
+        "currency": "BRL",
+        "source": "https://deli.com.br/pt-br/pre%C3%A7os/",
+        "capturedAt": "2026-10-26"
+      }
+    ],
+    "fudoPricingNotes": "Brasil se vende bajo la marca Deli (deli.com.br), enlazada desde fu.do como versión pt-br (hreflang) y con los mismos estilos y estructura de producto; el pie de página identifica a 'Comandarina Brasil Ltda', mientras que la política de privacidad de fu.do México identifica a 'Comandarina S.A. de C.V.' como FUDO. Descuentos publicados: semestral -10% y anual -15%; 'Com assinatura mensal você tem 5% de desconto' (texto literal). Gestão Fiscal (NFC-e): R$ 1,50 por 25 notas, gratis en el Plano Pro. La emisión ilimitada de notas fiscales figura incluida solo en el Plano Pro; en los otros planes el módulo Gestão Fiscal se cobra aparte.",
+    "fudoSignupUrl": "https://deli.com.br/pt-br/criar-uma-conta/",
+    "fudoSiteUrl": "https://deli.com.br/pt-br/",
+    "sources": [
+      "https://deli.com.br/pt-br/pre%C3%A7os/",
+      "https://deli.com.br/pt-br/criar-uma-conta/",
+      "https://fu.do/es-ar/",
+      "https://fu.do/es-mx/politicas-de-privacidad/",
+      "https://www.nfe.fazenda.gov.br/",
+      "http://sped.rfb.gov.br/pagina/show/1519",
+      "https://nfamazonense.sefaz.am.gov.br/restaurantes-e-bares-devem-emitir-nota-fiscal-para-toda-refeicao-fornecida-2/",
+      "https://www.moneytimes.com.br/nossa-lideranca-nao-vem-de-amarras-contratuais-ifood-responde-a-concorrencia-e-detalha-estrategia-para-se-manter-no-topo/",
+      "https://mercadoeconsumo.com.br/16/09/2026/noticias/ifood-anuncia-investimento-recorde-de-r-24-bi-em-meio-a-disputas-na-justica-e-no-cade/"
+    ],
+    "productName": "Deli",
+    "productNameNote": "En Brasil el producto se comercializa como Deli (deli.com.br), enlazado desde fu.do como pt-br. Fuente: docs/research/paises.md"
+  }
+}

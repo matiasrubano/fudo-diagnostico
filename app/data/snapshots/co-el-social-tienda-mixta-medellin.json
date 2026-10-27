@@ -1,0 +1,185 @@
+{
+  "id": "co-el-social-tienda-mixta-medellin",
+  "country": "CO",
+  "profile": "bar",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "El Social Tienda Mixta desde 1969",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi lo lista como \"El Social - El Poblado\"."
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Cra. 35 #8A-8, El Poblado",
+        "city": "Medellín",
+        "region": "Antioquia",
+        "postalCode": null,
+        "country": "CO"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi publica otra dirección: Cra 36 #10A-71, El Poblado."
+      }
+    },
+    "businessType": {
+      "value": "bar",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Bar de salsa."
+      }
+    },
+    "rating": {
+      "value": 4.5,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google. TripAdvisor tiene ficha aparte (\"El Social Provenza\"); no se mezcla."
+      }
+    },
+    "reviewCount": {
+      "value": 4016,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"4.016 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 11:30–01:00",
+        "martes: 11:30–01:00",
+        "miércoles: 11:30–01:00",
+        "jueves: 11:30–02:00",
+        "viernes: 11:30–02:00",
+        "sábado: 11:30–02:00",
+        "domingo: 11:30–01:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": "http://www.elsocial.com.co/",
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sitio abierto en el navegador; incluye pedido online (/pedir)."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@elsocial1969",
+        "url": "https://www.instagram.com/elsocial1969/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial elsocial.com.co (enlace a Instagram)",
+        "url": "https://www.elsocial.com.co/pedir",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google también muestra otro perfil (@elsocial.tiendamixta, +66 k seguidores); se usó el enlazado desde la web oficial."
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": "https://www.rappi.com.co/restaurantes/900028886-el-social",
+        "ubereats": null,
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi (ficha abierta desde resultado de Google)",
+        "url": "https://www.rappi.com.co/restaurantes/900028886-el-social",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Además tiene pedido propio en su web. DiDi Food no se pudo confirmar (solo apareció la página genérica de DiDi Food Medellín)."
+      }
+    },
+    "locationsCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google y Rappi",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Se observan al menos 2 direcciones distintas (Cra. 35 #8A-8 en Google; Cra 36 #10A-71 en Rappi) pero no un listado oficial de sedes."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona COP 20.000–120.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido de la categoría de Google \"Bar de salsa\" (local con salón)."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Social+Tienda+Mixta+desde+1969+Medell%C3%ADn&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no muestra botón de pedido para llevar."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Rappi (ficha del local)",
+        "url": "https://www.rappi.com.co/restaurantes/900028886-el-social",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "También pedido propio en elsocial.com.co/pedir."
+      }
+    }
+  },
+  "notes": "Bar de salsa y tienda mixta de El Poblado/Provenza (Medellín, desde 1969): 4,5 con ~4.000 reseñas en Google, web propia con pedido online, Instagram de ~66 k, y listado en Rappi. Hay al menos dos direcciones publicadas (Google y Rappi no coinciden). Encaja como \"bar\" con buena presencia."
+}

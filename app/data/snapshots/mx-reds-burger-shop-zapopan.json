@@ -1,0 +1,184 @@
+{
+  "id": "mx-reds-burger-shop-zapopan",
+  "country": "MX",
+  "profile": "cadena-chica",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Red's Burger Shop",
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial reds.mx (Sucursales)",
+        "url": "https://reds.mx/sucursales/",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google rotula cada sucursal por separado (\"Red's Burger Shop Tchaikovsky\", \"Red's Burger Shop Obsidiana\")."
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Av. Piotr Ilich Tchaikovski 755, Arcos de Guadalupe",
+        "city": "Zapopan",
+        "region": "Jalisco",
+        "postalCode": "45030",
+        "country": "MX"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sucursal Tchaikovsky (la de más reseñas). La otra sucursal es Av. Obsidiana 2985 (Zapopan)."
+      }
+    },
+    "businessType": {
+      "value": "hamburgueseria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Hamburguesería."
+      }
+    },
+    "rating": {
+      "value": 4.7,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google de la sucursal Tchaikovsky. Uber Eats muestra 4,7 (4.000+) para la sucursal Obsidiana; no se mezclan."
+      }
+    },
+    "reviewCount": {
+      "value": 4120,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"4,120 opiniones en Google\" (sucursal Tchaikovsky). La sucursal Obsidiana tiene otra cifra (~2,9 k según el listado local de Google)."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 13:00–23:00",
+        "martes: 13:00–23:00",
+        "miércoles: 13:00–23:00",
+        "jueves: 13:00–23:00",
+        "viernes: 13:00–23:00",
+        "sábado: 13:00–23:00",
+        "domingo: 13:00–22:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Coincide con el sitio oficial (lun–sáb 13:00–23:00, dom 13:00–22:00)."
+      }
+    },
+    "website": {
+      "value": "https://reds.mx",
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial (abierto en el navegador) y resultados de Google",
+        "url": "https://reds.mx/sucursales/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@redsburgershop",
+        "url": "https://www.instagram.com/redsburgershop/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial reds.mx (enlace a Instagram)",
+        "url": "https://reds.mx/sucursales/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": "https://www.rappi.com.mx/restaurantes/1923213732-reds",
+        "ubereats": "https://www.ubereats.com/mx/store/reds-burger-shop-obsidiana/J1xJyyANQT6yQA5glJ0inQ",
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi y Uber Eats (fichas abiertas desde resultados de Google)",
+        "url": "https://www.rappi.com.mx/restaurantes/1923213732-reds",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi: sucursal Tchaikovsky. Uber Eats: sucursal Obsidiana (también hay \"Reds To Go\" y \"Las Águilas\"). DiDi Food no aparece en la búsqueda (no verificado dentro de la app). PedidosYa/iFood no operan en esta zona."
+      }
+    },
+    "locationsCount": {
+      "value": 2,
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial reds.mx (Sucursales: Tchaikovsky y Obsidiana)",
+        "url": "https://reds.mx/sucursales/",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google y las apps muestran además \"Red's To Go\" y \"Reds Burger Shop (Las Águilas)\", que parecen puntos de entrega/marcas hermanas; el sitio oficial lista 2."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona MXN 200–300; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Opciones de servicio: asientos al aire libre, menú para niños."
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir para llevar\" en la ficha; el sitio dice \"Ordena y recoge\"."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=%22Red%27s+Burger+Shop+Tchaikovsky%22+Av.+Piotr+Ilich+Tchaikovski+755+opiniones&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir a domicilio\" en la ficha."
+      }
+    }
+  },
+  "notes": "Hamburguesería de Guadalajara/Zapopan con 2 sucursales (Tchaikovsky y Obsidiana) más puntos \"To Go\" y Las Águilas en las apps, web propia, Instagram de ~28 k, y presencia en Uber Eats y Rappi. 4,7 con ~4.100 reseñas en la ficha de Tchaikovsky. Encaja como cadena chica con buena presencia y delivery."
+}

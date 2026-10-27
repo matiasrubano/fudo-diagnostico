@@ -1,0 +1,106 @@
+[
+  {
+    "id": "ar-bar-el-federal-san-telmo",
+    "country": "AR",
+    "name": "Bar El Federal",
+    "city": "Buenos Aires",
+    "profile": "bar",
+    "file": "ar-bar-el-federal-san-telmo.json"
+  },
+  {
+    "id": "ar-el-campeon-de-la-pizza-lanus",
+    "country": "AR",
+    "name": "El Campeón De La Pizza",
+    "city": "Lanús",
+    "profile": "pizzeria-delivery",
+    "file": "ar-el-campeon-de-la-pizza-lanus.json"
+  },
+  {
+    "id": "ar-pizzeria-las-palmas-lanus",
+    "country": "AR",
+    "name": "Pizzería Las Palmas",
+    "city": "Lanús",
+    "profile": "cadena-chica",
+    "file": "ar-pizzeria-las-palmas-lanus.json"
+  },
+  {
+    "id": "ar-pizzeria-piki-lanus",
+    "country": "AR",
+    "name": "Pizzeria Piki",
+    "city": "Lanús",
+    "profile": "mala-presencia",
+    "file": "ar-pizzeria-piki-lanus.json"
+  },
+  {
+    "id": "br-diavola-pizzaria-pinheiros",
+    "country": "BR",
+    "name": "Diavola Pizzaria - Pinheiros",
+    "city": "São Paulo",
+    "profile": "cadena-chica",
+    "file": "br-diavola-pizzaria-pinheiros.json"
+  },
+  {
+    "id": "cl-casa-salvo-cafe-providencia",
+    "country": "CL",
+    "name": "Casa Salvo Café",
+    "city": "Providencia",
+    "profile": "bien-posicionado",
+    "file": "cl-casa-salvo-cafe-providencia.json"
+  },
+  {
+    "id": "cl-davvero-pizzeria-nunoa",
+    "country": "CL",
+    "name": "Davvero Pizzería",
+    "city": "Ñuñoa",
+    "profile": "pizzeria-delivery",
+    "file": "cl-davvero-pizzeria-nunoa.json"
+  },
+  {
+    "id": "co-come-como-en-casa-dark-kitchen-bogota",
+    "country": "CO",
+    "name": "Come como en Casa Dark Kitchen",
+    "city": "Bogotá",
+    "profile": "dark-kitchen",
+    "file": "co-come-como-en-casa-dark-kitchen-bogota.json"
+  },
+  {
+    "id": "co-el-social-tienda-mixta-medellin",
+    "country": "CO",
+    "name": "El Social Tienda Mixta desde 1969",
+    "city": "Medellín",
+    "profile": "bar",
+    "file": "co-el-social-tienda-mixta-medellin.json"
+  },
+  {
+    "id": "mx-la-taqueria-del-pueblo-tlahuac",
+    "country": "MX",
+    "name": "La Taqueria del Pueblo",
+    "city": "Ciudad de México",
+    "profile": "mala-presencia",
+    "file": "mx-la-taqueria-del-pueblo-tlahuac.json"
+  },
+  {
+    "id": "mx-ladina-bar-roma-norte",
+    "country": "MX",
+    "name": "Ladina Bar",
+    "city": "Ciudad de México",
+    "profile": "bar",
+    "file": "mx-ladina-bar-roma-norte.json"
+  },
+  {
+    "id": "mx-reds-burger-shop-zapopan",
+    "country": "MX",
+    "name": "Red's Burger Shop",
+    "city": "Zapopan",
+    "profile": "cadena-chica",
+    "file": "mx-reds-burger-shop-zapopan.json"
+  },
+  {
+    "id": "mx-tacos-hola-el-guero-cdmx",
+    "country": "MX",
+    "name": "Tacos Hola El Güero",
+    "city": "Ciudad de México",
+    "profile": "bien-posicionado",
+    "file": "mx-tacos-hola-el-guero-cdmx.json"
+  }
+]

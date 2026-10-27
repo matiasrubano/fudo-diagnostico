@@ -1,0 +1,182 @@
+{
+  "id": "ar-bar-el-federal-san-telmo",
+  "country": "AR",
+  "profile": "bar",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Bar El Federal",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Carlos Calvo 599",
+        "city": "Buenos Aires",
+        "region": "Ciudad Autónoma de Buenos Aires",
+        "postalCode": "C1068",
+        "country": "AR"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "bar",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Bar."
+      }
+    },
+    "rating": {
+      "value": 4.4,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google. TripAdvisor muestra 4,0 (980) para el mismo local; no se mezclan."
+      }
+    },
+    "reviewCount": {
+      "value": 11911,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"11.911 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 08:00–02:00",
+        "martes: 08:00–02:00",
+        "miércoles: 08:00–02:00",
+        "jueves: 08:00–02:00",
+        "viernes: 08:00–02:00",
+        "sábado: 08:00–02:00",
+        "domingo: 08:00–02:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": "http://www.barelfederal.com.ar/",
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se pudo abrir el dominio desde el entorno de captura (error de DNS); la URL es la que figura en la ficha de Google."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@bar_el_federal",
+        "url": "https://www.instagram.com/bar_el_federal/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda: Instagram, +14,9 k seguidores)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+Carlos+Calvo+599+pedidosya+instagram+sitio+oficial&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": "https://www.rappi.com.ar/restaurantes/130076-bar-el-federal",
+        "ubereats": null,
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi (ficha del local, abierta desde resultado de Google)",
+        "url": "https://www.rappi.com.ar/restaurantes/130076-bar-el-federal",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi confirmado abriendo la ficha. PedidosYa, Uber Eats y DiDi Food no aparecen en la búsqueda de Google (no se verificó dentro de cada app)."
+      }
+    },
+    "locationsCount": {
+      "value": 1,
+      "status": "found",
+      "provenance": {
+        "source": "Google / Ciudad de Buenos Aires (Turismo): única dirección",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido: una sola dirección publicada (Carlos Calvo 599)."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona ARS 20.000–30.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Opciones de servicio: asientos al aire libre, comida en el bar."
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir para llevar\" en la ficha."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Bar+El+Federal+San+Telmo+Buenos+Aires&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir a domicilio\" en la ficha."
+      }
+    }
+  },
+  "notes": "Bar notable de San Telmo (CABA, desde 1864), un solo local, ~11.900 reseñas en Google con 4,4. Combina salón/vereda, barra de cócteles y comida; tiene web propia, Instagram (~15 k) y listado en Rappi. Encaja como \"bar\" con buena presencia y volumen alto de reseñas."
+}

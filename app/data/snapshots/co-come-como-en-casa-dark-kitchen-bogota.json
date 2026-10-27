@@ -1,0 +1,180 @@
+{
+  "id": "co-come-como-en-casa-dark-kitchen-bogota",
+  "country": "CO",
+  "profile": "dark-kitchen",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Come como en Casa Dark Kitchen",
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Cl. 70A #94-41, Engativá",
+        "city": "Bogotá",
+        "region": "Bogotá D.C.",
+        "postalCode": null,
+        "country": "CO"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Dirección tal como la publica Rappi: \"Cl. 70A #94-41, Bogotá, Colombia\"."
+      }
+    },
+    "businessType": {
+      "value": "dark-kitchen",
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Se autodenomina \"Dark Kitchen\"; Rappi la clasifica como \"Comida Típica\"."
+      }
+    },
+    "rating": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda por nombre y dirección) y Rappi",
+        "url": "https://www.google.com/search?q=%22Come+como+en+Casa%22+%22Dark+Kitchen%22+Engativ%C3%A1+Calle+70A+94-41&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No apareció ficha de Google del negocio (solo un homónimo \"Como en casa\", restaurante de brunch en otra dirección, que no se usa). Rappi no publica rating en la ficha."
+      }
+    },
+    "reviewCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda por nombre y dirección) y Rappi",
+        "url": "https://www.google.com/search?q=%22Come+como+en+Casa%22+%22Dark+Kitchen%22+Engativ%C3%A1+Calle+70A+94-41&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sin ficha de Google detectada; Rappi no publica cantidad de reseñas."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 09:00–23:59",
+        "martes: 09:00–23:59",
+        "miércoles: 09:00–23:59",
+        "jueves: 09:00–23:59",
+        "viernes: 09:00–23:59",
+        "sábado: 09:00–23:59",
+        "domingo: 09:00–23:59"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda por nombre y dirección)",
+        "url": "https://www.google.com/search?q=%22Come+como+en+Casa%22+%22Dark+Kitchen%22+Engativ%C3%A1+Calle+70A+94-41&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se encontró sitio propio. Los resultados son Rappi y artículos sobre dark kitchens."
+      }
+    },
+    "instagram": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda por nombre y dirección)",
+        "url": "https://www.google.com/search?q=%22Come+como+en+Casa%22+%22Dark+Kitchen%22+Engativ%C3%A1+Calle+70A+94-41&hl=es&gl=co",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No apareció perfil de Instagram propio."
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "ubereats": null,
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Único canal encontrado. DiDi Food/Uber Eats no aparecen en la búsqueda de Google (no verificado dentro de cada app). PedidosYa e iFood no operan en Colombia."
+      }
+    },
+    "locationsCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi lista una sola dirección (\"Engativá\"); no se encontró información de otras cocinas."
+      }
+    },
+    "priceLevel": {
+      "value": "$",
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Menú de Rappi: de COP 5.000 a 26.900 (almuerzo del día COP 12.000); el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se verificó; el único canal hallado es Rappi."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se verificó retiro en local."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Rappi Colombia (ficha del local, datos estructurados de la página)",
+        "url": "https://www.rappi.com.co/restaurantes/900282964-come-como-en-casa-dark-kitchen",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    }
+  },
+  "notes": "Cocina oculta (dark kitchen) en Engativá, Bogotá: se presenta como \"Dark Kitchen\", vende comida típica, desayunos, almuerzos del día y comida rápida solo por Rappi. No tiene ficha de Google detectada (sin rating ni reseñas públicas), ni web ni Instagram propios encontrados. Caso de solo-delivery dependiente de una app."
+}

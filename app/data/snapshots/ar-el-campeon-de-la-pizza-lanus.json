@@ -1,0 +1,182 @@
+{
+  "id": "ar-el-campeon-de-la-pizza-lanus",
+  "country": "AR",
+  "profile": "pizzeria-delivery",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "El Campeón De La Pizza",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Av. 9 de Julio 1253",
+        "city": "Lanús",
+        "region": "Buenos Aires",
+        "postalCode": "B1824KKE",
+        "country": "AR"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "pizzeria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Pizzería."
+      }
+    },
+    "rating": {
+      "value": 4.2,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google. TripAdvisor tiene una ficha aparte; no se mezcla."
+      }
+    },
+    "reviewCount": {
+      "value": 6167,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"6.167 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 07:00–00:00",
+        "martes: 07:00–00:00",
+        "miércoles: 07:00–00:00",
+        "jueves: 07:00–00:00",
+        "viernes: 07:00–00:00",
+        "sábado: 07:00–01:00",
+        "domingo: 07:00–01:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "absent",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "El botón \"Sitio web\" de la ficha apunta a una página de Facebook (facebook.com/pages/El-Campeón-De-La-Pizza); no se encontró dominio propio en los resultados."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@elcampeondelapizza",
+        "url": "https://www.instagram.com/elcampeondelapizza/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda: Instagram, +4,8 k seguidores)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": "https://www.pedidosya.com.ar/restaurantes/lanus/el-campeon-de-la-pizza-ef3ec932-7350-49ba-84ac-55f1db349cf4-menu",
+        "rappi": "https://www.rappi.com.ar/restaurantes/130977-el-campeon-de-la-pizza",
+        "ubereats": null,
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "PedidosYa y Rappi (fichas abiertas desde resultados de Google)",
+        "url": "https://www.pedidosya.com.ar/restaurantes/lanus/el-campeon-de-la-pizza-ef3ec932-7350-49ba-84ac-55f1db349cf4-menu",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "PedidosYa y Rappi confirmados abriendo las fichas. Uber Eats y DiDi Food no aparecen en la búsqueda de Google (no verificado dentro de cada app)."
+      }
+    },
+    "locationsCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google / Rappi (\"Lanús Este\")",
+        "url": "https://www.rappi.com.ar/restaurantes/130977-el-campeon-de-la-pizza",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Rappi la rotula \"Lanús Este\", pero no se encontró un listado de sucursales; la ficha de Google muestra una sola dirección."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona ARS 10.000–20.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido de las opciones de servicio de Google (hora feliz, buenos cócteles, recomendable para mirar deportes)."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=El+Campe%C3%B3n+de+la+Pizza+Lan%C3%BAs+sucursales&hl=es&gl=ar",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara retiro en local."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "PedidosYa (ficha del local)",
+        "url": "https://www.pedidosya.com.ar/restaurantes/lanus/el-campeon-de-la-pizza-ef3ec932-7350-49ba-84ac-55f1db349cf4-menu",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "También listada en Rappi."
+      }
+    }
+  },
+  "notes": "Pizzería de Lanús con ~6.200 reseñas en Google (4,2), venta fuerte por apps (listada en PedidosYa y Rappi) e Instagram activo. Sin web propia: el \"sitio web\" de la ficha de Google es una página de Facebook. Es el caso de pizzería del conurbano con mucho delivery."
+}

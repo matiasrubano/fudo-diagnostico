@@ -1,0 +1,182 @@
+{
+  "id": "ar-pizzeria-las-palmas-lanus",
+  "country": "AR",
+  "profile": "cadena-chica",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Pizzería Las Palmas",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Av. Hipólito Yrigoyen 4498",
+        "city": "Lanús",
+        "region": "Buenos Aires",
+        "postalCode": "B1824",
+        "country": "AR"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "pizzeria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "rating": {
+      "value": 4.2,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google. TripAdvisor muestra 3,7 (151 opiniones) para el mismo local; no se mezclan."
+      }
+    },
+    "reviewCount": {
+      "value": 5457,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"5.457 opiniones en Google\""
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 06:00–00:00",
+        "martes: 06:00–00:00",
+        "miércoles: 06:00–00:00",
+        "jueves: 06:00–00:00",
+        "viernes: 06:00–23:30",
+        "sábado: 24 horas",
+        "domingo: 24 horas"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Tabla de horarios de la ficha de Google (sucursal Lanús)."
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "absent",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda) + resultados de búsqueda",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "El botón \"Sitio web\" de la ficha de Google apunta al perfil de Instagram; no se encontró dominio propio."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@pizzerialaspalmas",
+        "url": "https://instagram.com/pizzerialaspalmas"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha: perfiles / botón sitio web)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": "https://www.pedidosya.com.ar/restaurantes/lanus/las-palmas-lanus-5da39863-50ee-40b8-b2e9-76df38ac6c75-menu",
+        "rappi": null,
+        "ubereats": null,
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda) -> ficha en PedidosYa",
+        "url": "https://www.pedidosya.com.ar/restaurantes/lanus/las-palmas-lanus-5da39863-50ee-40b8-b2e9-76df38ac6c75-menu",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "PedidosYa encontrado. Rappi, Uber Eats y DiDi Food no aparecen en una búsqueda de Google (no se verificó dentro de cada app)."
+      }
+    },
+    "locationsCount": {
+      "value": 3,
+      "status": "found",
+      "provenance": {
+        "source": "Instagram @pizzerialaspalmas (bio: Avellaneda, Lanús y Pompeya)",
+        "url": "https://instagram.com/pizzerialaspalmas",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Av Mitre 610 (Avellaneda), Av H Yrigoyen 4498 (Lanús), Av Caseros 2999 (Pompeya)."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona ARS 10.000–20.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido de las opciones de servicio de Google (menú para niños, hora feliz, recomendable para mirar deportes)."
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir para llevar\" en la ficha."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Pizzeria+Las+Palmas+Lan%C3%BAs&hl=es",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir a domicilio\" en la ficha."
+      }
+    }
+  },
+  "notes": "Cadena chica: pizzería histórica de Lanús (desde 1967) con 3 sucursales en el conurbano/CABA, ~5.500 reseñas en Google y venta fuerte por teléfono y PedidosYa. Sin web propia: el \"sitio web\" de la ficha de Google apunta al Instagram. Buen caso de pizzería con delivery cuya presencia depende de redes y apps."
+}

@@ -1,0 +1,183 @@
+{
+  "id": "cl-casa-salvo-cafe-providencia",
+  "country": "CL",
+  "profile": "bien-posicionado",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Casa Salvo Café",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "General Salvo 20",
+        "city": "Providencia",
+        "region": "Región Metropolitana",
+        "postalCode": "7500000",
+        "country": "CL"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha muestra \"General Salvo 18, Gral. Salvo 20\" (ubicado en el cowork Taller 1)."
+      }
+    },
+    "businessType": {
+      "value": "cafeteria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Cafetería."
+      }
+    },
+    "rating": {
+      "value": 4.9,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google. TripAdvisor muestra 4,8 (30) para el mismo local; no se mezclan."
+      }
+    },
+    "reviewCount": {
+      "value": 3117,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"3.117 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 08:00–22:00",
+        "martes: 08:00–22:00",
+        "miércoles: 08:00–22:00",
+        "jueves: 08:00–22:00",
+        "viernes: 08:00–22:00",
+        "sábado: 08:30–20:00",
+        "domingo: 09:00–19:30"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia+General+Salvo&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": "https://casasalvo.cl",
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado orgánico casasalvo.cl)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "El botón \"Sitio web\" de la ficha apunta al Instagram, pero existe dominio propio (casasalvo.cl)."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@casasalvo.cl",
+        "url": "https://www.instagram.com/casasalvo.cl/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha y resultado de búsqueda; +14,4 k seguidores)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": "https://www.pedidosya.cl/restaurantes/santiago/casa-salvo-5f605851-19d9-4c7c-b104-337396a8ff78-menu",
+        "rappi": null,
+        "ubereats": "https://www.ubereats.com/cl/store/casa-salvo-providencia/eQ8mE4qdVkWuCZBN5vX6Zw",
+        "didi": null,
+        "ifood": null
+      },
+      "status": "found",
+      "provenance": {
+        "source": "PedidosYa y Uber Eats (fichas abiertas desde resultados de Google)",
+        "url": "https://www.pedidosya.cl/restaurantes/santiago/casa-salvo-5f605851-19d9-4c7c-b104-337396a8ff78-menu",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Además tiene menú de pedido propio (cuenta.getjusto.com). Rappi y DiDi Food no aparecen en la búsqueda (no verificado dentro de cada app)."
+      }
+    },
+    "locationsCount": {
+      "value": 1,
+      "status": "found",
+      "provenance": {
+        "source": "Google / Instagram (única dirección: General Salvo 20)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido: una sola dirección publicada."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona CLP 10.000–15.000; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Es una cafetería con salón (ficha de Google con horario de mayor concurrencia y tiempo de permanencia)."
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir para llevar\" en la ficha."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Casa+Salvo+Caf%C3%A9+Providencia&hl=es&gl=cl",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir a domicilio\" en la ficha; listada en PedidosYa y Uber Eats."
+      }
+    }
+  },
+  "notes": "Cafetería de especialidad en Providencia (Santiago), un solo local, 4,9 con ~3.100 reseñas en Google, web propia (casasalvo.cl), Instagram de ~14 k, horarios completos y presencia en PedidosYa y Uber Eats además de pedido propio. Referente de \"bien posicionado\" en Chile."
+}

@@ -1,0 +1,176 @@
+{
+  "id": "mx-tacos-hola-el-guero-cdmx",
+  "country": "MX",
+  "profile": "bien-posicionado",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Tacos Hola El Güero",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "Ámsterdam 135, Hipódromo",
+        "city": "Ciudad de México",
+        "region": "Ciudad de México",
+        "postalCode": "06100",
+        "country": "MX"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "taqueria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Taquería."
+      }
+    },
+    "rating": {
+      "value": 4.3,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google."
+      }
+    },
+    "reviewCount": {
+      "value": 1600,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google muestra \"1,600 opiniones\" (cifra redondeada en el panel)."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 09:00–21:00",
+        "martes: 09:00–21:00",
+        "miércoles: 09:00–21:00",
+        "jueves: 09:00–21:00",
+        "viernes: 09:00–21:00",
+        "sábado: 09:00–19:00",
+        "domingo: 09:00–15:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "website": {
+      "value": null,
+      "status": "absent",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "El botón \"Sitio web\" de la ficha apunta al Instagram (instagram.com/tacosholaelguero); no hay dominio propio en los resultados de búsqueda."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@tacosholaelguero",
+        "url": "https://www.instagram.com/tacosholaelguero/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha y resultado de búsqueda; +4,6 k seguidores)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda \"tacos hola el güero rappi uber eats didi food\")",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+Condesa+rappi+uber+eats+didi+food&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Los resultados de Uber Eats/DiDi corresponden a otros comercios (\"El Güero Alteño\", \"Tacos El Güero\"). No se verificó dentro de cada app."
+      }
+    },
+    "locationsCount": {
+      "value": 1,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha) y Guía MICHELIN (una sola dirección: Ámsterdam 135)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Inferido: una sola dirección publicada en Google, Michelin e Instagram. Existen homónimos no relacionados."
+      }
+    },
+    "priceLevel": {
+      "value": "$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona MXN 1–100; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Opciones de servicio: asientos al aire libre."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no declara retiro en local."
+      }
+    },
+    "deliveryOffered": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Tacos+Hola+El+G%C3%BCero+%C3%81msterdam+135&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no muestra botón de pedido a domicilio."
+      }
+    }
+  },
+  "notes": "Taquería de guisados de la Condesa/Hipódromo (CDMX, desde 1968), un solo local, 4,3 con ~1.600 reseñas en Google y mención en la Guía Michelin. Bien posicionada en reputación, pero sin web propia (la ficha apunta a Instagram) y sin listados de delivery encontrados: oportunidad típica para Fudo. Úsese como \"bien-posicionado en Google, sin canales propios\"."
+}

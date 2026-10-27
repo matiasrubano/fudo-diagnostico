@@ -1,0 +1,182 @@
+{
+  "id": "br-diavola-pizzaria-pinheiros",
+  "country": "BR",
+  "profile": "cadena-chica",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Diavola Pizzaria - Pinheiros",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Nombre comercial: Diavola Pizzeria Italiana."
+      }
+    },
+    "address": {
+      "value": {
+        "street": "R. João Moura, 1080 - Pinheiros",
+        "city": "São Paulo",
+        "region": "São Paulo",
+        "postalCode": "05412-002",
+        "country": "BR"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "pizzeria",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Pizzaria."
+      }
+    },
+    "rating": {
+      "value": 4.8,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google de la unidad Pinheiros."
+      }
+    },
+    "reviewCount": {
+      "value": 1247,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"1.247 avaliações no Google\" (unidad Pinheiros)."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "segunda: cerrado",
+        "terça: 18:00–23:00",
+        "quarta: 18:00–23:00",
+        "quinta: 18:00–23:00",
+        "sexta: 18:00–00:00",
+        "sábado: 18:00–00:00",
+        "domingo: 18:00–23:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Unidad Pinheiros. Días en portugués normalizados a español en el campo."
+      }
+    },
+    "website": {
+      "value": "http://www.diavola.com.br/",
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Site\" de la ficha)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sitio abierto en el navegador."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@diavolapizzeriaitaliana",
+        "url": "https://www.instagram.com/diavolapizzeriaitaliana/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda: Instagram)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": {
+        "pedidosya": null,
+        "rappi": null,
+        "ubereats": null,
+        "didi": null,
+        "ifood": "https://www.ifood.com.br/delivery/sao-paulo-sp/diavola-pizzeria-italiana-sumare/994bbb2d-f675-4436-a6cf-7fa1cefdc2db"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial diavola.com.br/delivery (enlace a iFood)",
+        "url": "https://www.diavola.com.br/delivery",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "URL de iFood de la unidad Perdizes/Sumaré (publicada en la web oficial). También tiene app propio (deliveryapp.neemo.com.br/franquia/727). Rappi y otros no verificados."
+      }
+    },
+    "locationsCount": {
+      "value": 2,
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial diavola.com.br (\"dois endereços\": Pinheiros y Perdizes)",
+        "url": "https://www.diavola.com.br/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona BRL 60–120; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Sitio oficial diavola.com.br (botón \"Reservar mesa\" en Pinheiros)",
+        "url": "https://www.diavola.com.br/",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "takeout": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir e retirar\" en la ficha; el sitio ofrece precio especial para retirar."
+      }
+    },
+    "deliveryOffered": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Diavola+Pizzaria+Pinheiros+R.+Jo%C3%A3o+Moura+1080&hl=pt-BR&gl=br",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Botón \"Pedir delivery\" en la ficha."
+      }
+    }
+  },
+  "notes": "Pizzaria italiana (estilo Vêneto) de São Paulo con 2 unidades (Pinheiros, abierta en 2009, y Perdizes), 4,8 con ~1.250 reseñas en Google (unidad Pinheiros), web propia con reserva y delivery, app propio e iFood. Encaja como cadena chica con buena presencia. Datos de rating/horarios corresponden a la unidad Pinheiros."
+}

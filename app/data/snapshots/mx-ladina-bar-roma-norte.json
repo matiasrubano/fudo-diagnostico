@@ -1,0 +1,177 @@
+{
+  "id": "mx-ladina-bar-roma-norte",
+  "country": "MX",
+  "profile": "bar",
+  "capturedAt": "2026-10-26",
+  "fields": {
+    "name": {
+      "value": "Ladina Bar",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "address": {
+      "value": {
+        "street": "C. Colima 333, Roma Norte",
+        "city": "Ciudad de México",
+        "region": "Ciudad de México",
+        "postalCode": "06700",
+        "country": "MX"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "businessType": {
+      "value": "bar",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Categoría de Google: Bar."
+      }
+    },
+    "rating": {
+      "value": 4.6,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Calificación de Google."
+      }
+    },
+    "reviewCount": {
+      "value": 782,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "\"782 opiniones en Google\"."
+      }
+    },
+    "openingHours": {
+      "value": [
+        "lunes: 16:00–00:00",
+        "martes: 16:00–00:00",
+        "miércoles: 16:00–02:00",
+        "jueves: 16:00–02:00",
+        "viernes: 16:00–02:00",
+        "sábado: 10:00–02:00",
+        "domingo: 10:00–02:00"
+      ],
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Primera tabla de horarios de la ficha; Google muestra además una segunda tabla (sábado y domingo 10:00–16:00) que no se incluyó."
+      }
+    },
+    "website": {
+      "value": "http://jardinmx.com/ladina/",
+      "status": "found",
+      "provenance": {
+        "source": "Google (botón \"Sitio web\" de la ficha)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sitio alojado en jardinmx.com (grupo/proyecto), no es un dominio propio del bar."
+      }
+    },
+    "instagram": {
+      "value": {
+        "handle": "@ladinabar",
+        "url": "https://www.instagram.com/ladinabar/"
+      },
+      "status": "found",
+      "provenance": {
+        "source": "Google (resultado de búsqueda: Instagram, +10,8 k seguidores)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true
+      }
+    },
+    "delivery": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (búsqueda \"ladina bar roma norte rappi uber eats didi pedidosya\")",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Roma+Norte+rappi+uber+eats+didi+food+pedidosya&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Sin resultados de ladina en Rappi, Uber Eats ni DiDi Food. No se verificó dentro de cada app."
+      }
+    },
+    "locationsCount": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "No se pudo confirmar si es un solo local; la web está dentro de jardinmx.com."
+      }
+    },
+    "priceLevel": {
+      "value": "$$",
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Google: precio por persona MXN 200–500; el mapeo a $/$$/$$$ es propio."
+      }
+    },
+    "dineIn": {
+      "value": true,
+      "status": "found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "Opciones de servicio: buenos cócteles, comida en el bar, bebidas en hora feliz."
+      }
+    },
+    "takeout": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no muestra botón de pedido para llevar."
+      }
+    },
+    "deliveryOffered": {
+      "value": null,
+      "status": "not_found",
+      "provenance": {
+        "source": "Google (ficha en la búsqueda)",
+        "url": "https://www.google.com/search?q=Ladina+Bar+Colima+333+Roma+Norte&hl=es&gl=mx",
+        "capturedAt": "2026-10-26",
+        "real": true,
+        "note": "La ficha no muestra botón de pedido a domicilio."
+      }
+    }
+  },
+  "notes": "Bar de cócteles en la Roma Norte (CDMX) con 4,6 y ~780 reseñas en Google, Instagram de ~10,8 k seguidores y horarios cargados. Sin delivery ni pedidos en apps encontrados: negocio de salón/barra. Encaja como \"bar\"."
+}
