@@ -39,6 +39,12 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
             <span className="mt-0.5 block break-words text-xs uppercase tracking-wide text-muted">
               {copy.areas[area.id].name} · {rowSummary(area.id, d)}
             </span>
+            {/* el área que se deja afuera a propósito se explica a la vista, no solo en el detalle */}
+            {area.note && (
+              <span className="mt-1 block text-xs font-medium">
+                {copy.result.areaNote[area.note]}
+              </span>
+            )}
             <span className="mt-1 block text-xs font-semibold text-blue-700 underline group-open:no-underline">
               <span className="group-open:hidden">{copy.ticket.detail}</span>
               <span className="hidden group-open:inline">{copy.ticket.hideDetail}</span>
@@ -78,9 +84,6 @@ function Row({ area, d, sample }: { area: AreaScore; d: Diagnosis; sample: boole
         </summary>
         <div className="pb-3">
           <p className="mb-2 text-xs text-muted">{copy.areas[area.id].help}</p>
-          {area.note && (
-            <p className="mb-2 text-xs font-medium">{copy.result.areaNote[area.note]}</p>
-          )}
           {unknownCount > 0 && unknownCount < area.checks.length && (
             <p className="mb-2 text-xs font-medium">
               {copy.result.partial(area.checks.length - unknownCount, area.checks.length)}
@@ -169,10 +172,10 @@ function MoneyBlock({ d, sample }: { d: Diagnosis; sample: boolean }) {
       case 'appCommission':
         return (
           <>
-            {a.appCommission}: {pct(u.value)}.{' '}
+            {a.appCommission}:{' '}
             {source ? (
               <>
-                {a.commissionSourced(countryName, source.claim)}{' '}
+                {pct(u.value)}. {a.commissionSourced(countryName, source.claim)}{' '}
                 <a
                   href={source.url}
                   target="_blank"

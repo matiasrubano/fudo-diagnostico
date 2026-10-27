@@ -460,6 +460,9 @@ export function Home(props: HomeProps) {
             </h2>
             {featured ? (
               <>
+                <p className="mb-3 text-sm font-medium text-on-night-muted">
+                  {copy.proof.source(formatDate(featured.place.capturedAt))}
+                </p>
                 <Ticket d={featured} sample />
                 <p className="mt-5 text-sm text-on-night-muted">{copy.proof.intro(city ?? '')}</p>
                 <button

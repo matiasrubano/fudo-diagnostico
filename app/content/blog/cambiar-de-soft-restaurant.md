@@ -24,7 +24,7 @@ sources:
   - label: "ITSitio (01/02/2022) — National Soft cumple 20 años en México (Soft Restaurant)"
     url: "https://www.itsitio.com/distribucion/national-soft-cumple-20-anos-en-mexico-y-lo-celebra-con-nuevas-iniciativas-para-los-canales/"
   - label: "SAT — Servicio de facturación CFDI 4.0 (solo versión 4.0 desde 01/04/2023)"
-    url: "https://wwwmatnp.sat.gob.mx/aplicacion/75169/servicio-de-facturacion-cfdi-version-4.0-(vigente-a-partir-del-1-de-enero-de-2022)"
+    url: "https://wwwmat.sat.gob.mx/aplicacion/75169/servicio-de-facturacion-cfdi-version-4.0-(vigente-a-partir-del-1-de-enero-de-2022)"
   - label: "Fudo — Tu Gestión México (importación masiva de productos, ingredientes y clientes)"
     url: "https://fu.do/es-mx/tu-gestion/"
 verifyNotes:

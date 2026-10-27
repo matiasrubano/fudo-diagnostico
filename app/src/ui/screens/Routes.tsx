@@ -82,7 +82,8 @@ function AccountPreview({ d, country }: { d: Diagnosis; country: CountryConfig }
             <dd>
               {r.preview.planFrom(plan.name, formatPrice(plan.priceMonthly, d.country))}.{' '}
               <span className="text-sm text-muted">
-                {r.preview.planNote} ({formatDate(plan.capturedAt)})
+                {r.preview.planNote(new URL(country.fudoSiteUrl).hostname)} (
+                {formatDate(plan.capturedAt)})
               </span>
             </dd>
           </div>

@@ -183,6 +183,12 @@ export function renderArticlePage(a: Article, ctx: PageContext): string {
     datePublished: a.updatedAt,
     dateModified: a.updatedAt,
     author: { '@type': 'Organization', name: a.author },
+    // Quién publica: este sitio (demo no oficial). No se atribuye a Fudo
+    publisher: {
+      '@type': 'Organization',
+      name: `${copy.brand.name} (${copy.brand.demoTag})`,
+      url: ctx.siteUrl,
+    },
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     keywords: a.keyword,
   }
@@ -385,6 +391,7 @@ export function renderLlmsTxt(
     '## Herramienta',
     '',
     `- [Diagnóstico gratis](${siteUrl}/): buscá tu local y recibí una nota por área, recomendaciones y una estimación de la plata que se escapa`,
+    `- [Guías para dueños de restaurantes](${siteUrl}/blog/): índice de todas las guías, por país`,
     '',
   ]
   if (landings.length > 0) {

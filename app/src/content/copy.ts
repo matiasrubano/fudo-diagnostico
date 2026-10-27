@@ -70,6 +70,9 @@ export const copy = {
     title: 'Así queda la comanda de un local real',
     intro: (city: string) =>
       `Es un local de ${city}. Rating, reseñas, horarios, web y apps salen de su ficha pública; el cobro y los canales son respuestas de ejemplo.`,
+    /** junto al ticket de ejemplo: de dónde salen los datos del local (Rubén: "¿quién les dio mi local?") */
+    source: (date: string) =>
+      `Datos públicos de la ficha de Google, capturados el ${date} para esta demo`,
     cta: 'Ver su diagnóstico completo',
     tryMine: 'Hacer el diagnóstico de mi local',
   },
@@ -122,6 +125,15 @@ export const copy = {
   guides: {
     title: 'Guías para dueños de restaurantes',
     all: 'Ver todas las guías',
+  },
+
+  /** Página 404 (dist/404.html): sin voz propia, para cualquier país */
+  notFoundPage: {
+    title: 'No encontramos esta página',
+    body: 'Esta dirección no existe o cambió.',
+    documentTitle: 'Página no encontrada | Diagnóstico gratis para restaurantes',
+    home: 'Ir al diagnóstico',
+    guides: 'Ver las guías',
   },
 
   confirm: {
@@ -343,7 +355,7 @@ export const copy = {
       commissionSourced: (country: string, claim: string) => `En ${country}, ${claim}`,
       commissionNone: (country: string, pct: string) =>
         `Sin dato público en ${country}: usamos ${pct} (supuesto)`,
-      commissionAssumed: (pct: string) => `usamos ${pct} (supuesto, el piso de lo publicado)`,
+      commissionAssumed: (pct: string) => `Usamos ${pct} (supuesto: el piso de lo publicado).`,
       redirectableShare: 'Parte de esos pedidos que podrías pasar a un canal propio',
       googleGapLoss: 'Ventas perdidas con la ficha de Google al 0%',
       billingManual: 'Merma si se cobra a mano',
@@ -368,10 +380,12 @@ export const copy = {
 
   footer: {
     title: 'Qué es real y qué es simulado',
-    disclaimer:
-      'Demo de entrevista, no es un sitio oficial de Fudo. Lo real lleva fuente y fecha; lo simulado está marcado como tal.',
+    /** `product` = Fudo, o Deli en Brasil */
+    disclaimer: (product: string) =>
+      `Demo de entrevista, no es un sitio oficial de ${product}. Lo real lleva fuente y fecha; lo simulado está marcado como tal.`,
     columns: { what: 'Qué', status: 'Estado', detail: 'Detalle' },
-    rows: [
+    /** `product` = Fudo o Deli; `site` = fu.do o deli.com.br */
+    rows: (product: string, site: string) => [
       {
         what: 'Datos del local (nombre, dirección, rating, reseñas, horarios, web, delivery)',
         status: 'real',
@@ -381,12 +395,13 @@ export const copy = {
       {
         what: 'Comparación con otros locales',
         status: 'real',
-        detail: 'Rating y reseñas de los otros locales reales de la demo del mismo país. No es un promedio de mercado.',
+        detail:
+          'Rating y reseñas de los otros locales reales de la demo del mismo país. No es un promedio de mercado.',
       },
       {
-        what: 'Precios de planes y links de Fudo',
+        what: `Precios de planes y links de ${product}`,
         status: 'real',
-        detail: 'Publicados en fu.do, capturados el 26/10/2026.',
+        detail: `Publicados en ${site}, capturados el 26/10/2026.`,
       },
       {
         what: 'Notas por área y recomendaciones',
@@ -396,12 +411,13 @@ export const copy = {
       {
         what: 'Cuánta plata se te escapa por mes',
         status: 'simulado',
-        detail: 'Estimación con supuestos propios (ticket, pedidos, comisión) visibles en la pantalla.',
+        detail:
+          'Estimación con supuestos propios (pedidos, ticket, comisión) visibles en la pantalla; los pedidos y el ticket se pueden cambiar por los tuyos.',
       },
       {
         what: 'Tu cuenta ya armada, la carta y la creación de cuenta',
         status: 'simulado',
-        detail: 'Hoy el alta de fu.do no acepta precarga: el botón solo simula.',
+        detail: `Hoy el alta de ${site} no acepta precarga: el botón solo simula.`,
       },
       {
         what: 'Envío de email y migración de datos',
@@ -411,12 +427,16 @@ export const copy = {
       {
         what: 'Instagram y apps de delivery',
         status: 'parcial',
-        detail: 'Solo la presencia (que exista el perfil o el link). No hay métricas: no tenemos acceso real a ellas.',
+        detail:
+          'Solo la presencia (que exista el perfil o el link). No hay métricas: no tenemos acceso real a ellas.',
       },
     ],
-    status: { real: 'real', simulado: 'simulado', parcial: 'solo presencia' } as Record<string, string>,
-    debug: 'Panel de eventos (/debug)',
-    unofficial: 'Demo de entrevista · no es un sitio oficial de Fudo. La marca Fudo pertenece a sus dueños.',
+    status: { real: 'real', simulado: 'simulado', parcial: 'solo presencia' } as Record<
+      string,
+      string
+    >,
+    unofficial: (product: string) =>
+      `Demo de entrevista · no es un sitio oficial de ${product}. La marca ${product} pertenece a sus dueños.`,
   },
 
   debug: {
@@ -557,7 +577,7 @@ const base = {
     },
     guidesTitle: (country: string) => `Trámites en ${country}`,
     guidesIntro: (authority: string) =>
-      `Lo primero que se pregunta quien abre: qué comprobante tiene que emitir ante ${authority}.`,
+      `Lo primero que se pregunta quien abre: qué comprobante emitir (${authority}).`,
     guides: {
       'factura-electronica-restaurante-arca': 'Guía: factura electrónica de un restaurante con ARCA',
       'cfdi-4-restaurante-propinas': 'Guía: CFDI 4.0 en restaurantes, facturación y propinas',
@@ -567,7 +587,7 @@ const base = {
     } as Record<string, string>,
     dataTitle: 'Datos que conviene tener a mano al abrir',
     data: (authority: string) => [
-      `Tu alta ante ${authority} y el tipo de comprobante que te toca emitir`,
+      `Tu alta fiscal (${authority}) y el tipo de comprobante que te toca emitir`,
       'Nombre del local, dirección y horarios',
       'La carta con precios, aunque sea un borrador',
       'Por dónde vas a vender: salón, mostrador, apps de delivery o canal propio',
@@ -625,7 +645,7 @@ const base = {
       menuNote: 'Ejemplo ilustrativo. En producción la carta se cargaría desde una foto o PDF con Carta QR.',
       plan: 'Plan sugerido',
       planFrom: (name: string, price: string) => `${name}, desde ${price} por mes`,
-      planNote: 'Precio publicado en fu.do.',
+      planNote: (site: string) => `Precio publicado en ${site}.`,
       menuSample: [
         { name: 'Plato del día', price: 'ejemplo' },
         { name: 'Bebida', price: 'ejemplo' },

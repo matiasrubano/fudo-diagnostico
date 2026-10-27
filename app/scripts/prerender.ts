@@ -15,7 +15,15 @@ import {
   renderSitemap,
   type PageContext,
 } from './blog'
-import { homeMeta, landingLinks, landingMeta, landingPath, renderPage } from './pages'
+import {
+  homeMeta,
+  landingLinks,
+  landingMeta,
+  landingPath,
+  renderDebugShell,
+  renderNotFound,
+  renderPage,
+} from './pages'
 
 const ROOT = process.cwd()
 const DIST = join(ROOT, 'dist')
@@ -90,6 +98,10 @@ for (const code of LANDING_COUNTRIES) {
   )
 }
 
+// 3b) /debug/ (la app con su título y noindex) y 404.html (el hosting la sirve con estado 404 en vez de la home)
+write('debug/index.html', renderDebugShell(template))
+write('404.html', renderNotFound(template))
+
 // 4) sitemap, llms.txt y robots.txt (este viene de public/ con el dominio como placeholder)
 const today = new Date().toISOString().slice(0, 10)
 const landings = landingLinks(siteUrl)
@@ -100,5 +112,5 @@ if (existsSync(robots))
   writeFileSync(robots, readFileSync(robots, 'utf8').replaceAll('%SITE_URL%', siteUrl))
 
 console.log(
-  `prerender: ${articles.length} artículos, home, ${LANDING_COUNTRIES.length} landings por país, /blog/, sitemap.xml, llms.txt (${siteUrl})`,
+  `prerender: ${articles.length} artículos, home, ${LANDING_COUNTRIES.length} landings por país, /blog/, /debug/, 404.html, sitemap.xml, llms.txt (${siteUrl})`,
 )

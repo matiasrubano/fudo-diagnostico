@@ -25,6 +25,10 @@ export function Modal({
     <dialog
       ref={ref}
       onClose={onClose}
+      // clic en el fondo (el <dialog> es el destino del clic solo fuera del contenido): cierra (B-15)
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
       aria-labelledby="modal-title"
       className="m-auto w-[calc(100%-32px)] max-w-lg rounded-2xl p-0 shadow-float backdrop:bg-night/60"
     >

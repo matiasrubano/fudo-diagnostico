@@ -5,7 +5,7 @@ export function ScreenTitle({
   children,
   eyebrow,
   className = '',
-  titleClassName = 'text-[32px] font-extrabold leading-[1.1] sm:text-5xl',
+  titleClassName = 'break-words text-[32px] font-extrabold leading-[1.1] sm:text-5xl',
   eyebrowClassName = 'eyebrow mb-2',
 }: {
   children: ReactNode

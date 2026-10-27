@@ -142,9 +142,9 @@ export function Neighbors({ n, country }: { n: NeighborComparison; country: Coun
                 className={`border-t border-line align-top ${e.you ? 'bg-primary-50 font-semibold' : ''}`}
               >
                 <td className="px-3 py-2">
-                  <span className="break-words">{e.name}</span>
+                  <span className="break-words">{e.name}</span>{' '}
                   {e.you && (
-                    <span className="ml-2 rounded-pill bg-night px-2 py-0.5 text-xs font-semibold text-white">
+                    <span className="ml-1 inline-block rounded-pill bg-night px-2 py-0.5 text-xs font-semibold text-white">
                       {v.you}
                     </span>
                   )}

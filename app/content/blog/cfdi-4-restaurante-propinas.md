@@ -22,7 +22,7 @@ faq:
     a: "Necesitas un portal de autofacturación. Algunos sistemas de gestión lo incluyen: Fudo, por ejemplo, ofrece un portal donde el cliente genera su propia factura. Revisa que pida RFC, nombre o razón social, código postal y régimen fiscal del receptor."
 sources:
   - label: "SAT — Servicio de facturación CFDI 4.0 (vigencia: 3.3 hasta 31/03/2023, solo 4.0 desde 01/04/2023)"
-    url: "https://wwwmatnp.sat.gob.mx/aplicacion/75169/servicio-de-facturacion-cfdi-version-4.0-(vigente-a-partir-del-1-de-enero-de-2022)"
+    url: "https://wwwmat.sat.gob.mx/aplicacion/75169/servicio-de-facturacion-cfdi-version-4.0-(vigente-a-partir-del-1-de-enero-de-2022)"
   - label: "Praxium Consultores (12/09/2026) — Propinas en restaurante: IVA, ISR y cómo registrarlas"
     url: "https://praxiumconsultores.com/blog/propinas-en-restaurante-iva-isr-y-como-registrarlas"
   - label: "Praxium Consultores (12/09/2026) — Factura de restaurante: requisitos del CFDI"

@@ -7,11 +7,5 @@
     "api/*.ts": {
       "includeFiles": "{data/snapshots/**,src/config/countries.json}"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/((?!api/|blog/|ar/|mx/|cl/|co/|assets/|sitemap\\.xml|robots\\.txt|llms\\.txt|favicon).*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }

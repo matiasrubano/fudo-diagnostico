@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { getCountry } from '../../config/countries'
 import { copy } from '../../content/copy'
 import type { CountryCode } from '../../domain/types'
 import { SimulatedBadge } from './ProvenanceBadge'
@@ -49,7 +50,7 @@ export function Header({ country }: { country?: CountryCode | null }) {
         </a>
         <a
           href="/blog/"
-          className="inline-flex min-h-touch items-center px-2 text-sm font-semibold text-white underline-offset-4 hover:underline"
+          className="inline-flex min-h-touch min-w-touch items-center justify-center px-3 text-sm font-semibold text-white underline-offset-4 hover:underline"
         >
           {copy.nav.blog}
         </a>
@@ -73,17 +74,15 @@ function StatusBadge({ status }: { status: string }) {
 
 /** Barra final azul noche: logo, aviso de "no oficial" y enlaces. */
 export function NightBar({ country }: { country?: CountryCode | null }) {
+  const product = country ? getCountry(country).productName : 'Fudo'
   return (
     <div className="bg-night text-white">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-6 sm:flex-row sm:items-center sm:justify-between">
         <BrandLogo country={country} />
-        <p className="max-w-xl text-sm text-on-night-muted">{copy.footer.unofficial}</p>
+        <p className="max-w-xl text-sm text-on-night-muted">{copy.footer.unofficial(product)}</p>
         <p className="flex flex-wrap gap-x-4 text-sm font-semibold">
           <a href="/blog/" className="inline-flex min-h-touch items-center underline">
             {copy.nav.blog}
-          </a>
-          <a href="/debug" className="inline-flex min-h-touch items-center underline">
-            {copy.footer.debug}
           </a>
         </p>
       </div>
@@ -93,15 +92,20 @@ export function NightBar({ country }: { country?: CountryCode | null }) {
 
 export function Footer({ country }: { country?: CountryCode | null }) {
   const f = copy.footer
+  // En Brasil el producto es Deli: el pie legal no puede decir "Fudo" ni "fu.do" (B-12)
+  const c = country ? getCountry(country) : null
+  const product = c?.productName ?? 'Fudo'
+  const site = c ? new URL(c.fudoSiteUrl).hostname : 'fu.do'
+  const rows = f.rows(product, site)
   return (
     <footer className="mt-16">
       <div className="border-t border-line bg-white">
         <div className="mx-auto max-w-3xl px-4 py-10">
           <h2 className="text-2xl font-extrabold">{f.title}</h2>
-          <p className="mt-1 text-sm text-muted">{f.disclaimer}</p>
+          <p className="mt-1 text-sm text-muted">{f.disclaimer(product)}</p>
           {/* Mobile: tarjetas apiladas. Desde sm: tabla. */}
           <ul className="mt-4 space-y-3 sm:hidden">
-            {f.rows.map((row) => (
+            {rows.map((row) => (
               <li key={row.what} className="rounded-xl border border-line p-3 text-sm">
                 <p className="font-semibold">{row.what}</p>
                 <p className="my-1.5">
@@ -121,7 +125,7 @@ export function Footer({ country }: { country?: CountryCode | null }) {
                 </tr>
               </thead>
               <tbody>
-                {f.rows.map((row) => (
+                {rows.map((row) => (
                   <tr key={row.what} className="border-t border-line align-top">
                     <td className="px-3 py-2 font-medium">{row.what}</td>
                     <td className="px-3 py-2">

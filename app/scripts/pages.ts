@@ -8,6 +8,7 @@ import { LANDING_COUNTRIES, type LandingCountry } from '../src/domain/showcase'
 import type { ShowcaseResponse } from '../src/server/diagnosisService'
 import { landingFacts, type GuideLink } from '../src/ui/screens/Home'
 import { PAGE_DATA_ID, serializePageData, type PageData } from '../src/ui/pageData'
+import { NotFoundPage } from '../src/ui/NotFoundPage'
 import { StaticPage } from '../src/ui/StaticPage'
 import { esc, type LandingLink } from './blog'
 
@@ -172,4 +173,35 @@ export function landingLinks(siteUrl: string): LandingLink[] {
     path: landingPath(code),
     title: landingMeta(code, siteUrl).title,
   }))
+}
+
+/** <head> de las páginas que no se indexan (404 y /debug/): título propio, noindex y sin canonical a la home */
+function renderNoIndexHead(title: string, description: string): string {
+  return [
+    `<title>${esc(title)}</title>`,
+    `<meta name="description" content="${esc(description)}" />`,
+    '<meta name="robots" content="noindex, nofollow" />',
+  ].join('\n    ')
+}
+
+/** dist/404.html: el hosting la sirve (con estado 404) para cualquier URL que no exista. Sin JavaScript de la app. */
+export function renderNotFound(template: string): string {
+  const root = renderToStaticMarkup(createElement(NotFoundPage))
+  return template
+    .replace(
+      /<!--head:start-->[\s\S]*?<!--head:end-->/,
+      renderNoIndexHead(copy.notFoundPage.documentTitle, copy.notFoundPage.body),
+    )
+    .replace(/<script type="module"[^>]*><\/script>/, '')
+    .replace('<div id="root"><!--prerender:home--></div>', () => `<div id="root">${root}</div>`)
+}
+
+/** dist/debug/index.html: la app (SPA) arranca con su título propio y noindex, no con los de la home */
+export function renderDebugShell(template: string): string {
+  return template
+    .replace(
+      /<!--head:start-->[\s\S]*?<!--head:end-->/,
+      renderNoIndexHead(copy.debug.documentTitle, copy.debug.intro),
+    )
+    .replace('<div id="root"><!--prerender:home--></div>', '<div id="root"></div>')
 }
