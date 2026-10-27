@@ -16,7 +16,6 @@ export type Volume = 'bajo' | 'medio' | 'alto' | 'desconocido'
 
 /** Por qué se eligió ese tier (ids de texto en copy.ts) */
 export type LeadReason =
-  | 'por-abrir'
   | 'fuera-de-segmento'
   | 'cadena'
   | 'nucleo-sin-sistema'
@@ -40,19 +39,16 @@ export function volumeOf(reviewCount: PlaceProfile['fields']['reviewCount']): Vo
 
 /**
  * Reglas, en orden (la primera que aplica gana):
- *  1. "Todavía no abrí"                       → por-abrir  (Consultor de Nuevos Negocios)
- *  2. 4+ locales, o negocio fuera del rubro   → descartar  (no es autoservicio: se deriva a ventas)
- *  3. Núcleo = volumen (no bajo) + delivery:
+ *  ("Todavía no abrí" no pasa por acá: es otra ruta, sin diagnóstico. Ver src/domain/opening.ts)
+ *  1. 4+ locales, o negocio fuera del rubro   → descartar  (no es autoservicio: se deriva a ventas)
+ *  2. Núcleo = volumen (no bajo) + delivery:
  *       - ya usa otro sistema de gestión      → switcher
  *       - cobra a mano o solo con terminal    → caliente
- *  4. Todo lo demás                           → nutrir
+ *  3. Todo lo demás                           → nutrir
  */
 export function classifyLead(profile: PlaceProfile, answers: Answers): LeadClassification {
   const volume = volumeOf(profile.fields.reviewCount)
 
-  if (answers.businessType === 'por-abrir') {
-    return { tier: 'por-abrir', volume, reasons: ['por-abrir'] }
-  }
   if (answers.locals === '4+') {
     return { tier: 'descartar', volume, reasons: ['cadena'] }
   }

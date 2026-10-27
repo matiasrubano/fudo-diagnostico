@@ -16,9 +16,8 @@ import type { Grade } from '../domain/scoring.js'
 import type {
   AreaId,
   BillingSetup,
-  BusinessType,
+  BusinessChoice,
   CountryCode,
-  LeadTier,
   LocalsBand,
   SalesChannel,
 } from '../domain/types.js'
@@ -102,7 +101,6 @@ export const copy = {
       'Viernes 21:30, alguien busca tu local: ¿te encuentra, ve que estás abierto y te puede pedir? Diagnóstico gratis para restaurantes de Argentina, México, Chile y Colombia.',
     appDescription:
       'Diagnóstico de la presencia online de un restaurante: ficha de Google, reseñas, web, apps de delivery y operación, con recomendaciones y una estimación (simulada) de la plata que se escapa por mes.',
-    noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, podés leer las guías.',
   },
 
   countriesNav: {
@@ -144,7 +142,7 @@ export const copy = {
           'dark-kitchen': 'Dark kitchen (solo delivery)',
           'por-abrir': 'Todavía no abrí',
           otro: 'Otro (kiosco, catering, food truck…)',
-        } satisfies Record<BusinessType, string>,
+        } satisfies Record<BusinessChoice, string>,
       },
       channels: {
         options: {
@@ -169,8 +167,6 @@ export const copy = {
       },
     },
   },
-
-  loading: { title: 'Armando tu diagnóstico…', error: 'No pudimos armar el diagnóstico. Probá de nuevo.' },
 
   result: {
     eyebrow: 'Tu diagnóstico',
@@ -384,14 +380,6 @@ export const copy = {
     back: 'Volver al diagnóstico',
     cols: { time: 'Hora', session: 'Sesión', event: 'Evento', props: 'Datos' },
   },
-
-  tiers: {
-    caliente: 'Caliente',
-    switcher: 'Switcher',
-    nutrir: 'Nutrir',
-    descartar: 'Descartar',
-    'por-abrir': 'Por abrir',
-  } satisfies Record<LeadTier, string>,
 }
 
 export const siteName = 'Diagnóstico gratis para restaurantes'
@@ -436,6 +424,13 @@ const base = {
     notApplicable: 'No aplica: no vendés por delivery',
     sampleBanner:
       'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
+  },
+
+  noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, podés leer las guías.',
+
+  loading: {
+    title: 'Armando tu diagnóstico…',
+    error: 'No pudimos armar el diagnóstico. Probá de nuevo.',
   },
 
   /** Búsqueda sin coincidencia real: nunca se muestra otro local como si fuera el del dueño */
@@ -490,9 +485,44 @@ const base = {
     howIntro: 'Es una cuenta simple, con números que podés discutir. Estos son los pasos y todos los supuestos:',
   },
 
+  /** "Estoy por abrir": otra ruta, sin diagnóstico (src/domain/opening.ts) */
+  opening: {
+    prompt: '¿Todavía no abriste?',
+    link: 'Mirá qué conviene tener listo antes de abrir',
+    eyebrow: 'Estoy por abrir',
+    title: 'Antes de abrir: el plan y los trámites',
+    intro:
+      'Todavía no hay un local para diagnosticar, y está bien: no te mostramos notas ni plata de ningún local. Empezá por lo que más ayuda antes de abrir.',
+    consultor: {
+      title: 'Consultor de Nuevos Negocios',
+      body: 'Identidad, competidores, carta, compras y un plan de redes de 4 semanas. Es gratis, toma unos 2 minutos y no pide tarjeta.',
+      cta: 'Probar el Consultor de Nuevos Negocios',
+    },
+    guidesTitle: (country: string) => `Trámites en ${country}`,
+    guidesIntro: (authority: string) =>
+      `Lo primero que se pregunta quien abre: qué comprobante tiene que emitir ante ${authority}.`,
+    guides: {
+      'factura-electronica-restaurante-arca': 'Guía: factura electrónica de un restaurante con ARCA',
+      'cfdi-4-restaurante-propinas': 'Guía: CFDI 4.0 en restaurantes, facturación y propinas',
+      'boleta-electronica-restaurante-sii': 'Guía: boleta electrónica en restaurantes de Chile (SII)',
+      'factura-electronica-pos-restaurante-dian':
+        'Guía: factura electrónica y POS en restaurantes de Colombia (DIAN)',
+    } as Record<string, string>,
+    dataTitle: 'Datos que conviene tener a mano al abrir',
+    data: (authority: string) => [
+      `Tu alta ante ${authority} y el tipo de comprobante que te toca emitir`,
+      'Nombre del local, dirección y horarios',
+      'La carta con precios, aunque sea un borrador',
+      'Por dónde vas a vender: salón, mostrador, apps de delivery o canal propio',
+      'Cómo vas a cobrar: efectivo, tarjeta, QR o transferencia',
+      'Cuántos locales y cuántas cajas o puestos de cobro vas a tener',
+    ],
+    later: 'Cuando ya tengas el local abierto, volvé y hacé el diagnóstico.',
+    openLocal: 'Ya tengo un local abierto: hacer el diagnóstico',
+  },
+
   route: {
     reasons: {
-      'por-abrir': 'Contaste que todavía no abriste.',
       'fuera-de-segmento': 'Tu rubro está fuera del segmento de esta herramienta.',
       cadena: 'Tenés 4 o más locales.',
       'nucleo-sin-sistema': 'Vendés con volumen y por delivery, y hoy no tenés un sistema que lo ordene.',
@@ -552,12 +582,6 @@ const base = {
       emailButton: 'Mandame las guías',
       emailDone: 'Listo (simulado): no se envió nada ni guardamos tu email. En producción llegaría el link de las guías.',
       emailInvalid: 'Escribí un email válido.',
-    },
-    porAbrir: {
-      title: 'Todavía no abriste: te ayuda el Consultor de Nuevos Negocios',
-      body: 'Antes de pensar en un sistema, conviene tener el plan: identidad, competidores, carta, compras y un plan de redes de 4 semanas, más la guía de trámites según tu ubicación. Es gratis, toma unos 2 minutos y no pide tarjeta.',
-      cta: 'Probar el Consultor de Nuevos Negocios',
-      url: 'https://tools.fu.do/abrir-un-restaurante',
     },
     descartar: {
       cadenaTitle: 'Con 4 o más locales conviene hablar con una persona',
@@ -705,6 +729,8 @@ const tuteo: DeepPartial<Voice> = {
     sampleBanner:
       'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Prueba con el tuyo.',
   },
+  noscript: 'El diagnóstico necesita JavaScript. Mientras tanto, puedes leer las guías.',
+  loading: { error: 'No pudimos armar el diagnóstico. Prueba de nuevo.' },
   notFound: {
     pickIn: (country) => `Prueba con uno de la demo en ${country}:`,
     pickAny: 'Prueba con uno de la demo:',
@@ -725,6 +751,12 @@ const tuteo: DeepPartial<Voice> = {
   },
   money: {
     howIntro: 'Es una cuenta simple, con números que puedes discutir. Estos son los pasos y todos los supuestos:',
+  },
+  opening: {
+    link: 'Mira qué conviene tener listo antes de abrir',
+    intro:
+      'Todavía no hay un local para diagnosticar, y está bien: no te mostramos notas ni plata de ningún local. Empieza por lo que más ayuda antes de abrir.',
+    later: 'Cuando ya tengas el local abierto, vuelve y haz el diagnóstico.',
   },
   route: {
     reasons: {

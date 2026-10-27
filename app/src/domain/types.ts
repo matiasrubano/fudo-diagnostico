@@ -100,8 +100,11 @@ export interface GeoBias {
 
 // ─── Respuestas del dueño (las 4 preguntas) ───
 
+/** Tipos de negocio que se diagnostican */
 export type BusinessType =
-  'restaurante' | 'bar' | 'pizzeria' | 'cafeteria' | 'dark-kitchen' | 'por-abrir' | 'otro'
+  'restaurante' | 'bar' | 'pizzeria' | 'cafeteria' | 'dark-kitchen' | 'otro'
+/** Lo que se ofrece en la P1: además de los tipos, "Todavía no abrí", que NO es un diagnóstico sino otra ruta (src/domain/opening.ts) */
+export type BusinessChoice = BusinessType | 'por-abrir'
 export type SalesChannel = 'salon' | 'mostrador' | 'apps' | 'delivery-propio'
 export type BillingSetup = 'manual' | 'terminal' | 'otro-sistema'
 export type LocalsBand = '1' | '2-3' | '4+'
@@ -116,4 +119,4 @@ export interface Answers {
 // ─── Resultado del diagnóstico ───
 
 export type AreaId = 'google' | 'reviews' | 'web' | 'delivery' | 'operation'
-export type LeadTier = 'caliente' | 'switcher' | 'nutrir' | 'descartar' | 'por-abrir'
+export type LeadTier = 'caliente' | 'switcher' | 'nutrir' | 'descartar'

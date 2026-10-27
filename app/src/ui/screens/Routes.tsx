@@ -6,36 +6,10 @@ import type { Diagnosis } from '../../domain/diagnose'
 import { withUtm } from '../../domain/links'
 import { FREE_RESOURCES, moduleUrl } from '../../domain/recommendations'
 import type { AreaId } from '../../domain/types'
+import { ExternalLink } from '../components/ExternalLink'
 import { Modal } from '../components/Modal'
 import { ProvenanceBadge, SimulatedBadge } from '../components/ProvenanceBadge'
 import { formatDate, formatPrice } from '../format'
-
-function ExternalLink({
-  href,
-  tier,
-  cta,
-  className,
-  children,
-}: {
-  href: string
-  tier: string
-  cta: string
-  className: string
-  children: string
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-      onClick={() => track('cta_click', { cta, tier })}
-    >
-      {children}
-      <span className="sr-only"> (se abre en una pestaña nueva)</span>
-    </a>
-  )
-}
 
 // ─── Caliente y switcher: "Tu Fudo ya armado" ───
 
@@ -306,26 +280,6 @@ function Nurture({ d }: { d: Diagnosis }) {
   )
 }
 
-// ─── Por abrir ───
-
-function OpenBusiness({ d }: { d: Diagnosis }) {
-  const r = copyFor(d.country).route
-  return (
-    <div className="space-y-4">
-      <h2 className="text-3xl font-extrabold leading-tight">{r.porAbrir.title}</h2>
-      <p className="text-lg text-body">{r.porAbrir.body}</p>
-      <ExternalLink
-        href={withUtm(r.porAbrir.url, 'por-abrir')}
-        tier={d.lead.tier}
-        cta="consultor"
-        className="btn btn-primary w-full sm:w-auto"
-      >
-        {r.porAbrir.cta}
-      </ExternalLink>
-    </div>
-  )
-}
-
 // ─── Descartar ───
 
 function Discard({ d, country }: { d: Diagnosis; country: CountryConfig }) {
@@ -372,13 +326,9 @@ export function RouteSection({ d }: { d: Diagnosis }) {
       <p id="route-reason" className="mb-5 text-sm text-muted">
         <span className="font-semibold">{copy.result.whyRoute}:</span>{' '}
         {d.lead.reasons.map((reason) => r.reasons[reason]).join(' ')}{' '}
-        <span className="rounded-pill bg-night px-2 py-0.5 text-xs font-semibold text-white">
-          {copy.tiers[tier]}
-        </span>
       </p>
       {(tier === 'caliente' || tier === 'switcher') && <HotOrSwitcher d={d} country={country} />}
       {tier === 'nutrir' && <Nurture d={d} />}
-      {tier === 'por-abrir' && <OpenBusiness d={d} />}
       {tier === 'descartar' && <Discard d={d} country={country} />}
     </section>
   )

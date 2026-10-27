@@ -28,6 +28,8 @@ export interface HomeProps {
   onSearch: (query: string, byExample?: boolean) => void
   /** abre el diagnóstico completo de un local de la demo, con respuestas de ejemplo (simuladas) */
   onOpenSample: (placeId: string, country: CountryCode | null) => void
+  /** "¿Todavía no abriste?": lleva a la ruta de quien está por abrir (sin diagnóstico) */
+  onOpening: () => void
 }
 
 export function landingFacts(code: CountryCode): LandingFacts {
@@ -47,7 +49,8 @@ function SearchBlock({
   error,
   examples,
   onSearch,
-}: Pick<HomeProps, 'initialQuery' | 'loading' | 'error' | 'onSearch'> & {
+  onOpening,
+}: Pick<HomeProps, 'initialQuery' | 'loading' | 'error' | 'onSearch' | 'onOpening'> & {
   country: CountryCode | null
   examples: string[]
 }) {
@@ -79,6 +82,7 @@ function SearchBlock({
             placeholder={v.placeholder}
             aria-invalid={tooShort}
             aria-describedby={tooShort || error ? 'search-error' : undefined}
+            maxLength={80}
             className="input flex-1 border-transparent"
           />
           <button type="submit" disabled={loading} className="btn btn-brand sm:min-w-[170px]">
@@ -96,8 +100,22 @@ function SearchBlock({
         )}
       </form>
 
+      <p className="mt-5 text-sm text-on-night-muted">
+        {copyFor(country).opening.prompt}{' '}
+        <a
+          href="#por-abrir"
+          onClick={(event) => {
+            event.preventDefault()
+            onOpening()
+          }}
+          className="inline-flex min-h-touch items-center font-semibold text-white underline underline-offset-4"
+        >
+          {copyFor(country).opening.link}
+        </a>
+      </p>
+
       {examples.length > 0 && (
-        <div className="mt-5">
+        <div className="mt-2">
           <p className="mb-2 text-sm text-on-night-muted">{v.examplesLabel}</p>
           <ul className="flex flex-wrap gap-2">
             {examples.map((example) => (
@@ -385,6 +403,7 @@ export function Home(props: HomeProps) {
               error={props.error}
               examples={examples}
               onSearch={props.onSearch}
+              onOpening={props.onOpening}
             />
             <ul className="mt-8 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
               {v.hero.trust.map((item) => (

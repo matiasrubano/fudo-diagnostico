@@ -43,14 +43,6 @@ describe('leadTier: las 5 rutas', () => {
     expect(lead.tier).toBe('descartar')
   })
 
-  it('por-abrir: "todavía no abrí" gana sobre todo lo demás', async () => {
-    const lead = classifyLead(
-      await place(IDS.campeon),
-      answers({ businessType: 'por-abrir', locals: '4+' }),
-    )
-    expect(lead.tier).toBe('por-abrir')
-  })
-
   it('volumen desconocido (not_found) no cuenta como bajo: la dark kitchen con apps es caliente', async () => {
     const dk = await place(IDS.darkKitchen)
     expect(volumeOf(dk.fields.reviewCount)).toBe('desconocido')

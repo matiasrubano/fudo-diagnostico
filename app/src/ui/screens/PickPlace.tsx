@@ -65,11 +65,14 @@ export function PickPlace({
   response,
   onPick,
   onBack,
+  onOpening,
 }: {
   query: string
   response: SearchResponse
   onPick: (place: PlaceSummary, fromSuggestion: boolean) => void
   onBack: () => void
+  /** "¿Todavía no abriste?": otra ruta, sin diagnóstico */
+  onOpening: () => void
 }) {
   const { results, suggestions, notFound, priorityCountry, onlyPriority } = response
   const { settled, guard } = useSettled()
@@ -94,6 +97,16 @@ export function PickPlace({
         <button type="button" className="btn btn-secondary mt-6" onClick={onBack}>
           {copy.confirm.back}
         </button>
+        <p className="mt-6 text-muted">
+          {copyFor(priorityCountry).opening.prompt}{' '}
+          <button
+            type="button"
+            onClick={onOpening}
+            className="inline-flex min-h-touch items-center font-semibold text-blue-700 underline"
+          >
+            {copyFor(priorityCountry).opening.link}
+          </button>
+        </p>
         {groups.map((group) => (
           <div key={group.title} className="mt-8">
             <h2 className="mb-3 text-base font-bold">{group.title}</h2>

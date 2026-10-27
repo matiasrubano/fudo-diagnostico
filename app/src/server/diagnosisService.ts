@@ -33,7 +33,6 @@ const BUSINESS_TYPES: BusinessType[] = [
   'pizzeria',
   'cafeteria',
   'dark-kitchen',
-  'por-abrir',
   'otro',
 ]
 const CHANNELS: SalesChannel[] = ['salon', 'mostrador', 'apps', 'delivery-propio']

@@ -3,6 +3,7 @@ import { getCountry } from '../../config/countries'
 import { copy, copyFor } from '../../content/copy'
 import type { Answers, CountryCode, SalesChannel } from '../../domain/types'
 import { ScreenTitle } from '../components/ScreenTitle'
+import { NO_CLICKS, useSettled } from '../useSettled'
 
 export const TOTAL_QUESTIONS = 4
 
@@ -49,11 +50,18 @@ function SingleChoice<V extends string>({
   selected?: V
   onSelect: (value: V) => void
 }) {
+  // B-1: el segundo clic de un doble clic no puede contestar la pregunta que sigue
+  const { settled, guard } = useSettled()
   return (
     <>
       <ScreenTitle>{title}</ScreenTitle>
       {hint && <p className="mt-2 text-muted">{hint}</p>}
-      <div role="radiogroup" aria-label={title} className="mt-6 grid gap-3">
+      <div
+        role="radiogroup"
+        aria-label={title}
+        className="mt-6 grid gap-3"
+        style={settled ? undefined : NO_CLICKS}
+      >
         {options.map((o) => (
           <button
             key={o.value}
@@ -61,7 +69,7 @@ function SingleChoice<V extends string>({
             role="radio"
             aria-checked={selected === o.value}
             className="option"
-            onClick={() => onSelect(o.value)}
+            onClick={guard(() => onSelect(o.value))}
           >
             {o.label}
           </button>
@@ -85,6 +93,7 @@ function MultiChoice({
   onDone: (values: SalesChannel[]) => void
 }) {
   const [selected, setSelected] = useState<SalesChannel[]>(initial)
+  const { guard } = useSettled()
   const toggle = (v: SalesChannel) =>
     setSelected((s) => (s.includes(v) ? s.filter((x) => x !== v) : [...s, v]))
   return (
@@ -116,7 +125,7 @@ function MultiChoice({
         type="button"
         className="btn btn-primary mt-6 w-full sm:w-auto"
         disabled={selected.length === 0}
-        onClick={() => onDone(selected)}
+        onClick={guard(() => onDone(selected))}
       >
         {copy.questions.next}
       </button>
@@ -138,7 +147,7 @@ export function Questions({
   step: number
   answers: Partial<Answers>
   country: CountryCode | null
-  onAnswer: <K extends keyof Answers>(key: K, value: Answers[K]) => void
+  onAnswer: <K extends keyof Answers>(key: K, value: Answers[K] | 'por-abrir') => void
   onBack: () => void
 }) {
   const q = copy.questions.items
