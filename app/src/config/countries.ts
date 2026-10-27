@@ -1,5 +1,5 @@
-import raw from './countries.json'
-import type { CountryCode } from '../domain/types'
+import raw from './countries.json' with { type: 'json' }
+import type { CountryCode } from '../domain/types.js'
 
 // Forma de countries.json (generado en la investigación G1, con fuente y fecha por dato)
 export interface FudoPlan {

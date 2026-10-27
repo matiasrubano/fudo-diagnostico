@@ -1,8 +1,8 @@
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types'
-import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider'
-import { countryFromCode, searchCatalog, suggestFromCatalog } from './shared'
+import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types.js'
+import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider.js'
+import { countryFromCode, searchCatalog, suggestFromCatalog } from './shared.js'
 
 /** Forma de cada archivo app/data/snapshots/<pais>-<slug>.json */
 interface SnapshotFile {
@@ -14,8 +14,14 @@ interface SnapshotFile {
   notes?: string
 }
 
-export function defaultSnapshotDir(): string {
-  return process.env.SNAPSHOT_DIR ?? join(process.cwd(), 'data', 'snapshots')
+/**
+ * En local el cwd es app/; en la función de Vercel es /var/task y los archivos
+ * quedan en /var/task/app/data/snapshots. Se usa la primera carpeta que exista.
+ */
+export function defaultSnapshotDir(cwd: string = process.cwd()): string {
+  if (process.env.SNAPSHOT_DIR) return process.env.SNAPSHOT_DIR
+  const candidates = [join(cwd, 'data', 'snapshots'), join(cwd, 'app', 'data', 'snapshots')]
+  return candidates.find((dir) => existsSync(dir)) ?? candidates[0]!
 }
 
 /**

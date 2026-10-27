@@ -1,4 +1,4 @@
-import type { Answers, AreaId, Field, PlaceProfile } from './types'
+import type { Answers, AreaId, Field, PlaceProfile } from './types.js'
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  PESOS Y UMBRALES  ·  para el cambio en vivo, tocá SOLO este bloque

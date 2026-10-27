@@ -1,7 +1,7 @@
-import type { CountryConfig } from '../config/countries'
-import { withUtm } from './links'
-import { appsFound, type Scorecard } from './scoring'
-import type { Answers, AreaId, CountryCode, PlaceProfile } from './types'
+import type { CountryConfig } from '../config/countries.js'
+import { withUtm } from './links.js'
+import { appsFound, type Scorecard } from './scoring.js'
+import type { Answers, AreaId, CountryCode, PlaceProfile } from './types.js'
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  RECOMENDACIONES POR REGLAS (sin LLM: decisión D3)

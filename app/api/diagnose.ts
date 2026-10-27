@@ -1,6 +1,6 @@
-import { PlaceNotFoundError } from '../src/gateway'
-import { parseAnswers, runDiagnosis } from '../src/server/diagnosisService'
-import { json } from '../src/server/http'
+import { PlaceNotFoundError } from '../src/gateway/index.js'
+import { parseAnswers, runDiagnosis } from '../src/server/diagnosisService.js'
+import { json } from '../src/server/http.js'
 
 // POST /api/diagnose   body: { placeId: string, answers: Answers }
 // Devuelve el Diagnosis completo (notas, recomendaciones, plata perdida, tier).

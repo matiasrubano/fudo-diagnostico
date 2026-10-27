@@ -1,5 +1,5 @@
-import { geoBiasFromHeaders, searchPlaces } from '../src/server/diagnosisService'
-import { json } from '../src/server/http'
+import { geoBiasFromHeaders, searchPlaces } from '../src/server/diagnosisService.js'
+import { json } from '../src/server/http.js'
 
 // GET /api/places-search?q=<texto>
 // Devuelve { results, suggestions, notFound }. El proveedor de datos y las keys nunca salen de acá.

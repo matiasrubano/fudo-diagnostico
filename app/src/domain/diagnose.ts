@@ -1,9 +1,9 @@
-import { getCountry } from '../config/countries'
-import { classifyLead, type LeadClassification } from './leadTier'
-import { estimateMoneyLost, type MoneyEstimate } from './moneyLost'
-import { buildRecommendations, type Recommendation } from './recommendations'
-import { scoreProfile, type Scorecard } from './scoring'
-import type { Answers, CountryCode, PlaceProfile } from './types'
+import { getCountry } from '../config/countries.js'
+import { classifyLead, type LeadClassification } from './leadTier.js'
+import { estimateMoneyLost, type MoneyEstimate } from './moneyLost.js'
+import { buildRecommendations, type Recommendation } from './recommendations.js'
+import { scoreProfile, type Scorecard } from './scoring.js'
+import type { Answers, CountryCode, PlaceProfile } from './types.js'
 
 /** País que se usa si la dirección del local cae fuera de los 5 países de la demo */
 export const FALLBACK_COUNTRY: CountryCode = 'AR'

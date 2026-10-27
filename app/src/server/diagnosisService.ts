@@ -1,4 +1,4 @@
-import { diagnose, type Diagnosis } from '../domain/diagnose'
+import { diagnose, type Diagnosis } from '../domain/diagnose.js'
 import {
   isCountryCode,
   type Answers,
@@ -8,8 +8,8 @@ import {
   type LocalsBand,
   type PlaceSummary,
   type SalesChannel,
-} from '../domain/types'
-import { getGateway, type PlaceDataProvider } from '../gateway'
+} from '../domain/types.js'
+import { getGateway, type PlaceDataProvider } from '../gateway/index.js'
 
 /** Lo que devuelve /api/places-search */
 export interface SearchResponse {

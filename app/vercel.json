@@ -10,7 +10,7 @@
   },
   "rewrites": [
     {
-      "source": "/((?!api/|blog/|assets/|sitemap\.xml|robots\.txt|llms\.txt|favicon).*)",
+      "source": "/((?!api/|blog/|assets/|sitemap\\.xml|robots\\.txt|llms\\.txt|favicon).*)",
       "destination": "/index.html"
     }
   ]

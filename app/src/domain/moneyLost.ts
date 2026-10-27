@@ -1,6 +1,6 @@
-import { appsFound, type Scorecard } from './scoring'
-import { volumeOf, type Volume } from './leadTier'
-import type { Answers, CountryCode, PlaceProfile } from './types'
+import { appsFound, type Scorecard } from './scoring.js'
+import { volumeOf, type Volume } from './leadTier.js'
+import type { Answers, CountryCode, PlaceProfile } from './types.js'
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  "CUÁNTA PLATA SE TE ESCAPA POR MES"  ·  ESTIMACIÓN SIMULADA

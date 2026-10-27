@@ -1,11 +1,11 @@
-import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types'
-import { GooglePlacesProvider } from './GooglePlacesProvider'
-import { MockProvider } from './MockProvider'
-import type { PlaceDataProvider } from './PlaceDataProvider'
-import { SnapshotProvider } from './SnapshotProvider'
+import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types.js'
+import { GooglePlacesProvider } from './GooglePlacesProvider.js'
+import { MockProvider } from './MockProvider.js'
+import type { PlaceDataProvider } from './PlaceDataProvider.js'
+import { SnapshotProvider } from './SnapshotProvider.js'
 
-export type { PlaceDataProvider } from './PlaceDataProvider'
-export { PlaceNotFoundError } from './PlaceDataProvider'
+export type { PlaceDataProvider } from './PlaceDataProvider.js'
+export { PlaceNotFoundError } from './PlaceDataProvider.js'
 
 export type DataSource = 'snapshot' | 'places' | 'mock'
 

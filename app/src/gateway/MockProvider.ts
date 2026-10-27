@@ -1,6 +1,6 @@
-import type { GeoBias, PlaceProfile, PlaceSummary, Provenance } from '../domain/types'
-import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider'
-import { field, notFound, searchCatalog, suggestFromCatalog } from './shared'
+import type { GeoBias, PlaceProfile, PlaceSummary, Provenance } from '../domain/types.js'
+import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider.js'
+import { field, notFound, searchCatalog, suggestFromCatalog } from './shared.js'
 
 const PROV: Provenance = {
   source: 'Mock (datos ficticios para tests)',

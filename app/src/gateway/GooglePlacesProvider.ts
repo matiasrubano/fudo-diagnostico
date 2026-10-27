@@ -5,9 +5,9 @@ import type {
   PlaceProfile,
   PlaceSummary,
   Provenance,
-} from '../domain/types'
-import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider'
-import { countryFromCode, field, notFound } from './shared'
+} from '../domain/types.js'
+import { PlaceNotFoundError, type PlaceDataProvider } from './PlaceDataProvider.js'
+import { countryFromCode, field, notFound } from './shared.js'
 
 // Google Places API (New). Field masks mínimos de docs/research/datos.md §1.2.
 // El SKU lo define el campo más caro de la máscara, así que se pide solo lo que usamos.

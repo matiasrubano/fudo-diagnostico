@@ -6,7 +6,7 @@ import type {
   PlaceProfile,
   PlaceSummary,
   Provenance,
-} from '../domain/types'
+} from '../domain/types.js'
 
 const STOPWORDS = new Set(['de', 'la', 'el', 'los', 'las', 'del', 'y', 'en', 'lo', 'un', 'una'])
 

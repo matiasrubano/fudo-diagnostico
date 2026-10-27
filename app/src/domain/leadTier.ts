@@ -1,5 +1,5 @@
-import { sellsByApps } from './scoring'
-import type { Answers, LeadTier, PlaceProfile } from './types'
+import { sellsByApps } from './scoring.js'
+import type { Answers, LeadTier, PlaceProfile } from './types.js'
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  FILTRO DE LEADS  ·  umbrales del volumen proxy (reseñas de Google, gratis)

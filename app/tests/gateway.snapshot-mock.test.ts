@@ -101,3 +101,11 @@ describe('servicio de búsqueda', () => {
     expect(geoBiasFromHeaders(new Headers()).lat).toBeUndefined()
   })
 })
+
+describe('defaultSnapshotDir', () => {
+  it('encuentra los snapshots tanto con cwd = app/ como con cwd = raíz (Vercel: /var/task)', () => {
+    const appDir = process.cwd()
+    expect(defaultSnapshotDir(appDir)).toBe(join(appDir, 'data', 'snapshots'))
+    expect(defaultSnapshotDir(join(appDir, '..'))).toBe(join(appDir, 'data', 'snapshots'))
+  })
+})

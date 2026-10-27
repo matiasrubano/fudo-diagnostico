@@ -1,4 +1,4 @@
-import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types'
+import type { GeoBias, PlaceProfile, PlaceSummary } from '../domain/types.js'
 
 /**
  * Contrato único de acceso a datos de un local.
