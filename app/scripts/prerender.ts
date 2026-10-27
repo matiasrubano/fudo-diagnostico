@@ -2,15 +2,20 @@
 // prerenderiza la home y genera sitemap.xml y llms.txt. Ver docs/adr/0004-blog-prerenderizado-geo.md
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { LANDING_COUNTRIES } from '../src/domain/showcase'
+import { SnapshotProvider } from '../src/gateway/SnapshotProvider'
+import { buildShowcase } from '../src/server/diagnosisService'
+import type { GuideLink } from '../src/ui/screens/Home'
 import {
+  articlePath,
   parseArticle,
   renderArticlePage,
   renderBlogIndex,
-  renderHomeShell,
   renderLlmsTxt,
   renderSitemap,
   type PageContext,
 } from './blog'
+import { homeMeta, landingLinks, landingMeta, landingPath, renderPage } from './pages'
 
 const ROOT = process.cwd()
 const DIST = join(ROOT, 'dist')
@@ -50,20 +55,50 @@ const ctx: PageContext = { siteUrl, cssHref }
 for (const a of articles) write(`blog/${a.slug}/index.html`, renderArticlePage(a, ctx))
 write('blog/index.html', renderBlogIndex(articles, ctx))
 
-// 3) Home: URL canónica + contenido estático dentro de #root (React lo reemplaza al montar)
-const home = indexHtml
-  .replaceAll('%SITE_URL%', siteUrl)
-  .replace(/<div id="root">[\s\S]*?<\/div>/, `<div id="root">${renderHomeShell(articles)}</div>`)
-writeFileSync(join(DIST, 'index.html'), home)
+// 3) Home y landings por país: el mismo árbol de React, renderizado a HTML estático con los datos reales del snapshot.
+//    Cada una lleva su <head> propio (title, description, canonical, hreflang, JSON-LD). React se monta encima.
+const template = indexHtml
+const provider = new SnapshotProvider()
+const guides: GuideLink[] = articles.map((a) => ({
+  title: a.title,
+  href: articlePath(a),
+  country: a.country,
+}))
+
+writeFileSync(
+  join(DIST, 'index.html'),
+  renderPage(
+    template,
+    homeMeta(siteUrl),
+    siteUrl,
+    null,
+    await buildShowcase(null, provider),
+    guides,
+  ),
+)
+for (const code of LANDING_COUNTRIES) {
+  write(
+    `${landingPath(code).slice(1)}index.html`,
+    renderPage(
+      template,
+      landingMeta(code, siteUrl),
+      siteUrl,
+      code,
+      await buildShowcase(code, provider),
+      guides,
+    ),
+  )
+}
 
 // 4) sitemap, llms.txt y robots.txt (este viene de public/ con el dominio como placeholder)
 const today = new Date().toISOString().slice(0, 10)
-write('sitemap.xml', renderSitemap(articles, siteUrl, today))
-write('llms.txt', renderLlmsTxt(articles, siteUrl))
+const landings = landingLinks(siteUrl)
+write('sitemap.xml', renderSitemap(articles, siteUrl, today, landings))
+write('llms.txt', renderLlmsTxt(articles, siteUrl, landings))
 const robots = join(DIST, 'robots.txt')
 if (existsSync(robots))
   writeFileSync(robots, readFileSync(robots, 'utf8').replaceAll('%SITE_URL%', siteUrl))
 
 console.log(
-  `prerender: ${articles.length} artículos, home, /blog/, sitemap.xml, llms.txt (${siteUrl})`,
+  `prerender: ${articles.length} artículos, home, ${LANDING_COUNTRIES.length} landings por país, /blog/, sitemap.xml, llms.txt (${siteUrl})`,
 )

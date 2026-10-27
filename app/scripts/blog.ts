@@ -1,8 +1,12 @@
 // Blog prerenderizado: de content/blog/*.md a HTML estático (se ejecuta después de `vite build`).
 // Este archivo solo tiene funciones puras (parsear y armar HTML/JSON-LD); scripts/prerender.ts las usa y escribe en dist/.
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { marked } from 'marked'
 import { parse as parseYaml } from 'yaml'
 import { copy } from '../src/content/copy'
+import { tokens } from '../src/theme/tokens'
+import { Header, SimpleFooter } from '../src/ui/components/Layout'
 
 export type BlogCountry = 'AR' | 'MX' | 'CL' | 'CO'
 export const BLOG_COUNTRIES: { code: BlogCountry; name: string }[] = [
@@ -99,8 +103,7 @@ export interface PageContext {
   cssHref: string
 }
 
-const FONTS_HREF =
-  'https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap'
+const FONTS_HREF = tokens.font.googleFontsHref
 
 interface PageParts {
   title: string
@@ -135,12 +138,13 @@ function page(p: PageParts): string {
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="${esc(p.title)}" />
 <meta name="twitter:description" content="${esc(p.description)}" />
-<meta name="theme-color" content="#FFFBEB" />
+<meta name="theme-color" content="#0F1B4E" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="stylesheet" href="${esc(FONTS_HREF)}" />
 <link rel="stylesheet" href="${esc(p.ctx.cssHref)}" />
 ${p.jsonLd.map(ldJson).join('\n')}
 </head>
-<body class="bg-cream-soft">
+<body class="bg-surface">
 ${siteHeader()}
 ${p.body}
 ${siteFooter()}
@@ -149,22 +153,17 @@ ${siteFooter()}
 `
 }
 
+/** Mismo header y pie que la app (componentes React renderizados a HTML estático): una sola marca en todo el sitio. */
 function siteHeader(): string {
-  return `<header class="border-b border-line bg-white">
-<div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-2">
-<a href="/" class="flex min-h-touch items-center gap-2 font-display text-xl font-extrabold"><span aria-hidden="true" class="grid h-8 w-8 place-items-center rounded-lg bg-primary-500 text-lg text-white">D</span>${esc(copy.brand.name)}<span class="rounded-pill bg-night px-2 py-0.5 text-xs font-semibold text-white">${esc(copy.brand.demoTag)}</span></a>
-<a href="/blog/" class="inline-flex min-h-touch items-center px-2 text-sm font-semibold text-ink underline-offset-4 hover:underline">${esc(copy.nav.blog)}</a>
-</div>
-</header>`
+  return renderToStaticMarkup(createElement(Header))
 }
 
 function siteFooter(): string {
-  return `<footer class="mt-16 border-t border-line bg-white">
-<div class="mx-auto max-w-3xl px-4 py-8 text-sm text-muted">
-<p>Demo de entrevista: las guías son borradores con fuentes citadas y pendientes de verificación; no reemplazan a un contador ni a un abogado.</p>
-<p class="mt-2"><a class="inline-flex min-h-touch items-center font-medium underline" href="/">Hacer el diagnóstico gratis</a> · <a class="inline-flex min-h-touch items-center font-medium underline" href="/blog/">Todas las guías</a></p>
-</div>
-</footer>`
+  return renderToStaticMarkup(
+    createElement(SimpleFooter, {
+      note: 'Las guías son borradores de demo, con fuentes citadas y pendientes de verificación; no reemplazan a un contador ni a un abogado.',
+    }),
+  )
 }
 
 // ─── Página de artículo ───
@@ -335,35 +334,26 @@ ${sections}
   })
 }
 
-// ─── Home: contenido estático que van a leer los crawlers sin JS (React lo reemplaza al montar) ───
-
-export function renderHomeShell(articles: Article[]): string {
-  const h = copy.hero
-  const guides = BLOG_COUNTRIES.map(({ code, name }) => {
-    const list = articles.filter((a) => a.country === code)
-    if (list.length === 0) return ''
-    return `<div><h3 class="text-lg font-bold">${esc(name)}</h3><ul class="mt-1 space-y-1">${list
-      .map(
-        (a) =>
-          `<li><a class="inline-flex min-h-touch items-center font-medium text-blue-700 underline" href="${articlePath(a)}">${esc(a.title)}</a></li>`,
-      )
-      .join('')}</ul></div>`
-  }).join('')
-  return `${siteHeader()}
-<main class="mx-auto max-w-3xl px-4 pb-8 pt-8 sm:pt-12">
-<p class="eyebrow mb-2">${esc(h.eyebrow)}</p>
-<h1 class="text-[32px] font-extrabold leading-[1.1] sm:text-5xl">${esc(h.title)}</h1>
-<p class="mt-4 max-w-xl text-lg leading-relaxed text-muted">${esc(h.subtitle)}</p>
-<noscript><p class="mt-4 rounded-xl bg-[#FFF1B8] p-4 text-sm font-medium text-warning-text">El diagnóstico necesita JavaScript. Mientras tanto, podés leer las guías.</p></noscript>
-<section class="mt-10" aria-labelledby="home-guides"><h2 id="home-guides" class="text-2xl font-extrabold">Guías para dueños de restaurantes</h2><div class="mt-3 space-y-4">${guides}</div><p class="mt-4"><a class="font-semibold underline" href="/blog/">Ver todas las guías</a></p></section>
-</main>`
-}
-
 // ─── sitemap.xml, llms.txt ───
 
-export function renderSitemap(articles: Article[], siteUrl: string, today: string): string {
+export interface LandingLink {
+  /** "AR" */
+  code: string
+  country: string
+  /** "/ar/" */
+  path: string
+  title: string
+}
+
+export function renderSitemap(
+  articles: Article[],
+  siteUrl: string,
+  today: string,
+  landings: LandingLink[] = [],
+): string {
   const urls = [
     { loc: `${siteUrl}/`, lastmod: today },
+    ...landings.map((l) => ({ loc: siteUrl + l.path, lastmod: today })),
     {
       loc: `${siteUrl}/blog/`,
       lastmod:
@@ -382,7 +372,11 @@ ${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod
 }
 
 /** Formato de la propuesta llmstxt.org (no es un estándar; Google dice que no lo usa). */
-export function renderLlmsTxt(articles: Article[], siteUrl: string): string {
+export function renderLlmsTxt(
+  articles: Article[],
+  siteUrl: string,
+  landings: LandingLink[] = [],
+): string {
   const lines = [
     `# ${copy.brand.name} para restaurantes`,
     '',
@@ -393,6 +387,11 @@ export function renderLlmsTxt(articles: Article[], siteUrl: string): string {
     `- [Diagnóstico gratis](${siteUrl}/): buscá tu local y recibí una nota por área, recomendaciones y una estimación de la plata que se escapa`,
     '',
   ]
+  if (landings.length > 0) {
+    lines.push('## Diagnóstico por país', '')
+    for (const l of landings) lines.push(`- [${l.country}](${siteUrl + l.path}): ${l.title}`)
+    lines.push('')
+  }
   for (const { code, name } of BLOG_COUNTRIES) {
     const list = articles.filter((a) => a.country === code)
     if (list.length === 0) continue
