@@ -73,7 +73,12 @@ export function Debug() {
         {events.length === 0 ? (
           <p className="mt-3 text-muted">{d.empty}</p>
         ) : (
-          <div className="mt-3 overflow-x-auto rounded-xl border border-line bg-white">
+          <div
+            tabIndex={0}
+            role="region"
+            aria-label={d.events}
+            className="mt-3 overflow-x-auto rounded-xl border border-line bg-white"
+          >
             <table className="w-full min-w-[640px] border-collapse text-left text-sm">
               <thead className="bg-surface">
                 <tr>
