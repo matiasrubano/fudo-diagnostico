@@ -8,7 +8,9 @@ Vite + React + TypeScript (strict) + Tailwind en el front; funciones serverless 
 1. Hero            GET  /api/places-search?q=...      → { results, suggestions, notFound }
 2. "¿Es este?"     (el usuario elige un resultado o una sugerencia)
 3. 4 preguntas     (estado local del navegador)
-4. Resultado       POST /api/diagnose { placeId, answers } → Diagnosis
+4. Resultado       POST /api/diagnose { placeId, answers } → Diagnosis + neighbors
+   Vidriera        GET  /api/showcase?country=AR → ticket de ejemplo real + locales de la demo
+                   POST /api/diagnose { placeId, sample: true } → "Ver su diagnóstico completo" (respuestas de ejemplo, simuladas)
 5. Ruteo           según Diagnosis.lead.tier (se muestra en la misma pantalla)
 ```
 
@@ -71,13 +73,16 @@ Selección (`gateway/index.ts → createGateway`):
 | `recommendations.ts` | Lista de reglas `{cuándo, texto por país, módulo de Fudo con URL}`; top 5 por impacto | cambiar qué se recomienda |
 | `leadTier.ts` | caliente / switcher / nutrir / descartar / por-abrir según volumen proxy (reseñas), sistema actual, canales y locales | cambiar el filtro |
 | `moneyLost.ts` | "Plata que se escapa por mes": 3 componentes con supuestos nombrados | cambiar los supuestos |
+| `neighbors.ts` | `compareWithNeighbors(local, catálogo)`: rango real de reseñas y rating contra los otros locales del snapshot del mismo país, con puesto y marca de misma ciudad/tipo. Devuelve `null` si no hay pares con datos (la UI no muestra nada). El catálogo sale de `provider.suggest()` | cambiar cómo se compara |
+| `showcase.ts` | Local destacado por país (`FEATURED_PLACE`, solo el id), respuestas de ejemplo simuladas y chequeo de horario del viernes 21:30 | cambiar el ticket de la home |
 | `links.ts` | UTM de todos los links salientes (`utm_source=diagnostico&utm_medium=tool&utm_campaign=<area>`) | — |
 
 La UI muestra la cuenta de la plata perdida paso a paso ("¿Cómo calculamos esto?") leyendo las mismas constantes `ASSUMPTIONS`.
 
 ## Interfaz
 
-- `src/content/copy.ts`: **todos** los textos (salvo las recomendaciones, que viven con sus reglas).
+- `src/content/copy.ts`: **todos** los textos, incluidas las recomendaciones (las reglas de `recommendations.ts` solo deciden cuándo aplican). Dos bloques: `copy` (común) y la voz por país: un objeto **base en voseo (Argentina)** + `OVERRIDES` por país (tuteo en MX, CL, CO y BR). `copyFor(país)` los mezcla; apps, ente fiscal y moneda llegan de `countries.json`, nunca escritos a mano. Como lo importa el servidor, sus imports son `import type … .js`.
+- La comanda (`ui/components/Ticket.tsx`) es el resultado como ticket de cocina: borde dentado por CSS, tipografía mono (IBM Plex Mono), un renglón por área con su pregunta de dueño (`copyFor(país).ticket.areaQuestion`; el id interno del área no cambia) y al pie el total simulado con "¿Cómo calculamos esto?". `Neighbors.tsx` muestra la comparación con vecinos.
 - `src/theme/tokens.ts` → `tailwind.config.ts`: colores, fuentes, radios y sombras de Fudo. El naranja de marca `#FF5023` con texto blanco da 3,27:1 (no pasa AA para texto chico): los botones usan `#D03F00` (4,78:1).
 - `src/ui/screens/`: Hero, PickPlace, Questions, Result, Routes (un componente por tier), Debug. `src/ui/components/`: badges, modal (`<dialog>` nativo), layout.
 - Accesibilidad: foco visible, el título de cada paso recibe el foco al cambiar de pantalla, objetivos táctiles ≥44 px, `role=radiogroup`/`aria-pressed` en las preguntas.
@@ -90,6 +95,7 @@ La UI muestra la cuenta de la plata perdida paso a paso ("¿Cómo calculamos est
   - `blog/index.html` (índice por país, con anclas `#ar`, `#mx`…) y `blog/<slug>/index.html`: el artículo completo **en el HTML, sin JS**, con `<title>`/description propios, canonical, OG/Twitter, `inLanguage`, JSON-LD `Article` + `FAQPage` + `BreadcrumbList`, FAQ visible, fuentes con links, caja "Pendiente de verificación" y CTA al diagnóstico.
   - `index.html` (home): meta no genérica, JSON-LD `WebApplication`, contenido estático dentro de `#root` (React lo reemplaza) y links a las guías.
   - `sitemap.xml`, `llms.txt` (propuesta llmstxt.org; no es un estándar) y `robots.txt` (de `public/`).
+- **Landings por país** (`/ar/`, `/mx/`, `/cl/`, `/co/`): `scripts/pages.ts` toma `dist/index.html` como plantilla y, para la home y cada país, reemplaza el bloque `<!--head:start-->…<!--head:end-->` (title, description, canonical, `hreflang` entre home y landings, OG, JSON-LD `WebApplication` + `BreadcrumbList`) y renderiza con `renderToStaticMarkup` el **mismo árbol de React** que monta la app (`ui/StaticPage.tsx`), con datos reales del snapshot (`buildShowcase`). Los datos viajan embebidos (`<script id="page-data">`) para que React arranque con lo mismo; en `npm run dev` se piden a `/api/showcase`. `sitemap.xml` y `llms.txt` las incluyen. Brasil no tiene landing (contenido en español).
 - Las páginas reutilizan el CSS de Tailwind compilado por Vite (`scripts/` está en los `content` de Tailwind).
 - `SITE_URL` (env) define el dominio de canonical/sitemap/llms.txt; default = placeholder.
 - `vercel.json`: `trailingSlash: true` y rewrite de SPA que **no** pisa `/blog/*`, `/api/*`, `sitemap.xml`, `robots.txt` ni `llms.txt`.
