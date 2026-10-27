@@ -138,7 +138,7 @@ Frontend ──► /api/diagnose ──► DiagnosisService ──► DataGatewa
 
 **Listo cuando:** el flujo completo anda en mobile y desktop con `DATA_SOURCE=snapshot`, y `GooglePlacesProvider` compila y tiene test con fixture.
 
-### G3 — Repo de GitHub y deploy en Vercel `[ ]` · A2 + orquestador
+### G3 — Repo de GitHub y deploy en Vercel `[x]` · A2 + orquestador
 **El equipo técnico de Fudo va a leer el repo: la estructura es parte de la evaluación.**
 
 **Estructura del repo (raíz = `C:\Users\m_rubano\FUDO\`):**
@@ -167,18 +167,20 @@ video/
 ```
 
 **Estándares:**
-- [ ] TypeScript `strict`, ESLint + Prettier, **Vitest** con tests de `domain/` y `gateway/`
-- [ ] **Conventional commits**, pequeños y con sentido (que el historial cuente cómo se construyó)
-- [ ] Cero secretos en el repo: `.env.example` documentado, `.gitignore` correcto. Antes de cada push: `git grep` de keys
-- [ ] El README arranca con la demo y el video. Un evaluador tiene que entender todo en 2 minutos
-- [ ] Ningún archivo de la carpeta `video/out` ni binarios pesados en git (usar `.gitignore`; el video se linkea)
+- [x] TypeScript `strict`, ESLint + Prettier, **Vitest** con tests de `domain/` y `gateway/`
+- [x] **Conventional commits**, pequeños y con sentido (que el historial cuente cómo se construyó)
+- [x] Cero secretos en el repo: `.env.example` documentado, `.gitignore` correcto. Antes de cada push: `git grep` de keys
+- [x] El README arranca con la demo y el video. Un evaluador tiene que entender todo en 2 minutos
+- [x] Ningún archivo de la carpeta `video/out` ni binarios pesados en git (usar `.gitignore`; el video se linkea)
 
 **Publicación:**
-- [ ] Revisar `gh auth status` y `vercel whoami`. **Si alguno no está logueado, frenar y pedirle a Matías que se loguee.** Nunca escribir credenciales
+- [x] Revisar `gh auth status` y `vercel whoami`. **Si alguno no está logueado, frenar y pedirle a Matías que se loguee.** Nunca escribir credenciales
 - [x] 🔒 **G-OK0** (2026-10-27: `fudo-diagnostico`, **público** con el riesgo de ToS declarado en ADR 0002 y en el informe): confirmar con Matías nombre del repo (propuesta: `fudo-diagnostico`) y visibilidad (propuesta: pública, porque lo lee el equipo técnico)
-- [ ] `gh repo create` → push de `main`
-- [ ] Vercel conectado al repo: root directory `app/`, deploy automático en `main` y previews por PR. Variables de entorno: `DATA_SOURCE=snapshot` (y `GOOGLE_PLACES_API_KEY` vacía)
-- [ ] CI en verde
+- [x] `gh repo create` → push de `main`
+- [~] Vercel conectado al repo (proyecto creado con root `app/`, Node 22, env `DATA_SOURCE=snapshot` + `SITE_URL`; deploy por CLI. **Falta:** que Matías agregue GitHub en Login Connections de Vercel para el deploy automático por push): root directory `app/`, deploy automático en `main` y previews por PR. Variables de entorno: `DATA_SOURCE=snapshot` (y `GOOGLE_PLACES_API_KEY` vacía)
+- [x] CI en verde
+
+**Evidencia (2026-10-27):** repo https://github.com/matiasrubano/fudo-diagnostico (público), CI verde, https://fudo-diagnostico.vercel.app con home, blog, sitemap, llms.txt y `/api/places-search` + `/api/diagnose` respondiendo. Fallos resueltos: `vercel.json` con escape inválido; ESM sin extensión `.js`; cwd de la Lambda (`/var/task/app/...`); launcher de Vercel no carga ESM sin `"type": "module"` → declarado, Node 22.x fijo, handlers `GET/POST`.
 
 **Listo cuando:** repo público (o privado con acceso), CI en verde, URL de Vercel andando y anotada en §7.
 
@@ -281,8 +283,8 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | Entregable | Ubicación / URL |
 |---|---|
 | Plan | `C:\Users\m_rubano\FUDO\PLAN.md` |
-| Repo GitHub | _pendiente_ |
-| App (Vercel) | _pendiente_ |
+| Repo GitHub | https://github.com/matiasrubano/fudo-diagnostico |
+| App (Vercel) | https://fudo-diagnostico.vercel.app |
 | Informe | `C:\Users\m_rubano\FUDO\docs\informe\Informe-Fudo.pdf` (+ `.docx`) |
 | Video | `C:\Users\m_rubano\FUDO\video\out\demo-16x9.mp4` |
 | Log de prompts | `C:\Users\m_rubano\FUDO\docs\prompts\LOG.md` |
@@ -298,3 +300,6 @@ G1 ──► G2 ──► 🔒OK0 ──► G3 ──► G4 ──► G5 (A4 ×4
 | 2026-10-26 | G2 | En curso. A2 (app, gateway, dominio, prerender del blog, repo local con commits, sin remoto) + A2b (8 artículos en `app/content/blog/`) en paralelo. `countries.json` suma `productName` (BR = Deli). gh 2.103.3 y vercel 65.3.1 instalados; falta login de Matías |
 | 2026-10-27 | G2 | ✅ Cerrado. App + gateway + dominio + blog prerenderizado (8 guías) + README/ARCHITECTURE/4 ADR/CI. 10 commits locales en `main`, sin remoto. 3 bugs menores anotados para G4 |
 | 2026-10-27 | G-OK0 | ✅ Matías: repo `fudo-diagnostico`, público, riesgo de ToS del snapshot declarado (ADR 0002 + informe). Falta `gh auth login` y `vercel login` para G3 |
+| 2026-10-27 | G3 | En curso (cortado por límite de uso). ✅ Repo público https://github.com/matiasrubano/fudo-diagnostico, CI verde. ✅ Proyecto Vercel `fudo-diagnostico` (root `app/`, Node 22, DATA_SOURCE=snapshot, SITE_URL) desplegado en https://fudo-diagnostico.vercel.app: home, blog, sitemap, llms.txt OK. ❌ `/api/*` da 500: imports ESM sin `.js` + `defaultSnapshotDir` usa cwd (en Lambda es /var/task/app/data/snapshots). Fix de `vercel.json` (`\.`) sin commitear. A2 detenido a mitad del fix: revisar `git status`/diff antes de seguir. Pendiente: Matías conecta GitHub en Vercel (Login Connections) para deploys automáticos; 3 bugs menores (ver G2) |
+| 2026-10-27 | G3 | ✅ Cerrado (salvo deploy automático por push, pendiente de Login Connection de Matías). API arreglada y verificada en prod. Logo oficial de fu.do en `app/public/brand/` y `video/assets/` (pedido de Matías) |
+| 2026-10-27 | G5/A5 | Matías: "hacela menos genérica". A5 en curso: logo, hero con escena real, ticket/comanda, comparación con vecinos reales, voz por país, landings /ar /mx /cl /co, 3 bugs. A9 (log de prompts) en paralelo |
