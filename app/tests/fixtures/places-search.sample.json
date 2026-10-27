@@ -1,0 +1,13 @@
+{
+  "_fixture": "FICTICIO: forma de la respuesta de Text Search (docs/research/datos.md §1.4-B). Local y place_id inventados.",
+  "places": [
+    {
+      "id": "ChIJ_FIXTURE_NO_REAL_0001",
+      "displayName": { "text": "Pizzería La Esquina", "languageCode": "es" },
+      "formattedAddress": "Av. Hipólito Yrigoyen 1234, B1824 Lanús, Provincia de Buenos Aires, Argentina",
+      "location": { "latitude": -34.7, "longitude": -58.39 },
+      "primaryType": "pizza_restaurant",
+      "googleMapsUri": "https://maps.google.com/?cid=0000000000000000000"
+    }
+  ]
+}

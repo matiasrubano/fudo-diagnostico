@@ -1,0 +1,63 @@
+{
+  "_fixture": "FICTICIO: armado por nosotros siguiendo el esquema del recurso Place (docs/research/datos.md §1.4-B). No es una respuesta real de Google ni un local real; el place_id y los valores son inventados.",
+  "id": "ChIJ_FIXTURE_NO_REAL_0001",
+  "displayName": { "text": "Pizzería La Esquina", "languageCode": "es" },
+  "formattedAddress": "Av. Hipólito Yrigoyen 1234, B1824 Lanús, Provincia de Buenos Aires, Argentina",
+  "addressComponents": [
+    { "longText": "1234", "shortText": "1234", "types": ["street_number"], "languageCode": "es" },
+    {
+      "longText": "Avenida Hipólito Yrigoyen",
+      "shortText": "Av. Hipólito Yrigoyen",
+      "types": ["route"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Lanús",
+      "shortText": "Lanús",
+      "types": ["locality", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Provincia de Buenos Aires",
+      "shortText": "Provincia de Buenos Aires",
+      "types": ["administrative_area_level_1", "political"],
+      "languageCode": "es"
+    },
+    {
+      "longText": "Argentina",
+      "shortText": "AR",
+      "types": ["country", "political"],
+      "languageCode": "es"
+    },
+    { "longText": "B1824", "shortText": "B1824", "types": ["postal_code"], "languageCode": "es" }
+  ],
+  "location": { "latitude": -34.7, "longitude": -58.39 },
+  "primaryType": "pizza_restaurant",
+  "businessStatus": "OPERATIONAL",
+  "googleMapsUri": "https://maps.google.com/?cid=0000000000000000000",
+  "rating": 4.3,
+  "userRatingCount": 812,
+  "priceLevel": "PRICE_LEVEL_MODERATE",
+  "websiteUri": "https://www.example-pizzeria.test/",
+  "regularOpeningHours": {
+    "openNow": true,
+    "periods": [
+      {
+        "open": { "day": 1, "hour": 19, "minute": 0 },
+        "close": { "day": 1, "hour": 23, "minute": 30 }
+      }
+    ],
+    "weekdayDescriptions": [
+      "lunes: 19:00 – 23:30",
+      "martes: 19:00 – 23:30",
+      "miércoles: 19:00 – 23:30",
+      "jueves: 19:00 – 23:30",
+      "viernes: 19:00 – 1:00",
+      "sábado: 19:00 – 1:00",
+      "domingo: 19:00 – 23:30"
+    ]
+  },
+  "delivery": true,
+  "takeout": true,
+  "dineIn": true
+}
