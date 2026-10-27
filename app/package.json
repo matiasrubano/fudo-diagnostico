@@ -2,9 +2,10 @@
   "name": "fudo-diagnostico",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Diagnóstico gratis de la presencia online de un restaurante + 'Tu Fudo ya armado' (demo para entrevista).",
   "engines": {
-    "node": ">=22.12"
+    "node": "22.x"
   },
   "scripts": {
     "dev": "vite",

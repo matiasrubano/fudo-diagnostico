@@ -14,4 +14,4 @@ async function handler(request: Request): Promise<Response> {
   }
 }
 
-export default { fetch: handler }
+export const GET = handler

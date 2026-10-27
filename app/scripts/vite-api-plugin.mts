@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import { loadEnv, type Plugin } from 'vite'
 
-type Handler = { default: { fetch: (request: Request) => Promise<Response> } }
+type Handler = Partial<Record<'GET' | 'POST', (request: Request) => Promise<Response>>>
 
 async function readBody(req: IncomingMessage): Promise<Buffer> {
   const chunks: Buffer[] = []
@@ -35,7 +35,10 @@ export function apiDevServer(): Plugin {
             headers: req.headers as Record<string, string>,
             body: hasBody ? new Uint8Array(await readBody(req)) : undefined,
           })
-          const response = await mod.default.fetch(request)
+          const route = mod[request.method as 'GET' | 'POST']
+          const response = route
+            ? await route(request)
+            : new Response('Method Not Allowed', { status: 405 })
           res.statusCode = response.status
           response.headers.forEach((value, key) => res.setHeader(key, value))
           res.end(Buffer.from(await response.arrayBuffer()))
