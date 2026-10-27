@@ -1,12 +1,13 @@
 import type { CountryConfig } from '../config/countries.js'
+import { copyFor, type RecsCopy } from '../content/copy.js'
 import { withUtm } from './links.js'
 import { appsFound, type Scorecard } from './scoring.js'
 import type { Answers, AreaId, CountryCode, PlaceProfile } from './types.js'
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  RECOMENDACIONES POR REGLAS (sin LLM: decisión D3)
-//  Cada regla = cuándo aplica + el texto (con datos del país) + a qué módulo de Fudo lleva.
-//  Para agregar una: sumá un objeto a RULES. Para cambiar un texto: buscá su `id`.
+//  Cada regla = cuándo aplica + a qué módulo de Fudo lleva. El TEXTO (voseo en AR, tuteo en MX/CL/CO)
+//  vive en src/content/copy.ts → `recs`. Para agregar una regla: sumá un objeto a RULES y su texto a copy.ts.
 //  Los links salen de docs/research/fudo-tools.md.
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -96,46 +97,47 @@ function appNames(ctx: RecContext): string {
   return names.join(' y ')
 }
 
-/** Primera frase de la recomendación de delivery: depende de los canales que marcó el dueño. */
-function deliveryIntro(ctx: RecContext): string {
-  const { channels } = ctx.answers
-  const apps = `${appNames(ctx)}, entre otras`
-  const salon = channels.includes('salon')
-  const counter = channels.includes('mostrador')
-  const others = salon && counter ? 'del salón y el mostrador' : salon ? 'del salón' : 'del mostrador'
-  if (!channels.includes('apps')) {
-    // No marcó apps, pero encontramos el local en alguna
-    return `Aunque no marcaste las apps, tu local figura en ${appsFound(ctx.profile)} (${apps}) y cada pedido que entra por ahí paga comisión.`
-  }
-  if (!salon && !counter) return `Hoy vendés solo por apps (${apps}) y cada pedido paga comisión.`
-  return `Además ${others}, vendés por apps (${apps}) y cada pedido que entra por ahí paga comisión.`
-}
-
 interface Rule {
   id: string
   area: AreaId
   /** suma al puntaje de prioridad (los temas de dinero van primero) */
   bonus: number
   when: (ctx: RecContext) => boolean
-  build: (ctx: RecContext) => Pick<Recommendation, 'title' | 'body' | 'action'>
+  /** `t` = textos del país del local (voseo o tuteo, ver src/content/copy.ts → copyFor) */
+  build: (ctx: RecContext, t: RecsCopy) => Pick<Recommendation, 'title' | 'body' | 'action'>
 }
 
 const free = (tool: { label: string; url: string }) => ({ kind: 'free-tool' as const, ...tool })
 const guide = (g: { label: string; url: string }) => ({ kind: 'guide' as const, ...g })
 const paid = (label: string, url: string) => ({ kind: 'paid-module' as const, label, url })
 
+/** Primera frase de la recomendación de delivery: depende de los canales que marcó el dueño. */
+function deliveryIntro(ctx: RecContext, t: RecsCopy['deliveryCommission']): string {
+  const { channels } = ctx.answers
+  const apps = `${appNames(ctx)}, entre otras`
+  const salon = channels.includes('salon')
+  const counter = channels.includes('mostrador')
+  if (!channels.includes('apps')) return t.unmarked(appsFound(ctx.profile), apps)
+  if (!salon && !counter) return t.onlyApps(apps)
+  return t.withOthers(
+    salon && counter ? t.where.both : salon ? t.where.salon : t.where.mostrador,
+    apps,
+  )
+}
+
+// Cada regla = cuándo aplica + a qué módulo lleva. Los textos están en src/content/copy.ts (copyFor(país).recs).
 const RULES: Rule[] = [
   {
     id: 'google-hours',
     area: 'google',
     bonus: 10,
     when: ({ profile }) => profile.fields.openingHours.status !== 'found',
-    build: ({ profile }) => ({
-      title: 'Completá tus horarios en Google',
+    build: ({ profile }, t) => ({
+      title: t.googleHours.title,
       body:
         profile.fields.openingHours.status === 'absent'
-          ? 'Tu ficha no tiene horarios cargados: quien te busca no sabe si estás abierto y elige a otro.'
-          : 'No pudimos leer tus horarios. Revisá que estén completos en tu ficha de Google, incluidos feriados.',
+          ? t.googleHours.bodyAbsent
+          : t.googleHours.bodyUnknown,
       action: free(TOOLS.googleSpecialist),
     }),
   },
@@ -144,9 +146,9 @@ const RULES: Rule[] = [
     area: 'google',
     bonus: 0,
     when: ({ scorecard }) => (scorecard.areas.google.score ?? 100) < 70,
-    build: () => ({
-      title: 'Reforzá tu ficha de Google',
-      body: 'Sumá descripción, categoría, precios y fotos actualizadas. La herramienta te redacta los textos listos para pegar.',
+    build: (_ctx, t) => ({
+      title: t.googleListing.title,
+      body: t.googleListing.body,
       action: free(TOOLS.googleSpecialist),
     }),
   },
@@ -155,9 +157,9 @@ const RULES: Rule[] = [
     area: 'reviews',
     bonus: 10,
     when: ({ profile }) => (profile.fields.reviewCount.value ?? Infinity) < 50,
-    build: ({ profile }) => ({
-      title: 'Conseguí más reseñas en Google',
-      body: `Tenés ${profile.fields.reviewCount.value ?? 'muy pocas'} reseñas. Con tan poca muestra, ni el rating ni el volumen te ayudan a aparecer arriba. Pedí la reseña en la mesa y en cada pedido por delivery.`,
+    build: ({ profile }, t) => ({
+      title: t.reviewsFew.title,
+      body: t.reviewsFew.body(String(profile.fields.reviewCount.value ?? 'muy pocas')),
       action: guide(TOOLS.guideGoogle),
     }),
   },
@@ -166,9 +168,9 @@ const RULES: Rule[] = [
     area: 'reviews',
     bonus: 10,
     when: ({ profile }) => (profile.fields.rating.value ?? 5) < 4.0,
-    build: ({ profile }) => ({
-      title: 'Entendé por qué tu rating está bajo',
-      body: `Tu nota en Google es ${String(profile.fields.rating.value).replace('.', ',')}. Leer qué se repite en las quejas te dice qué arreglar primero.`,
+    build: ({ profile }, t) => ({
+      title: t.reviewsRating.title,
+      body: t.reviewsRating.body(String(profile.fields.rating.value).replace('.', ',')),
       action: free(TOOLS.reviewAnalyst),
     }),
   },
@@ -177,9 +179,9 @@ const RULES: Rule[] = [
     area: 'web',
     bonus: 5,
     when: ({ profile }) => profile.fields.website.status === 'absent',
-    build: () => ({
-      title: 'Armá tu web gratis',
-      body: 'Tu ficha de Google no tiene sitio web propio. Con una web simple (carta, horarios, ubicación y WhatsApp) dejás de depender de redes y apps.',
+    build: (_ctx, t) => ({
+      title: t.webMissing.title,
+      body: t.webMissing.body,
       action: free(TOOLS.fudoSitios),
     }),
   },
@@ -188,9 +190,9 @@ const RULES: Rule[] = [
     area: 'web',
     bonus: 0,
     when: ({ profile }) => profile.fields.instagram.status === 'absent',
-    build: () => ({
-      title: 'Abrí un Instagram del local',
-      body: 'No encontramos un perfil de Instagram. No medimos su actividad (no tenemos acceso real a esa métrica), solo que exista.',
+    build: (_ctx, t) => ({
+      title: t.instagramMissing.title,
+      body: t.instagramMissing.body,
       action: guide(TOOLS.guideInstagram),
     }),
   },
@@ -200,9 +202,9 @@ const RULES: Rule[] = [
     bonus: 0,
     when: ({ answers, profile }) =>
       answers.channels.includes('salon') && profile.fields.website.status === 'absent',
-    build: () => ({
-      title: 'Subí tu carta en 30 segundos',
-      body: 'Sacale una foto a tu carta y la herramienta arma una carta digital con QR para la mesa y para compartir por WhatsApp.',
+    build: (_ctx, t) => ({
+      title: t.cartaQr.title,
+      body: t.cartaQr.body,
       action: free(TOOLS.cartaQr),
     }),
   },
@@ -213,9 +215,9 @@ const RULES: Rule[] = [
     when: ({ profile, answers }) =>
       (answers.channels.includes('apps') || appsFound(profile) > 0) &&
       !answers.channels.includes('delivery-propio'),
-    build: (ctx) => ({
-      title: 'Armá tu canal propio de delivery',
-      body: `${deliveryIntro(ctx)} ${COMMISSION_FACT[ctx.country.code] ?? 'Cada app cobra una comisión por venta.'} Un canal propio por WhatsApp o tienda online te deja ese margen.`,
+    build: (ctx, t) => ({
+      title: t.deliveryCommission.title,
+      body: `${deliveryIntro(ctx, t.deliveryCommission)} ${COMMISSION_FACT[ctx.country.code] ?? t.deliveryCommission.commissionGeneric} ${t.deliveryCommission.closing}`,
       action: paid(`Tu Delivery (${ctx.country.productName})`, moduleUrl(ctx.country, 'delivery')),
     }),
   },
@@ -224,9 +226,9 @@ const RULES: Rule[] = [
     area: 'delivery',
     bonus: 15,
     when: ({ profile, answers }) => appsFound(profile) >= 2 && answers.billing !== 'otro-sistema',
-    build: (ctx) => ({
-      title: 'Juntá todos los pedidos en una pantalla',
-      body: `Estás en ${appsFound(ctx.profile)} apps de delivery. Con un módulo que las centralice, los pedidos entran a la misma cola de cocina y dejás de saltar entre tablets.`,
+    build: (ctx, t) => ({
+      title: t.deliveryCentralize.title,
+      body: t.deliveryCentralize.body(appsFound(ctx.profile)),
       action: paid(`Delivery Apps (${ctx.country.productName})`, moduleUrl(ctx.country, 'gestion')),
     }),
   },
@@ -235,9 +237,9 @@ const RULES: Rule[] = [
     area: 'delivery',
     bonus: 0,
     when: ({ profile }) => appsFound(profile) === 1,
-    build: (ctx) => ({
-      title: 'No dependas de una sola app',
-      body: `Solo encontramos tu local en una app. En ${ctx.country.name} las más usadas son ${appNames(ctx)}: sumar otra te da alcance, pero medí antes cuánto te cuesta la comisión.`,
+    build: (ctx, t) => ({
+      title: t.deliveryOneApp.title,
+      body: t.deliveryOneApp.body(ctx.country.name, appNames(ctx)),
       action: free(TOOLS.commissionsCalc),
     }),
   },
@@ -246,9 +248,11 @@ const RULES: Rule[] = [
     area: 'operation',
     bonus: 25,
     when: ({ answers }) => answers.billing === 'manual',
-    build: (ctx) => ({
-      title: `Dejá de cobrar y facturar a mano (${FISCAL_SHORT[ctx.country.code] ?? ctx.country.fiscal.authority})`,
-      body: `Cobrar a mano genera errores de caja y comprobantes tardíos. ${BILLING_PITCH[ctx.country.code]}`,
+    build: (ctx, t) => ({
+      title: t.opsBillingManual.title(
+        FISCAL_SHORT[ctx.country.code] ?? ctx.country.fiscal.authority,
+      ),
+      body: t.opsBillingManual.body(BILLING_PITCH[ctx.country.code]),
       action: paid(`Tus Cobros (${ctx.country.productName})`, moduleUrl(ctx.country, 'cobros')),
     }),
   },
@@ -257,9 +261,9 @@ const RULES: Rule[] = [
     area: 'operation',
     bonus: 10,
     when: ({ answers }) => answers.billing === 'terminal',
-    build: (ctx) => ({
-      title: 'Conectá el cobro con tu gestión',
-      body: 'Cobrar solo con la terminal deja las ventas sin stock, sin reportes y sin comprobante unificado. Un sistema que cobre y registre a la vez te muestra cuánto vendés de verdad.',
+    build: (ctx, t) => ({
+      title: t.opsTerminalOnly.title,
+      body: t.opsTerminalOnly.body,
       action: paid(`Tu Gestión (${ctx.country.productName})`, moduleUrl(ctx.country, 'gestion')),
     }),
   },
@@ -268,10 +272,10 @@ const RULES: Rule[] = [
     area: 'operation',
     bonus: 15,
     when: ({ answers }) => answers.locals !== '1' && answers.billing !== 'otro-sistema',
-    build: (ctx) => ({
-      title: 'Mirá todos tus locales juntos',
-      body: 'Con más de un local y sin un sistema común, no hay forma de comparar ventas ni controlar el stock de cada uno. Los reportes consolidados lo resuelven.',
-      action: paid('Multi-local: hablá con ventas', moduleUrl(ctx.country, 'precios')),
+    build: (ctx, t) => ({
+      title: t.opsMultiLocal.title,
+      body: t.opsMultiLocal.body,
+      action: paid('Multi-local: hablar con ventas', moduleUrl(ctx.country, 'precios')),
     }),
   },
 ]
@@ -281,9 +285,10 @@ export function buildRecommendations(
   ctx: RecContext,
   max: number = MAX_RECOMMENDATIONS,
 ): Recommendation[] {
+  const t = copyFor(ctx.country.code).recs
   const recs = RULES.filter((rule) => rule.when(ctx)).map((rule) => {
     const gap = 100 - (ctx.scorecard.areas[rule.area].score ?? 50)
-    const built = rule.build(ctx)
+    const built = rule.build(ctx, t)
     return {
       id: rule.id,
       area: rule.area,
@@ -301,8 +306,8 @@ export function buildRecommendations(
         id: 'all-good',
         area: 'reviews',
         priority: 0,
-        title: 'Tu presencia online está sólida: ahora cuidá la reputación',
-        body: 'No detectamos fallas claras con los datos que tenemos. Leé qué dicen tus clientes para mantener el nivel.',
+        title: t.allGood.title,
+        body: t.allGood.body,
         action: { ...free(TOOLS.reviewAnalyst), url: withUtm(TOOLS.reviewAnalyst.url, 'reviews') },
       },
     ]

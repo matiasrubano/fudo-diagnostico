@@ -1,22 +1,56 @@
-// Todos los textos de la interfaz, en un solo lugar (español rioplatense, voseo).
-// Para el cambio en vivo: buscá la frase en este archivo y cambiala. No hay textos sueltos en los componentes,
-// salvo las recomendaciones (src/domain/recommendations.ts) y los nombres de las áreas, que están acá abajo.
-import type { AreaId, BillingSetup, BusinessType, LeadTier, LocalsBand, SalesChannel } from '../domain/types'
-import type { LeadReason } from '../domain/leadTier'
-import type { Grade } from '../domain/scoring'
+// Todos los textos de la interfaz, en un solo lugar.
+//
+//  1) `copy`  → textos que no cambian por país (marca, navegación, pantallas previas a saber el país, pie).
+//  2) `voice` → textos con voz y nombres locales: un objeto BASE (voseo rioplatense, Argentina)
+//     + OVERRIDES por país (tuteo para México, Chile y Colombia). Se usa desde que sabemos el país
+//     del local: preguntas, ticket, vecinos, recomendaciones y ruteo. Las landings /ar/, /mx/, /cl/, /co/ también.
+//     Para el cambio en vivo: buscá la frase en este archivo y cambiala. Para sumar una voz distinta
+//     en un país, agregá la clave en `OVERRIDES.<PAÍS>` (lo que no pises se hereda del base).
+//
+//  Los nombres de apps, ente fiscal y moneda NO se escriben acá: llegan de src/config/countries.json.
+//
+// IMPORTANTE: este archivo lo importa también el servidor (src/domain/recommendations.ts), por eso sus
+// imports son `import type ... from '....js'` (se borran al compilar) y no tiene dependencias de React.
+import type { LeadReason } from '../domain/leadTier.js'
+import type { Grade } from '../domain/scoring.js'
+import type {
+  AreaId,
+  BillingSetup,
+  BusinessType,
+  CountryCode,
+  LeadTier,
+  LocalsBand,
+  SalesChannel,
+} from '../domain/types.js'
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  1) TEXTOS COMUNES
+// ═══════════════════════════════════════════════════════════════════════════
 
 export const copy = {
-  brand: { name: 'Diagnóstico gratis', demoTag: 'demo' },
+  brand: { name: 'Diagnóstico gratis', demoTag: 'demo · no oficial', logoAlt: 'Fudo' },
 
   nav: { blog: 'Guías', debug: 'Panel de eventos' },
 
   hero: {
-    eyebrow: 'Diagnóstico gratis',
-    title: '¿Cómo está tu restaurante online?',
-    subtitle:
-      'Revisamos tu ficha de Google, tus reseñas, tu web y tus apps de delivery en 60 segundos. Sin tarjeta y sin registro.',
+    eyebrow: 'Diagnóstico gratis para restaurantes',
+    time: 'Viernes 21:30.',
+    /** Fallback mientras no llegan los datos del local de ejemplo (en producción viene embebido en el HTML) */
+    queryFallback: 'pizza cerca',
+    /** Qué escribiría el cliente, según el tipo real del local de ejemplo: "pizza en Lanús" */
+    queryNoun: {
+      pizzeria: 'pizza',
+      bar: 'bar',
+      cafeteria: 'café',
+      taqueria: 'tacos',
+      hamburgueseria: 'hamburguesas',
+      'dark-kitchen': 'delivery',
+      restaurante: 'restaurante',
+    } as Record<string, string>,
+    query: (noun: string, city: string) => `${noun} en ${city}`,
+    scene: (query: string) => `Alguien busca “${query}”.`,
+    question: '¿Te encuentra, ve que estás abierto y te puede pedir?',
     searchLabel: 'Nombre de tu local',
-    searchPlaceholder: 'Ej.: Pizzería Piki, Lanús',
     searchButton: 'Diagnosticar',
     searching: 'Buscando…',
     examplesLabel: 'O probá con un local real de la demo:',
@@ -28,6 +62,28 @@ export const copy = {
       'Sin tarjeta ni registro',
       'La nota sale de reglas que podés ver',
     ],
+  },
+
+  proof: {
+    eyebrow: 'Prueba, no promesas',
+    title: 'Así queda la comanda de un local real',
+    intro: (city: string) =>
+      `Es un local de ${city}. Rating, reseñas, horarios, web y apps salen de su ficha pública; el cobro y los canales son respuestas de ejemplo.`,
+    cta: 'Ver su diagnóstico completo',
+    sampleBanner:
+      'Estás viendo el diagnóstico de un local real con respuestas de ejemplo (simuladas). Probá con el tuyo.',
+    tryMine: 'Hacer el diagnóstico de mi local',
+  },
+
+  countriesNav: {
+    title: 'Elegí tu país',
+    lead: 'El diagnóstico usa las apps, el ente fiscal y la moneda de tu país.',
+    link: (country: string) => `Diagnóstico para restaurantes en ${country}`,
+  },
+
+  guides: {
+    title: 'Guías para dueños de restaurantes',
+    all: 'Ver todas las guías',
   },
 
   notFound: {
@@ -67,8 +123,6 @@ export const copy = {
         } satisfies Record<BusinessType, string>,
       },
       channels: {
-        title: '¿Por dónde vendés hoy?',
-        hint: 'Podés marcar varias.',
         options: {
           salon: 'En el salón',
           mostrador: 'Mostrador / retiro',
@@ -77,7 +131,6 @@ export const copy = {
         } satisfies Record<SalesChannel, string>,
       },
       billing: {
-        title: '¿Cómo cobrás y facturás hoy?',
         options: {
           manual: 'A mano: papel, Excel o calculadora',
           terminal: 'Solo con la terminal de tarjetas',
@@ -85,7 +138,6 @@ export const copy = {
         } satisfies Record<BillingSetup, string>,
       },
       locals: {
-        title: '¿Cuántos locales tenés?',
         options: { '1': '1 local', '2-3': '2 o 3 locales', '4+': '4 o más' } satisfies Record<
           LocalsBand,
           string
@@ -98,14 +150,10 @@ export const copy = {
 
   result: {
     eyebrow: 'Tu diagnóstico',
-    overall: 'Nota general',
-    outOf: 'de 100',
     noScore: 'Sin datos suficientes',
     notApplicable: 'No aplica: no vendés por delivery',
     insufficient: 'Sin datos suficientes',
     partial: (known: number, total: number) => `Basada en ${known} de ${total} chequeos: el resto no lo pudimos leer`,
-    areasTitle: 'Nota por área',
-    detail: 'Ver el detalle',
     countryAssumed:
       'La dirección de este local no es de los 5 países de la demo: usamos Argentina como referencia.',
     brBanner:
@@ -120,6 +168,25 @@ export const copy = {
     guidesLink: (country: string) => `Guías para restaurantes de ${country}`,
     whyRoute: 'Por qué te mostramos esto',
     restart: 'Diagnosticar otro local',
+  },
+
+  /** La comanda: el resultado impreso como ticket de cocina */
+  ticket: {
+    header: 'Comanda de diagnóstico',
+    local: 'Local',
+    detail: 'Ver el detalle',
+    hideDetail: 'Ocultar el detalle',
+    overall: 'Nota general',
+    outOf: '/100',
+    money: 'TOTAL QUE SE TE ESCAPA POR MES',
+    moneyApprox: 'Aproximadamente',
+    moneyRange: (low: string, high: string) => `Rango razonable: entre ${low} y ${high}`,
+    moneyZero: 'No detectamos plata que se escape de forma clara.',
+    moneyDisclaimer:
+      'Estimación simulada con supuestos propios de la demo, no un dato real de tu negocio.',
+    sampleOperation: 'simulado: depende de las respuestas',
+    sampleMoney: 'Con respuestas de ejemplo: salón y apps, cobro a mano, 1 local.',
+    footer: 'Gracias por tu visita',
   },
 
   grade: {
@@ -166,6 +233,11 @@ export const copy = {
     yourAnswer: 'tu respuesta',
     yes: 'Sí',
     no: 'No',
+    daysLoaded: (n: number) => `${n} días cargados`,
+    friday: (hours: string) => `viernes ${hours}`,
+    ratingOnGoogle: (rating: string) => `${rating} en Google`,
+    reviews: (n: string) => `${n} reseñas`,
+    appsFound: (n: number) => `${n} ${n === 1 ? 'app encontrada' : 'apps encontradas'}`,
   },
 
   badge: {
@@ -178,13 +250,7 @@ export const copy = {
   money: {
     eyebrow: 'Estimación simulada',
     title: 'Cuánta plata se te escapa por mes',
-    approx: 'Aproximadamente',
-    range: (low: string, high: string) => `Rango razonable: entre ${low} y ${high}`,
-    disclaimer:
-      'Es una estimación simulada con supuestos propios de la demo, no un dato real de tu negocio.',
     how: '¿Cómo calculamos esto?',
-    howIntro:
-      'Es una cuenta simple, con números que podés discutir. Estos son los pasos y todos los supuestos:',
     steps: {
       sales: (orders: string, ticket: string, locals: string, sales: string) =>
         `Ventas por mes ≈ ${orders} pedidos × ${ticket} de ticket × ${locals} (locales) = ${sales}`,
@@ -217,7 +283,163 @@ export const copy = {
       ticket: 'Ticket promedio (supuesto de la demo)',
       orders: 'Pedidos por mes por local, según volumen (supuesto de la demo)',
     },
-    zero: 'Con lo que nos contaste, no detectamos plata que se escape de forma clara.',
+  },
+
+  neighbors: {
+    badge: (date: string) => `real · capturado el ${date}`,
+    colLocal: 'Local',
+    colRating: 'Rating',
+    colReviews: 'Reseñas',
+    noData: 'Sin dato',
+    sameCity: 'misma ciudad',
+    sameType: 'mismo tipo',
+  },
+
+  footer: {
+    title: 'Qué es real y qué es simulado',
+    disclaimer:
+      'Demo de entrevista, no es un sitio oficial de Fudo. Lo real lleva fuente y fecha; lo simulado está marcado como tal.',
+    columns: { what: 'Qué', status: 'Estado', detail: 'Detalle' },
+    rows: [
+      {
+        what: 'Datos del local (nombre, dirección, rating, reseñas, horarios, web, delivery)',
+        status: 'real',
+        detail:
+          'Locales reales capturados el 26/10/2026 de la ficha pública de Google y de las apps. Solo para la demo: en producción se consultan en vivo a Google Places.',
+      },
+      {
+        what: 'Comparación con otros locales',
+        status: 'real',
+        detail: 'Rating y reseñas de los otros locales reales de la demo del mismo país. No es un promedio de mercado.',
+      },
+      {
+        what: 'Precios de planes y links de Fudo',
+        status: 'real',
+        detail: 'Publicados en fu.do, capturados el 26/10/2026.',
+      },
+      {
+        what: 'Notas por área y recomendaciones',
+        status: 'real',
+        detail: 'Cálculo por reglas sobre esos datos reales. No usa IA.',
+      },
+      {
+        what: 'Cuánta plata se te escapa por mes',
+        status: 'simulado',
+        detail: 'Estimación con supuestos propios (ticket, pedidos, comisión) visibles en la pantalla.',
+      },
+      {
+        what: 'Tu cuenta ya armada, la carta y la creación de cuenta',
+        status: 'simulado',
+        detail: 'Hoy el alta de fu.do no acepta precarga: el botón solo simula.',
+      },
+      {
+        what: 'Envío de email y migración de datos',
+        status: 'simulado',
+        detail: 'No se envía ni se importa nada.',
+      },
+      {
+        what: 'Instagram y apps de delivery',
+        status: 'parcial',
+        detail: 'Solo la presencia (que exista el perfil o el link). No hay métricas: no tenemos acceso real a ellas.',
+      },
+    ],
+    status: { real: 'real', simulado: 'simulado', parcial: 'solo presencia' } as Record<string, string>,
+    debug: 'Panel de eventos (/debug)',
+    unofficial: 'Demo de entrevista · no es un sitio oficial de Fudo. La marca Fudo pertenece a sus dueños.',
+  },
+
+  debug: {
+    title: 'Panel de eventos',
+    documentTitle: 'Panel de eventos (debug) | Diagnóstico gratis para restaurantes',
+    intro: 'Los eventos se guardan en el localStorage de este navegador. No se envía nada a ningún servidor.',
+    funnel: 'Embudo',
+    funnelHint: 'Sesiones únicas que llegaron a cada paso',
+    events: 'Eventos',
+    empty: 'Todavía no hay eventos. Hacé un diagnóstico y volvé.',
+    clear: 'Limpiar eventos',
+    back: 'Volver al diagnóstico',
+    cols: { time: 'Hora', session: 'Sesión', event: 'Evento', props: 'Datos' },
+  },
+
+  tiers: {
+    caliente: 'Caliente',
+    switcher: 'Switcher',
+    nutrir: 'Nutrir',
+    descartar: 'Descartar',
+    'por-abrir': 'Por abrir',
+  } satisfies Record<LeadTier, string>,
+}
+
+export const siteName = 'Diagnóstico gratis para restaurantes'
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  2) VOZ POR PAÍS: base (voseo, Argentina) + overrides
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Datos de countries.json que usan los textos de las landings (nunca se escriben a mano) */
+export interface LandingFacts {
+  country: string
+  apps: string[]
+  authority: string
+  currencyCode: string
+}
+
+const andList = (items: string[]) =>
+  items.length < 2 ? (items[0] ?? '') : `${items.slice(0, -1).join(', ')} y ${items.at(-1)}`
+
+/** BASE = voseo rioplatense (Argentina). Todo lo que un país no pise se hereda de acá. */
+const base = {
+  /** Etiqueta de la voz, para los tests y el panel */
+  voice: 'voseo' as 'voseo' | 'tuteo',
+
+  hero: {
+    subtitle: (apps: string[]) =>
+      apps.length
+        ? `Revisamos tu ficha de Google, tus reseñas, tu web y tus apps (${andList(apps)}) en 60 segundos. Sin tarjeta y sin registro.`
+        : 'Revisamos tu ficha de Google, tus reseñas, tu web y tus apps de delivery en 60 segundos. Sin tarjeta y sin registro.',
+    placeholder: 'Ej.: Pizzería Piki, Lanús',
+  },
+
+  questions: {
+    channelsTitle: '¿Por dónde vendés hoy?',
+    channelsHint: 'Podés marcar varias.',
+    billingTitle: '¿Cómo cobrás y facturás hoy?',
+    billingHint: (authority: string) => `Pensá en cómo emitís el comprobante ante ${authority}.`,
+    localsTitle: '¿Cuántos locales tenés?',
+  },
+
+  /** Cada área de la comanda como pregunta de dueño. El id interno del área no cambia. */
+  ticket: {
+    areaQuestion: {
+      google: '¿Te encuentran?',
+      reviews: '¿Te eligen?',
+      web: '¿Te pueden pedir sin comisión?',
+      delivery: '¿Estás en las apps que usa tu barrio?',
+      operation: '¿Cobrás y facturás sin errores?',
+    } satisfies Record<AreaId, string>,
+  },
+
+  neighbors: {
+    you: 'vos',
+    title: (place: string) => `Cómo estás contra otros locales de la demo en ${place}`,
+    intro: (n: number) =>
+      n === 1 ? 'Lo comparamos con otro local real de la demo.' : `Lo comparamos con otros ${n} locales reales de la demo.`,
+    reviewsRange: (min: string, max: string) => `Reseñas de los otros: entre ${min} y ${max}`,
+    ratingRange: (min: string, max: string) =>
+      min === max ? `Rating de los otros: ${min}` : `Rating de los otros: entre ${min} y ${max}`,
+    reviewsRank: (position: number, outOf: number, own: string) =>
+      `Con ${own} reseñas estás ${position === 1 ? 'primero' : `en el puesto ${position}`} de ${outOf} en cantidad de reseñas.`,
+    ratingRank: (position: number, outOf: number, own: string) =>
+      `Con ${own} de rating estás ${position === 1 ? 'primero' : `en el puesto ${position}`} de ${outOf}.`,
+    noOwnData: 'No pudimos leer tu rating ni tus reseñas, así que no te ubicamos en el ranking.',
+    sameCityNote: (n: number, city: string) =>
+      `${n === 1 ? '1 es' : `${n} son`} de ${city}, tu misma ciudad.`,
+    scale: 'Reseñas de cada local, de menos a más',
+    note: 'Compará solo lo comparable: son pocos locales y no representan el mercado.',
+  },
+
+  money: {
+    howIntro: 'Es una cuenta simple, con números que podés discutir. Estos son los pasos y todos los supuestos:',
   },
 
   route: {
@@ -301,73 +523,296 @@ export const copy = {
     },
   },
 
-  footer: {
-    title: 'Qué es real y qué es simulado',
-    disclaimer:
-      'Demo de entrevista. Lo real lleva fuente y fecha; lo simulado está marcado como tal.',
-    columns: { what: 'Qué', status: 'Estado', detail: 'Detalle' },
-    rows: [
-      {
-        what: 'Datos del local (nombre, dirección, rating, reseñas, horarios, web, delivery)',
-        status: 'real',
-        detail:
-          'Locales reales capturados el 26/10/2026 de la ficha pública de Google y de las apps. Solo para la demo: en producción se consultan en vivo a Google Places.',
-      },
-      {
-        what: 'Precios de planes y links de Fudo',
-        status: 'real',
-        detail: 'Publicados en fu.do, capturados el 26/10/2026.',
-      },
-      {
-        what: 'Notas por área y recomendaciones',
-        status: 'real',
-        detail: 'Cálculo por reglas sobre esos datos reales. No usa IA.',
-      },
-      {
-        what: 'Cuánta plata se te escapa por mes',
-        status: 'simulado',
-        detail: 'Estimación con supuestos propios (ticket, pedidos, comisión) visibles en la pantalla.',
-      },
-      {
-        what: 'Tu cuenta ya armada, la carta y la creación de cuenta',
-        status: 'simulado',
-        detail: 'Hoy el alta de fu.do no acepta precarga: el botón solo simula.',
-      },
-      {
-        what: 'Envío de email y migración de datos',
-        status: 'simulado',
-        detail: 'No se envía ni se importa nada.',
-      },
-      {
-        what: 'Instagram y apps de delivery',
-        status: 'parcial',
-        detail: 'Solo la presencia (que exista el perfil o el link). No hay métricas: no tenemos acceso real a ellas.',
-      },
-    ],
-    status: { real: 'real', simulado: 'simulado', parcial: 'solo presencia' } as Record<string, string>,
-    debug: 'Panel de eventos (/debug)',
+  /** Recomendaciones: el cuándo vive en src/domain/recommendations.ts, el texto, acá */
+  recs: {
+    googleHours: {
+      title: 'Completá tus horarios en Google',
+      bodyAbsent:
+        'Tu ficha no tiene horarios cargados: quien te busca no sabe si estás abierto y elige a otro.',
+      bodyUnknown:
+        'No pudimos leer tus horarios. Revisá que estén completos en tu ficha de Google, incluidos feriados.',
+    },
+    googleListing: {
+      title: 'Reforzá tu ficha de Google',
+      body: 'Sumá descripción, categoría, precios y fotos actualizadas. La herramienta te redacta los textos listos para pegar.',
+    },
+    reviewsFew: {
+      title: 'Conseguí más reseñas en Google',
+      body: (count: string) =>
+        `Tenés ${count} reseñas. Con tan poca muestra, ni el rating ni el volumen te ayudan a aparecer arriba. Pedí la reseña en la mesa y en cada pedido por delivery.`,
+    },
+    reviewsRating: {
+      title: 'Entendé por qué tu rating está bajo',
+      body: (rating: string) =>
+        `Tu nota en Google es ${rating}. Leer qué se repite en las quejas te dice qué arreglar primero.`,
+    },
+    webMissing: {
+      title: 'Armá tu web gratis',
+      body: 'Tu ficha de Google no tiene sitio web propio. Con una web simple (carta, horarios, ubicación y WhatsApp) dejás de depender de redes y apps.',
+    },
+    instagramMissing: {
+      title: 'Abrí un Instagram del local',
+      body: 'No encontramos un perfil de Instagram. No medimos su actividad (no tenemos acceso real a esa métrica), solo que exista.',
+    },
+    cartaQr: {
+      title: 'Subí tu carta en 30 segundos',
+      body: 'Sacale una foto a tu carta y la herramienta arma una carta digital con QR para la mesa y para compartir por WhatsApp.',
+    },
+    deliveryCommission: {
+      title: 'Armá tu canal propio de delivery',
+      /** solo vende por apps */
+      onlyApps: (apps: string) => `Hoy vendés solo por apps (${apps}) y cada pedido paga comisión.`,
+      /** vende por apps y también en el salón y/o el mostrador */
+      withOthers: (where: string, apps: string) =>
+        `Además ${where}, vendés por apps (${apps}) y cada pedido que entra por ahí paga comisión.`,
+      /** no marcó apps, pero el local figura en alguna */
+      unmarked: (n: number, apps: string) =>
+        `Aunque no marcaste las apps, tu local figura en ${n} (${apps}) y cada pedido que entra por ahí paga comisión.`,
+      closing: 'Un canal propio por WhatsApp o tienda online te deja ese margen.',
+      where: { salon: 'del salón', mostrador: 'del mostrador', both: 'del salón y el mostrador' },
+      commissionGeneric: 'Cada app cobra una comisión por venta.',
+    },
+    deliveryCentralize: {
+      title: 'Juntá todos los pedidos en una pantalla',
+      body: (n: number) =>
+        `Estás en ${n} apps de delivery. Con un módulo que las centralice, los pedidos entran a la misma cola de cocina y dejás de saltar entre tablets.`,
+    },
+    deliveryOneApp: {
+      title: 'No dependas de una sola app',
+      body: (country: string, apps: string) =>
+        `Solo encontramos tu local en una app. En ${country} las más usadas son ${apps}: sumar otra te da alcance, pero medí antes cuánto te cuesta la comisión.`,
+    },
+    opsBillingManual: {
+      title: (authority: string) => `Dejá de cobrar y facturar a mano (${authority})`,
+      body: (pitch: string) =>
+        `Cobrar a mano genera errores de caja y comprobantes tardíos. ${pitch}`,
+    },
+    opsTerminalOnly: {
+      title: 'Conectá el cobro con tu gestión',
+      body: 'Cobrar solo con la terminal deja las ventas sin stock, sin reportes y sin comprobante unificado. Un sistema que cobre y registre a la vez te muestra cuánto vendés de verdad.',
+    },
+    opsMultiLocal: {
+      title: 'Mirá todos tus locales juntos',
+      body: 'Con más de un local y sin un sistema común, no hay forma de comparar ventas ni controlar el stock de cada uno. Los reportes consolidados lo resuelven.',
+    },
+    allGood: {
+      title: 'Tu presencia online está sólida: ahora cuidá la reputación',
+      body: 'No detectamos fallas claras con los datos que tenemos. Leé qué dicen tus clientes para mantener el nivel.',
+    },
   },
 
-  debug: {
-    title: 'Panel de eventos',
-    documentTitle: 'Panel de eventos (debug) | Diagnóstico gratis para restaurantes',
-    intro: 'Los eventos se guardan en el localStorage de este navegador. No se envía nada a ningún servidor.',
-    funnel: 'Embudo',
-    funnelHint: 'Sesiones únicas que llegaron a cada paso',
-    events: 'Eventos',
-    empty: 'Todavía no hay eventos. Hacé un diagnóstico y volvé.',
-    clear: 'Limpiar eventos',
-    back: 'Volver al diagnóstico',
-    cols: { time: 'Hora', session: 'Sesión', event: 'Evento', props: 'Datos' },
+  /** Landings por país (/ar/, /mx/, /cl/, /co/): title, H1, description y bloques con apps, ente fiscal y moneda */
+  landing: {
+    /** frase corta del comprobante local, para el title/H1: "factura ARCA" */
+    fiscalPhrase: 'factura ARCA',
+    currencyName: 'pesos argentinos',
+    title: (f: LandingFacts, fiscalPhrase: string) =>
+      `Diagnóstico gratis para tu restaurante en ${f.country}: Google Maps, ${f.apps.slice(0, 2).join(', ')} y ${fiscalPhrase}`,
+    description: (f: LandingFacts) =>
+      `Buscá tu local en ${f.country}: ¿te encuentran en Google Maps, estás en ${andList(f.apps.slice(0, 2))} y facturás bien ante ${f.authority}? Gratis, sin registro, en ${f.currencyCode}.`,
+    factsTitle: (country: string) => `Lo que mira el diagnóstico en ${country}`,
+    factApps: (apps: string) => `Apps de delivery: ${apps}. Vemos en cuáles está tu local y si tenés canal propio.`,
+    factFiscal: (authority: string, system: string) =>
+      `Facturación: ${authority} (${system}). Te preguntamos cómo cobrás y facturás hoy.`,
+    factMoney: (currencyName: string, code: string, ticket: string) =>
+      `Moneda: ${currencyName} (${code}). La plata que se te escapa se calcula con un ticket promedio supuesto de ${ticket} (simulado).`,
+    factPlan: (name: string, price: string, date: string) =>
+      `Fudo: ${name} desde ${price} por mes, precio publicado en fu.do (capturado el ${date}).`,
+    placesTitle: (country: string) => `Locales reales de la demo en ${country}`,
+    placesIntro: 'Tocá uno para ver su diagnóstico con respuestas de ejemplo, o buscá el tuyo arriba.',
+    guidesTitle: (country: string) => `Guías para restaurantes de ${country}`,
+    otherCountries: 'Otros países',
+    breadcrumbHome: 'Inicio',
   },
-
-  tiers: {
-    caliente: 'Caliente',
-    switcher: 'Switcher',
-    nutrir: 'Nutrir',
-    descartar: 'Descartar',
-    'por-abrir': 'Por abrir',
-  } satisfies Record<LeadTier, string>,
 }
 
-export const siteName = 'Diagnóstico gratis para restaurantes'
+export type Voice = typeof base
+
+type DeepPartial<T> = T extends (...args: never[]) => unknown
+  ? T
+  : T extends readonly unknown[]
+    ? T
+    : T extends object
+      ? { [K in keyof T]?: DeepPartial<T[K]> }
+      : T
+
+/**
+ * TUTEO neutro (México, Chile, Colombia). Solo lo que cambia respecto del voseo.
+ * Si una frase es igual en las dos voces, no se repite acá.
+ */
+const tuteo: DeepPartial<Voice> = {
+  voice: 'tuteo',
+  questions: {
+    channelsTitle: '¿Por dónde vendes hoy?',
+    channelsHint: 'Puedes marcar varias.',
+    billingTitle: '¿Cómo cobras y facturas hoy?',
+    billingHint: (authority) => `Piensa en cómo emites el comprobante ante ${authority}.`,
+    localsTitle: '¿Cuántos locales tienes?',
+  },
+  ticket: {
+    areaQuestion: { operation: '¿Cobras y facturas sin errores?' },
+  },
+  neighbors: {
+    you: 'tú',
+    note: 'Compara solo lo comparable: son pocos locales y no representan el mercado.',
+  },
+  money: {
+    howIntro: 'Es una cuenta simple, con números que puedes discutir. Estos son los pasos y todos los supuestos:',
+  },
+  route: {
+    reasons: {
+      cadena: 'Tienes 4 o más locales.',
+      'nucleo-sin-sistema': 'Vendes con volumen y por delivery, y hoy no tienes un sistema que lo ordene.',
+      'nucleo-con-sistema': 'Vendes con volumen y por delivery, y ya usas otro sistema.',
+      'poco-volumen': 'Todavía tienes pocas reseñas, lo que indica poco volumen.',
+      'sin-delivery': 'No vendes por delivery.',
+    },
+    caliente: {
+      intro:
+        'Con los datos que ya tenemos de tu local, armamos cómo te quedaría la cuenta. Revísala y créala.',
+    },
+    switcher: {
+      title: (product) => `Pásate a ${product} sin empezar de cero`,
+      intro: 'Ya tienes un sistema, así que lo que importa es no perder lo que cargaste. Mira cómo quedaría tu cuenta.',
+      migrateBody:
+        'Puedes importar tus productos desde un Excel. En la demo no se importa nada: es una simulación.',
+    },
+    preview: { hoursMissing: 'No pudimos leer tus horarios: los cargas en un minuto.' },
+    modal: {
+      doneBody: 'No se creó ninguna cuenta. Para crear la cuenta real, sigue al alta oficial.',
+    },
+    nutrir: {
+      intro: 'Con lo que contaste, lo mejor es mejorar tu presencia antes de invertir en gestión. Estas guías gratis son para ti:',
+      emailLabel: 'Tu email, por si quieres recibir más guías',
+      emailButton: 'Mándame las guías',
+      emailInvalid: 'Escribe un email válido.',
+    },
+  },
+  recs: {
+    googleHours: {
+      title: 'Completa tus horarios en Google',
+      bodyUnknown:
+        'No pudimos leer tus horarios. Revisa que estén completos en tu ficha de Google, incluidos feriados.',
+    },
+    googleListing: {
+      title: 'Refuerza tu ficha de Google',
+      body: 'Suma descripción, categoría, precios y fotos actualizadas. La herramienta te redacta los textos listos para pegar.',
+    },
+    reviewsFew: {
+      title: 'Consigue más reseñas en Google',
+      body: (count) =>
+        `Tienes ${count} reseñas. Con tan poca muestra, ni el rating ni el volumen te ayudan a aparecer arriba. Pide la reseña en la mesa y en cada pedido por delivery.`,
+    },
+    reviewsRating: { title: 'Entiende por qué tu rating está bajo' },
+    webMissing: {
+      title: 'Arma tu web gratis',
+      body: 'Tu ficha de Google no tiene sitio web propio. Con una web simple (carta, horarios, ubicación y WhatsApp) dejas de depender de redes y apps.',
+    },
+    instagramMissing: { title: 'Abre un Instagram del local' },
+    cartaQr: {
+      title: 'Sube tu carta en 30 segundos',
+      body: 'Sácale una foto a tu carta y la herramienta arma una carta digital con QR para la mesa y para compartir por WhatsApp.',
+    },
+    deliveryCommission: {
+      title: 'Arma tu canal propio de delivery',
+      onlyApps: (apps) => `Hoy vendes solo por apps (${apps}) y cada pedido paga comisión.`,
+      withOthers: (where, apps) =>
+        `Además ${where}, vendes por apps (${apps}) y cada pedido que entra por ahí paga comisión.`,
+    },
+    deliveryCentralize: {
+      title: 'Junta todos los pedidos en una pantalla',
+      body: (n) =>
+        `Estás en ${n} apps de delivery. Con un módulo que las centralice, los pedidos entran a la misma cola de cocina y dejas de saltar entre tablets.`,
+    },
+    deliveryOneApp: {
+      body: (country, apps) =>
+        `Solo encontramos tu local en una app. En ${country} las más usadas son ${apps}: sumar otra te da alcance, pero mide antes cuánto te cuesta la comisión.`,
+    },
+    opsBillingManual: {
+      title: (authority) => `Deja de cobrar y facturar a mano (${authority})`,
+    },
+    opsTerminalOnly: {
+      title: 'Conecta el cobro con tu gestión',
+      body: 'Cobrar solo con la terminal deja las ventas sin stock, sin reportes y sin comprobante unificado. Un sistema que cobre y registre a la vez te muestra cuánto vendes de verdad.',
+    },
+    opsMultiLocal: { title: 'Mira todos tus locales juntos' },
+    allGood: {
+      title: 'Tu presencia online está sólida: ahora cuida la reputación',
+      body: 'No detectamos fallas claras con los datos que tenemos. Lee qué dicen tus clientes para mantener el nivel.',
+    },
+  },
+  landing: {
+    factApps: (apps) => `Apps de delivery: ${apps}. Vemos en cuáles está tu local y si tienes canal propio.`,
+    factFiscal: (authority, system) =>
+      `Facturación: ${authority} (${system}). Te preguntamos cómo cobras y facturas hoy.`,
+    placesIntro: 'Toca uno para ver su diagnóstico con respuestas de ejemplo, o busca el tuyo arriba.',
+  },
+}
+
+/** Overrides por país: lo que no está acá se hereda del base (voseo, Argentina). */
+const OVERRIDES: Record<CountryCode, DeepPartial<Voice>> = {
+  AR: {},
+  MX: {
+    ...tuteo,
+    hero: { placeholder: "Ej.: Red's Burger, Zapopan" },
+    landing: {
+      ...tuteo.landing,
+      fiscalPhrase: 'factura CFDI del SAT',
+      currencyName: 'pesos mexicanos',
+    },
+  },
+  CL: {
+    ...tuteo,
+    hero: { placeholder: 'Ej.: Davvero, Ñuñoa' },
+    landing: {
+      ...tuteo.landing,
+      fiscalPhrase: 'boleta electrónica del SII',
+      currencyName: 'pesos chilenos',
+    },
+  },
+  CO: {
+    ...tuteo,
+    hero: { placeholder: 'Ej.: El Social, Medellín' },
+    landing: {
+      ...tuteo.landing,
+      fiscalPhrase: 'factura electrónica de la DIAN',
+      currencyName: 'pesos colombianos',
+    },
+  },
+  // Brasil: el contenido sigue en español (recorte declarado); usa tuteo neutro
+  BR: { ...tuteo, hero: { placeholder: 'Ej.: Diavola Pizzaria, Pinheiros' } },
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/** Mezcla profunda: los objetos se combinan; funciones, strings y arrays del override reemplazan al base. */
+function merge<T>(baseValue: T, override: DeepPartial<T> | undefined): T {
+  if (override === undefined) return baseValue
+  if (!isPlainObject(baseValue) || !isPlainObject(override)) return override as T
+  const out: Record<string, unknown> = { ...baseValue }
+  for (const [key, value] of Object.entries(override)) {
+    out[key] = merge(baseValue[key], value as never)
+  }
+  return out as T
+}
+
+const cache = new Map<string, Voice>()
+
+/**
+ * Textos con la voz y los nombres del país del local. `null` (todavía no sabemos el país) usa el base.
+ * Ej.: copyFor('MX').questions.billingTitle === '¿Cómo cobras y facturas hoy?'
+ */
+export function copyFor(country: CountryCode | null): Voice {
+  const key = country ?? 'base'
+  let voice = cache.get(key)
+  if (!voice) {
+    voice = merge<Voice>(base, country ? OVERRIDES[country] : undefined)
+    cache.set(key, voice)
+  }
+  return voice
+}
+
+/** Los textos de los que se arma cada tipo de recomendación (los usa src/domain/recommendations.ts) */
+export type RecsCopy = Voice['recs']
