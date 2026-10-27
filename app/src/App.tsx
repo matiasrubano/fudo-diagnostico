@@ -26,6 +26,8 @@ export default function App() {
   const [stage, setStage] = useState<Stage>('search')
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
+  /** true si la búsqueda salió de tocar un ejemplo (chip) en vez de escribir */
+  const [searchedByExample, setSearchedByExample] = useState(false)
   const [searchError, setSearchError] = useState<string | null>(null)
   const [response, setResponse] = useState<SearchResponse | null>(null)
   const [place, setPlace] = useState<PlaceSummary | null>(null)
@@ -34,8 +36,9 @@ export default function App() {
   const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null)
   const [diagnosisError, setDiagnosisError] = useState<string | null>(null)
 
-  async function search(q: string) {
+  async function search(q: string, byExample = false) {
     setQuery(q)
+    setSearchedByExample(byExample)
     setSearching(true)
     setSearchError(null)
     track('diag_start', { query_length: q.length })
@@ -49,14 +52,15 @@ export default function App() {
     }
   }
 
-  function pick(selected: PlaceSummary) {
+  function pick(selected: PlaceSummary, fromSuggestion = false) {
     setPlace(selected)
     setAnswers({})
     setStep(0)
     setStage('questions')
     track('place_selected', {
       country: selected.country,
-      from_suggestion: response?.notFound ?? false,
+      // sugerencia = local elegido de la lista "en la demo cubrimos…" o de un ejemplo (chip)
+      from_suggestion: fromSuggestion || (response?.notFound ?? false) || searchedByExample,
     })
   }
 
@@ -119,7 +123,7 @@ export default function App() {
           <PickPlace
             query={query}
             response={response}
-            onPick={pick}
+            onPick={(selected, fromSuggestion) => pick(selected, fromSuggestion)}
             onBack={() => setStage('search')}
           />
         )}

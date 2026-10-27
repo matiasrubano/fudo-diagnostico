@@ -350,6 +350,7 @@ export const copy = {
 
   debug: {
     title: 'Panel de eventos',
+    documentTitle: 'Panel de eventos (debug) | Diagnóstico gratis para restaurantes',
     intro: 'Los eventos se guardan en el localStorage de este navegador. No se envía nada a ningún servidor.',
     funnel: 'Embudo',
     funnelHint: 'Sesiones únicas que llegaron a cada paso',

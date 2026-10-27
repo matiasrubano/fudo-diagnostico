@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { clearEvents, funnelCounts, readEvents } from '../../analytics/events'
 import { copy } from '../../content/copy'
 
@@ -9,6 +9,18 @@ export function Debug() {
   const [events, setEvents] = useState(readEvents)
   const funnel = funnelCounts(events)
   const max = Math.max(1, ...funnel.map((f) => f.sessions))
+
+  // /debug es una ruta de la SPA: sin esto hereda el <title> de la home (y no debe indexarse)
+  useEffect(() => {
+    document.title = d.documentTitle
+    const robots = document.createElement('meta')
+    robots.name = 'robots'
+    robots.content = 'noindex'
+    document.head.appendChild(robots)
+    return () => {
+      robots.remove()
+    }
+  }, [])
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-8">

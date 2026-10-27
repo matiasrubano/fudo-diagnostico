@@ -65,7 +65,7 @@ export function PickPlace({
 }: {
   query: string
   response: SearchResponse
-  onPick: (place: PlaceSummary) => void
+  onPick: (place: PlaceSummary, fromSuggestion: boolean) => void
   onBack: () => void
 }) {
   const { results, suggestions, notFound } = response
@@ -81,7 +81,7 @@ export function PickPlace({
             <li key={s.id}>
               <button
                 type="button"
-                onClick={() => onPick(s)}
+                onClick={() => onPick(s, true)}
                 className="option flex-col items-start gap-0 !py-3"
               >
                 <span className="font-semibold">{s.name}</span>
@@ -109,7 +109,7 @@ export function PickPlace({
             key={r.id}
             place={r}
             action={many ? copy.confirm.pick : copy.confirm.yes}
-            onPick={onPick}
+            onPick={(selected) => onPick(selected, false)}
           />
         ))}
       </ul>

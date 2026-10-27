@@ -96,6 +96,21 @@ function appNames(ctx: RecContext): string {
   return names.join(' y ')
 }
 
+/** Primera frase de la recomendación de delivery: depende de los canales que marcó el dueño. */
+function deliveryIntro(ctx: RecContext): string {
+  const { channels } = ctx.answers
+  const apps = `${appNames(ctx)}, entre otras`
+  const salon = channels.includes('salon')
+  const counter = channels.includes('mostrador')
+  const others = salon && counter ? 'del salón y el mostrador' : salon ? 'del salón' : 'del mostrador'
+  if (!channels.includes('apps')) {
+    // No marcó apps, pero encontramos el local en alguna
+    return `Aunque no marcaste las apps, tu local figura en ${appsFound(ctx.profile)} (${apps}) y cada pedido que entra por ahí paga comisión.`
+  }
+  if (!salon && !counter) return `Hoy vendés solo por apps (${apps}) y cada pedido paga comisión.`
+  return `Además ${others}, vendés por apps (${apps}) y cada pedido que entra por ahí paga comisión.`
+}
+
 interface Rule {
   id: string
   area: AreaId
@@ -200,7 +215,7 @@ const RULES: Rule[] = [
       !answers.channels.includes('delivery-propio'),
     build: (ctx) => ({
       title: 'Armá tu canal propio de delivery',
-      body: `Hoy vendés solo por apps (${appNames(ctx)}, entre otras) y cada pedido paga comisión. ${COMMISSION_FACT[ctx.country.code] ?? 'Cada app cobra una comisión por venta.'} Un canal propio por WhatsApp o tienda online te deja ese margen.`,
+      body: `${deliveryIntro(ctx)} ${COMMISSION_FACT[ctx.country.code] ?? 'Cada app cobra una comisión por venta.'} Un canal propio por WhatsApp o tienda online te deja ese margen.`,
       action: paid(`Tu Delivery (${ctx.country.productName})`, moduleUrl(ctx.country, 'delivery')),
     }),
   },

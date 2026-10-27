@@ -50,6 +50,22 @@ describe('recomendaciones por reglas y por país', () => {
     expect(mx.find((r) => r.id === 'delivery-commission')?.body).not.toContain('iProfesional')
   })
 
+  it('delivery: el texto depende de los canales marcados, no dice "solo por apps" si también vende en el salón', async () => {
+    const body = async (channels: Answers['channels']) =>
+      (await recs(IDS.campeon, 'AR', answers({ channels }), Infinity)).find(
+        (r) => r.id === 'delivery-commission',
+      )?.body
+    expect(await body(['apps'])).toContain('solo por apps')
+    const withSalon = await body(['salon', 'apps'])
+    expect(withSalon).not.toContain('solo por apps')
+    expect(withSalon).toContain('Además del salón')
+    expect(await body(['salon', 'mostrador', 'apps'])).toContain('del salón y el mostrador')
+    // no marcó apps pero el local figura en PedidosYa y Rappi
+    const unmarked = await body(['salon'])
+    expect(unmarked).not.toContain('solo por apps')
+    expect(unmarked).toContain('Aunque no marcaste')
+  })
+
   it('cada recomendación enlaza a Fudo con UTM de atribución', async () => {
     const list = await recs(IDS.campeon, 'AR')
     expect(list.length).toBeGreaterThan(0)

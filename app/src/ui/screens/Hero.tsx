@@ -11,7 +11,7 @@ export function Hero({
   initialQuery: string
   loading: boolean
   error: string | null
-  onSearch: (query: string) => void
+  onSearch: (query: string, byExample?: boolean) => void
 }) {
   const [query, setQuery] = useState(initialQuery)
   const [touched, setTouched] = useState(false)
@@ -67,7 +67,7 @@ export function Hero({
                 disabled={loading}
                 onClick={() => {
                   setQuery(example)
-                  onSearch(example)
+                  onSearch(example, true)
                 }}
               >
                 {example}
