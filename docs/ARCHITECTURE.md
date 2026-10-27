@@ -5,13 +5,19 @@ Vite + React + TypeScript (strict) + Tailwind en el front; funciones serverless 
 ## Flujo de datos
 
 ```
-1. Hero            GET  /api/places-search?q=...      → { results, suggestions, notFound }
+0. Home            GET  /api/geo[?country=MX]         → { country }  (IP; AR por defecto). Adapta voz, escena y ejemplos en el cliente
+1. Hero            GET  /api/places-search?q=...[&country=] → { results, suggestions, notFound, priorityCountry, onlyPriority }
+                   (búsqueda HONESTA: "¿Es este?" solo si todas las palabras están en nombre/ciudad/tipo; si no, "No encontramos «X»"
+                    con sugerencias del país de la ciudad nombrada o del país detectado, sin mezclar países)
 2. "¿Es este?"     (el usuario elige un resultado o una sugerencia)
 3. 4 preguntas     (estado local del navegador)
 4. Resultado       POST /api/diagnose { placeId, answers } → Diagnosis + neighbors
    Vidriera        GET  /api/showcase?country=AR → ticket de ejemplo real + locales de la demo
                    POST /api/diagnose { placeId, sample: true } → "Ver su diagnóstico completo" (respuestas de ejemplo, simuladas)
-5. Ruteo           según Diagnosis.lead.tier (se muestra en la misma pantalla)
+5. Ruteo           según Diagnosis.lead.tier: caliente / switcher / nutrir / descartar (misma pantalla, sin rótulos internos)
+   "Estoy por abrir" NO es un tier: es otra pantalla (#por-abrir) sin diagnóstico: Consultor de Nuevos Negocios + guía de
+                   trámites del país + datos a tener a mano (`src/domain/opening.ts`, `src/ui/screens/PorAbrir.tsx`).
+                   Entradas: link de la home, opción de la P1 y estado "no encontramos".
 ```
 
 - `api/*.ts` son handlers Web-standard (`export default { fetch(request) }`): reciben un `Request`, devuelven un `Response`. Hacen validación y llaman a `src/server/diagnosisService.ts`.
@@ -71,7 +77,7 @@ Selección (`gateway/index.ts → createGateway`):
 |---|---|---|
 | `scoring.ts` | Nota por área (google, reseñas, web, delivery, operación) y general. **Pesos y umbrales en constantes arriba** | cambiar cómo se puntúa |
 | `recommendations.ts` | Lista de reglas `{cuándo, texto por país, módulo de Fudo con URL}`; top 5 por impacto | cambiar qué se recomienda |
-| `leadTier.ts` | caliente / switcher / nutrir / descartar / por-abrir según volumen proxy (reseñas), sistema actual, canales y locales | cambiar el filtro |
+| `leadTier.ts` | caliente / switcher / nutrir / descartar según volumen proxy (reseñas), sistema actual, canales y locales | cambiar el filtro |
 | `moneyLost.ts` | "Plata que se escapa por mes": 3 componentes con supuestos nombrados | cambiar los supuestos |
 | `neighbors.ts` | `compareWithNeighbors(local, catálogo)`: rango real de reseñas y rating contra los otros locales del snapshot del mismo país, con puesto y marca de misma ciudad/tipo. Devuelve `null` si no hay pares con datos (la UI no muestra nada). El catálogo sale de `provider.suggest()` | cambiar cómo se compara |
 | `showcase.ts` | Local destacado por país (`FEATURED_PLACE`, solo el id), respuestas de ejemplo simuladas y chequeo de horario del viernes 21:30 | cambiar el ticket de la home |
@@ -98,7 +104,14 @@ La UI muestra la cuenta de la plata perdida paso a paso ("¿Cómo calculamos est
 - **Landings por país** (`/ar/`, `/mx/`, `/cl/`, `/co/`): `scripts/pages.ts` toma `dist/index.html` como plantilla y, para la home y cada país, reemplaza el bloque `<!--head:start-->…<!--head:end-->` (title, description, canonical, `hreflang` entre home y landings, OG, JSON-LD `WebApplication` + `BreadcrumbList`) y renderiza con `renderToStaticMarkup` el **mismo árbol de React** que monta la app (`ui/StaticPage.tsx`), con datos reales del snapshot (`buildShowcase`). Los datos viajan embebidos (`<script id="page-data">`) para que React arranque con lo mismo; en `npm run dev` se piden a `/api/showcase`. `sitemap.xml` y `llms.txt` las incluyen. Brasil no tiene landing (contenido en español).
 - Las páginas reutilizan el CSS de Tailwind compilado por Vite (`scripts/` está en los `content` de Tailwind).
 - `SITE_URL` (env) define el dominio de canonical/sitemap/llms.txt; default = placeholder.
-- `vercel.json`: `trailingSlash: true` y rewrite de SPA que **no** pisa `/blog/*`, `/api/*`, `sitemap.xml`, `robots.txt` ni `llms.txt`.
+- `vercel.json`: `trailingSlash: true` y **sin** rewrite de SPA: cada ruta es un archivo (`/`, `/ar/…`, `/blog/…`, `/debug/`). Lo que no existe cae en `dist/404.html` (noindex, con salida a la home y a las guías), con estado 404. `/debug/` tiene su propio HTML (título propio, noindex) y ya no se enlaza desde la UI.
+
+## Historial, "tus números" y geo
+
+- **Historial (B-4):** cada pantalla del recorrido se guarda con `history.pushState` (un snapshot completo en `history.state`: búsqueda, local, respuestas, diagnóstico). Atrás/Adelante restauran la pantalla y recargar el resultado lo mantiene. Solo "Estoy por abrir" cambia la URL (`#por-abrir`).
+- **Doble clic (B-1):** `src/ui/useSettled.ts` apaga los toques de una pantalla recién abierta por 450 ms (CSS `pointer-events` + guarda para teclado).
+- **"Tus números":** `estimateMoneyLost(profile, answers, scorecard, country, overrides)` es pura; la UI la vuelve a llamar con los pedidos y el ticket del dueño. Devuelve cada línea con sus `factors` y la lista `assumptionsUsed`, así la pantalla muestra solo lo que la cuenta usó. La comisión se cita con `COMMISSION_SOURCES` (AR: iProfesional 14/05/2026; MX: Uber Eats 13/03/2024; CL/CO/BR: "sin dato público").
+- **Geo:** `GET /api/geo` (`src/server/geo.ts`) devuelve el país de `x-vercel-ip-country` (o `?country=`, para probar). El HTML prerenderizado de `/` sigue siendo el argentino (SEO); el cliente trae `/api/showcase?country=XX` y cambia todo junto. El país de cada diagnóstico sigue saliendo de la dirección del local.
 
 Ver [ADR 0004](adr/0004-blog-prerenderizado-geo.md).
 
